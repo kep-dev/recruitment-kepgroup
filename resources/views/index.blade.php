@@ -62,7 +62,8 @@
         <!-- Hero -->
         <div class="px-4 sm:px-6 lg:px-8 ">
             <div
-                class="h-120 md:h-[80dvh] flex flex-col bg-[url('{{ asset('images/include/bgjdih.jpg') }}')] bg-cover bg-center bg-no-repeat rounded-2xl">
+                class="h-120 md:h-[80dvh] flex flex-col bg-center bg-no-repeat bg-cover rounded-2xl"
+                style="background-image: url({{ asset('images/include/bgjdih.jpg') }})">
                 <div class="mt-auto w-2/3 md:max-w-lg ps-5 pb-5 md:ps-10 md:pb-10">
                     <h1 class="text-xl md:text-3xl lg:text-5xl text-white">
                         Recruitment KEP Group

@@ -1,5 +1,5 @@
 <div
-    style="height: max-content"
+    style="height: max-content; position: sticky; top: 110px"
     class="row-span-3 col-span-3 bg-white border border-white-200 shadow-2xs rounded-xl p-4 md:p-5 white:bg-neutral-900 white:border-neutral-700 white:text-neutral-400">
     <div class="p-2 flex items-center border-b border-gray-200 rounded-t-xl dark:border-neutral-700">
         <img class="inline-block rounded-full" style="width:50px; height:50px; object-fit:cover" src="{{ asset('images/include/powerplants.jpg') }}" alt="Avatar">
@@ -12,8 +12,8 @@
         <div class=" pb-0 px-2  w-full flex flex-col flex-wrap">
             <ul class="space-y-1">
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                        href="/profile">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round">
@@ -24,8 +24,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                        href="/application">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-plane-icon lucide-plane">
@@ -36,8 +36,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                        href="/savedjob">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
@@ -47,8 +47,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                        href="#">
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                        href="/setting">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings">

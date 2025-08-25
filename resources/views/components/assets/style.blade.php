@@ -3,6 +3,8 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="../../favicon.ico">
     <!-- Font -->
+    {{-- css --}}
+    <link href={{ asset('css/addition.css') }} rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Theme Check and Update -->
     <script>

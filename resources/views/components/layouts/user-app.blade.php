@@ -28,7 +28,7 @@
     <meta property="og:image" content="https://preline.co/assets/img/og-image.png">
 
     <!-- Title -->
-    <title>Recruitment KEP Group</title>
+    <title>KEP Group</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="../../favicon.ico">

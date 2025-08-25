@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<x-layouts.app>
+{{-- <!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"> --}}
 
-<head>
+{{-- <head>
     <!-- Required Meta Tags Always Come First -->
     <meta charset="utf-8">
     <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -28,7 +29,7 @@
     <meta property="og:image" content="https://preline.co/assets/img/og-image.png">
 
     <!-- Title -->
-    <title>Recruitment KEP Group</title>
+    <title>Recruitment KEP</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -52,13 +53,13 @@
 
     <!-- CSS HS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+</head> --}}
 
-<body class="dark:bg-neutral-900">
-    <x-organism.user-header />
+{{-- <body class="dark:bg-neutral-900">
+    <x-organism.user-header /> --}}
 
     <!-- ========== MAIN CONTENT ========== -->
-    <main id="content">
+    <main class="w-full max-w-7xl md:pt-0 px-4 sm:px-6 lg:px-8 mx-auto">
         <!-- Hero -->
         <div class="px-4 sm:px-6 lg:px-8 ">
             <div
@@ -726,7 +727,7 @@
     <!-- ========== END MAIN CONTENT ========== -->
 
     <!-- ========== FOOTER ========== -->
-    <footer class="mt-auto border-t md:border-t-0 border-gray-200 dark:border-neutral-700">
+    {{-- <footer class="mt-auto border-t md:border-t-0 border-gray-200 dark:border-neutral-700">
         <div class="w-full max-w-7xl py-10 md:pt-0 px-4 sm:px-6 lg:px-8 mx-auto">
             <!-- Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-5">
@@ -814,13 +815,13 @@
             </div>
             <!-- End Grid -->
         </div>
-    </footer>
+    </footer> --}}
     <!-- ========== END FOOTER ========== -->
 
     <!-- JS Implementing Plugins -->
     <!-- JS THIRD PARTY PLUGINS -->
     <!-- Google Analytics. Global site tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B73TDMXKF5"></script>
+    {{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-B73TDMXKF5"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -831,6 +832,7 @@
         gtag('js', new Date());
         gtag('config', 'G-B73TDMXKF5');
     </script>
-</body>
+</body> --}}
 
-</html>
+{{-- </html> --}}
+</x-layouts.app>

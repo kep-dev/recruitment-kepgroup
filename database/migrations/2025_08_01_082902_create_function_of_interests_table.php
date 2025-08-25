@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('function_of_interests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('function_of_interest');
             $table->timestamps();
         });

@@ -22,18 +22,20 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use App\Filament\Resources\EmployeeTypes\Pages\ManageEmployeeTypes;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 
 class EmployeeTypeResource extends Resource
 {
     protected static ?string $model = EmployeeType::class;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Lowongan';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowRight;
+    protected static string | UnitEnum | null $navigationGroup = 'Lowongan';
+    protected static string|BackedEnum|null $navigationIcon = LucideIcon::Users;
 
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $navigationLabel = 'Jenis Karyawan';
     protected static ?string $modelLabel = 'Jenis Karyawan';
     protected static ?string $pluralModelLabel = 'Jenis Karyawan';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

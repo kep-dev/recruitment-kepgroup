@@ -70,7 +70,6 @@ class JobVacancyForm
                                             ->required()
                                             ->columnSpanFull(),
                                         TextInput::make('salary')
-                                            ->required()
                                             ->columnSpanFull(),
                                     ]),
 
@@ -163,23 +162,23 @@ class JobVacancyForm
                                     ->schema([
                                         Select::make('work_type_id')
                                             ->relationship('workType', 'name')
-                                            ->searchable()
+                                            // ->searchable()
                                             ->options(WorkType::all()->pluck('name', 'id'))
                                             ->label('Jenis Pekerjaan')
                                             ->required()
                                             ->columnSpanFull(),
                                         Select::make('employee_type_id')
                                             ->relationship('employeeType', 'name')
-                                            ->searchable()
+                                            // ->searchable()
                                             ->options(EmployeeType::all()->pluck('name', 'id'))
                                             ->label('Jenis Karyawan')
                                             ->required()
                                             ->columnSpanFull(),
                                         Select::make('job_level_id')
+                                        ->relationship('jobLevel', 'name')
                                             ->label('Level Jabatan')
+                                            // ->searchable()
                                             ->options(JobLevel::all()->pluck('name', 'id'))
-                                            ->searchable()
-                                            ->relationship('jobLevel', 'name')
                                             ->required()
                                             ->columnSpanFull(),
 

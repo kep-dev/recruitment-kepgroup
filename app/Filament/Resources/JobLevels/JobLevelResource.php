@@ -5,6 +5,7 @@ namespace App\Filament\Resources\JobLevels;
 use App\Filament\Resources\JobLevels\Pages\ManageJobLevels;
 use App\Models\JobLevel;
 use BackedEnum;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -24,13 +25,14 @@ class JobLevelResource extends Resource
 {
     protected static ?string $model = JobLevel::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowRight;
+    protected static string|BackedEnum|null $navigationIcon = LucideIcon::ChevronsUpDown;
     // protected static ?string $navigationParentItem = 'Lowongan';
-    protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Lowongan';
+    protected static string | UnitEnum | null $navigationGroup = 'Lowongan';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $navigationLabel = 'Level Jabatan';
     protected static ?string $modelLabel = 'Level Jabatan';
     protected static ?string $pluralModelLabel = 'Level Jabatan';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('training_certifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('training_certification_title');
             $table->string('institution_name');
             $table->enum('type', ['training', 'certification']);

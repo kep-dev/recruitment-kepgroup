@@ -67,4 +67,15 @@ class JobVacancy extends Model
     {
         return $this->hasMany(JobVacancyPlacement::class);
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'job_vacancy_id', 'id');
+    }
+
+    public function jobVacancyStages()
+    {
+        return $this->hasMany(JobVacancyStage::class);
+    }
+
 }

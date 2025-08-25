@@ -46,6 +46,7 @@ class JobVacancyInfolist
                                     ])
                                     ->afterHeader([
                                         Action::make('updateStatus')
+                                            ->label('Perbarui Status')
                                             ->icon(Heroicon::OutlinedPencilSquare)
                                             ->successNotification(
                                                 Notification::make()
@@ -60,6 +61,7 @@ class JobVacancyInfolist
                                                         '1' => 'Aktif',
                                                         '2' => 'Tidak Aktif',
                                                     ])
+                                                    ->default(fn(JobVacancy $record): bool => $record->status)
                                                     ->required(),
                                             ])
                                             ->action(function (array $data, JobVacancy $record): void {

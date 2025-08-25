@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Language extends Model
 {
     use HasUuids;
+
+    protected $fillable  = [
+        'user_id',
+        'language',
+        'level',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

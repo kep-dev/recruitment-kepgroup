@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('social_media', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('url');
             $table->timestamps();

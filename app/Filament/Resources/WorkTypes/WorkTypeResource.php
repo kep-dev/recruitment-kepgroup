@@ -21,18 +21,20 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use App\Filament\Resources\WorkTypes\Pages\ManageWorkTypes;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use UnitEnum;
 
 class WorkTypeResource extends Resource
 {
     protected static ?string $model = WorkType::class;
-    protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Lowongan';
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowRight;
+    protected static string | UnitEnum | null $navigationGroup = 'Lowongan';
+    protected static string|BackedEnum|null $navigationIcon = LucideIcon::Briefcase;
 
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $navigationLabel = 'Jenis Pekerjaan';
     protected static ?string $modelLabel = 'Jenis Pekerjaan';
     protected static ?string $pluralModelLabel = 'Jenis Pekerjaan';
+    protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema
     {

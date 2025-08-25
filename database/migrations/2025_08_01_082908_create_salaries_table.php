@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->decimal('expected_salary');
             $table->decimal('current_salary');
             $table->timestamps();

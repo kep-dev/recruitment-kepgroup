@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Filament\Resources\JobVacancyTests\RelationManagers;
+
+use PgSql\Lob;
+use App\Models\Test;
+use Filament\Tables\Table;
+use Filament\Actions\Action;
+use Filament\Schemas\Schema;
+use App\Models\JobVacancyTest;
+use Filament\Actions\CreateAction;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
+use Filament\Resources\RelationManagers\RelationManager;
+use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+
+class JobVacancyTestItemsRelationManager extends RelationManager
+{
+    protected static string $relationship = 'jobVacancyTestItems';
+    protected static ?string $title = 'Daftar Soal';
+
+    // protected static ?string $relatedResource = JobVacancyTestResource::class;
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
+    public function getFormSchema(): array
+    {
+        return [
+            Select::make('test_id')
+                ->label('Soal')
+                ->options(
+                    Test::all()->pluck('title', 'id')
+                )
+                ->default($this->record->test_id ?? null)
+                ->searchable()
+                ->required(),
+            TextInput::make('order')
+                ->label('Urutan')
+                ->required()
+                ->numeric()
+                ->columnSpanFull(),
+        ];
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->heading('Daftar soal untuk tes ini')
+            ->columns([
+                TextColumn::make('test.title')
+                    ->label('Soal')
+                    ->searchable(),
+                TextColumn::make('order')
+                    ->label('Urutan')
+                    ->sortable(),
+            ])
+            ->recordActions([
+                EditAction::make()
+                    ->label('Edit')
+                    ->schema($this->getFormSchema())
+                    ->action(function ($record, array $data) {
+                        $record->update($data);
+                    }),
+
+                DeleteAction::make()
+            ])
+            ->headerActions([
+                Action::make('createTestItem')
+                    ->icon(LucideIcon::Plus)
+                    ->label('Tambah Soal')
+                    ->schema($this->getFormSchema())
+                    ->action(function (array $data) {
+                        $this->getOwnerRecord()->jobVacancyTestItems()->create($data);
+                    }),
+            ]);
+    }
+}

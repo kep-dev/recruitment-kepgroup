@@ -2,30 +2,33 @@
 
 namespace App\Filament\Resources\JobVacancies;
 
-use App\Filament\Resources\JobVacancies\Pages\CreateJobVacancy;
-use App\Filament\Resources\JobVacancies\Pages\EditJobVacancy;
-use App\Filament\Resources\JobVacancies\Pages\ListJobVacancies;
-use App\Filament\Resources\JobVacancies\Pages\ViewJobVacancy;
-use App\Filament\Resources\JobVacancies\Schemas\JobVacancyForm;
-use App\Filament\Resources\JobVacancies\Schemas\JobVacancyInfolist;
-use App\Filament\Resources\JobVacancies\Tables\JobVacanciesTable;
-use App\Models\JobVacancy;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 use UnitEnum;
+use BackedEnum;
+use App\Models\JobVacancy;
+use Filament\Tables\Table;
+use Filament\Schemas\Schema;
+use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
+use App\Filament\Resources\JobVacancies\Pages\EditJobVacancy;
+use App\Filament\Resources\JobVacancies\Pages\ViewJobVacancy;
+use App\Filament\Resources\JobVacancies\Pages\CreateJobVacancy;
+use App\Filament\Resources\JobVacancies\Pages\ListJobVacancies;
+use App\Filament\Resources\JobVacancies\Schemas\JobVacancyForm;
+use App\Filament\Resources\JobVacancies\Tables\JobVacanciesTable;
+use App\Filament\Resources\JobVacancies\Schemas\JobVacancyInfolist;
+use App\Filament\Resources\JobVacancies\RelationManagers\JobVacancyStagesRelationManager;
 
 class JobVacancyResource extends Resource
 {
     protected static ?string $model = JobVacancy::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
+    protected static string|BackedEnum|null $navigationIcon = LucideIcon::Newspaper;
     protected static string | UnitEnum | null $navigationGroup = 'Lowongan';
     protected static ?string $navigationLabel = 'Lowongan';
     protected static ?string $modelLabel = 'Lowongan';
     protected static ?string $pluralModelLabel = 'Lowongan';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {
@@ -45,7 +48,7 @@ class JobVacancyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            JobVacancyStagesRelationManager::class
         ];
     }
 

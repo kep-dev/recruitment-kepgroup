@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('requirements');
             $table->date('end_date');
             $table->boolean('status')->default(false);
-            $table->decimal('salary', 8, 2)->nullable();
+            $table->decimal('salary', 12, 2)->nullable();
             $table->timestamps();
         });
     }

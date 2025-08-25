@@ -31,7 +31,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->spa()
-            ->maxContentWidth(Width::Full)
+
+            // ->maxContentWidth(Width::Full)
             ->colors([
                 'primary' => Color::Blue,
             ])

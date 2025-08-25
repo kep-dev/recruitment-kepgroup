@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^4.0@beta",
+        "codewithdennis/filament-lucide-icons": "^4.0",
         "filament/filament": "^4.0",
         "laravel/fortify": "^1.27",
         "laravel/framework": "^12.0",

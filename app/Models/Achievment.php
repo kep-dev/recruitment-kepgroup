@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Achievment extends Model
 {
     use HasUuids;
+
+    protected $fillable  = [
+        'user_id',
+        'achievment_name',
+        'organization_name',
+        'year',
+    ];
 }

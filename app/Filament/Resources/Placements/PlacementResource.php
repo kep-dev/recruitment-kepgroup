@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Placements;
 use App\Filament\Resources\Placements\Pages\ManagePlacements;
 use App\Models\Placement;
 use BackedEnum;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -24,13 +25,14 @@ class PlacementResource extends Resource
 {
     protected static ?string $model = Placement::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowRight;
+    protected static string|BackedEnum|null $navigationIcon = LucideIcon::Globe;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Lowongan';
+    protected static string | UnitEnum | null $navigationGroup = 'Lowongan';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $navigationLabel = 'Penempatan';
     protected static ?string $modelLabel = 'Penempatan';
     protected static ?string $pluralModelLabel = 'Penempatan';
+    protected static ?int $navigationSort = 5;
 
 
     public static function form(Schema $schema): Schema

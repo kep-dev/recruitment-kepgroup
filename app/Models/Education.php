@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Education extends Model
 {
     use HasUuids;
+    protected $table = 'educations';
+    protected $fillable = [
+        'user_id',
+        'education_level',
+        'major',
+        'university',
+        'location',
+        'graduation_year',
+        'gpa',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

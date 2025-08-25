@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Skill extends Model
 {
     use HasUuids;
+
+    protected $fillable  = [
+        'user_id',
+        'skill'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

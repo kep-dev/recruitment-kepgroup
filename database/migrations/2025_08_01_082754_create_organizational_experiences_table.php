@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('organizational_experiences', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('organization_name');
             $table->string('position');
             $table->string('level');

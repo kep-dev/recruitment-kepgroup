@@ -3,6 +3,7 @@
 use App\Livewire\Frontend\Dashboard\DashboardIndex;
 use App\Livewire\Frontend\Profile\ProfileIndex;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controller;
 
 // Route::get('/', function () {
 //     return view('index');

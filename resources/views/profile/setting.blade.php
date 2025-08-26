@@ -23,8 +23,8 @@
                         <span
                             class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
                     </label>
-                    <span>Information about featured events and job listings.</span>
                 </div>
+                <span>Information about featured events and job listings.</span>
             </div>
             {{-- Talentics Subscription Email --}}
 

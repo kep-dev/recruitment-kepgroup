@@ -12,7 +12,8 @@
         <div class=" pb-0 px-2  w-full flex flex-col flex-wrap">
             <ul class="space-y-1">
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white
+                    {{ request()->is('profile') ? 'bg-dark-100 focus:bg-gray-100 gray:bg-neutral-700 dark:bg-neutral-700 dark:focus:bg-neutral-700 text-white' : '' }}"
                         href="/profile">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
@@ -24,7 +25,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white
+                    {{ request()->is('application') ? 'bg-dark-100 focus:bg-gray-100 gray:bg-neutral-700 dark:bg-neutral-700 dark:focus:bg-neutral-700 text-white' : '' }}"
                         href="/application">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
@@ -36,7 +38,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white
+                    {{ request()->is('savedjob') ? 'bg-dark-100 focus:bg-gray-100 gray:bg-neutral-700 dark:bg-neutral-700 dark:focus:bg-neutral-700 text-white' : '' }}"
                         href="/savedjob">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
@@ -47,7 +50,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 hover:text-white
+                    {{ request()->is('setting') ? 'bg-dark-100 focus:bg-gray-100 gray:bg-neutral-700 dark:bg-neutral-700 dark:focus:bg-neutral-700 text-white' : '' }}"
                         href="/setting">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"

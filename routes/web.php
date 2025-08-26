@@ -13,7 +13,7 @@ Route::get('/application', function () {
     return view('profile.application');
 });
 Route::get('/savedjob', function () {
-    return view('appliprofile.savedjob');
+    return view('profile.saved-job');
 });
 Route::get('/setting', function () {
     return view('profile.setting');

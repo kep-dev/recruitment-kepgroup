@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('image');
             $table->text('description');
             $table->text('requirements');
+            $table->date('start_date');
             $table->date('end_date');
             $table->boolean('status')->default(false);
             $table->decimal('salary', 12, 2)->nullable();

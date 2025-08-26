@@ -74,8 +74,8 @@
             <!-- End Social Brands -->
         </div>
         <!-- End Grid -->
-        <div class="text-center mt-2">
+        {{-- <div class="text-center mt-2">
             <h2 style="color:aliceblue">Copyright © 2025 Recruitment KEP Group. PT Kaltim Electrik Group. All Rights Reserved.</h2>
-        </div>
+        </div> --}}
     </div>
 </footer>

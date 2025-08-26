@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Page Title' }}</title>
+    <title>{{ $title . ' | Recruitment KEP Group' ?? 'Recruitment KEP Group' }}</title>
     <x-assets.style />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -18,6 +18,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-B73TDMXKF5"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
+
         function gtag() {
             dataLayer.push(arguments);
         }
@@ -27,4 +28,3 @@
 </body>
 
 </html>
-

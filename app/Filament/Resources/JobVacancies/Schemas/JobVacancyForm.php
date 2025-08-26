@@ -55,7 +55,7 @@ class JobVacancyForm
                                     ->columnSpan([
                                         'sm' => 12,
                                         'lg' => 8,
-                                        'xl' => 9
+                                        'xl' => 8
                                     ])
                                     ->schema([
                                         TextInput::make('title')
@@ -78,7 +78,7 @@ class JobVacancyForm
                                     ->columnSpan([
                                         'sm' => 12,
                                         'lg' => 8,
-                                        'xl' => 9
+                                        'xl' => 8
                                     ])
                                     ->schema([
                                         Repeater::make('benefits')
@@ -120,7 +120,7 @@ class JobVacancyForm
                                     ->columnSpan([
                                         'sm' => 12,
                                         'lg' => 8,
-                                        'xl' => 9
+                                        'xl' => 8
                                     ])
                                     ->schema([
                                         Repeater::make('placements')
@@ -182,6 +182,10 @@ class JobVacancyForm
                                             ->required()
                                             ->columnSpanFull(),
 
+                                        DatePicker::make('start_date')
+                                            ->label('Tanggal Buka')
+                                            ->columnSpanFull()
+                                            ->required(),
                                         DatePicker::make('end_date')
                                             ->label('Tanggal Penutupan')
                                             ->columnSpanFull()

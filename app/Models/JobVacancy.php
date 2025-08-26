@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class JobVacancy extends Model
+class JobVacancy extends Model implements HasMedia
 {
-    use HasUuids;
+    use HasUuids, InteractsWithMedia;
 
     protected $fillable = [
         'user_id',
@@ -20,6 +22,7 @@ class JobVacancy extends Model
         'image',
         'description',
         'requirements',
+        'start_date',
         'end_date',
         'status',
         'salary'
@@ -33,9 +36,17 @@ class JobVacancy extends Model
             }
 
             if (empty($jobVacancy->slug)) {
-                $jobVacancy->slug = \Str::slug($jobVacancy->title);
+                $jobVacancy->slug = Str::slug($jobVacancy->title);
             }
         });
+    }
+
+    protected function casts()
+    {
+        return [
+            'start_date' => 'date:Y-m-d',
+            'end_date' => 'date:Y-m-d',
+        ];
     }
 
     public function user()
@@ -77,5 +88,4 @@ class JobVacancy extends Model
     {
         return $this->hasMany(JobVacancyStage::class);
     }
-
 }

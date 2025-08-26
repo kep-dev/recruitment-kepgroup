@@ -1,9 +1,9 @@
-<div
-    style="height: max-content"
-    class="row-span-3 col-span-3 bg-white border border-white-200 shadow-2xs rounded-xl p-4 md:p-5 white:bg-neutral-900 white:border-neutral-700 white:text-neutral-400">
+<div style="height: max-content"
+    class="row-span-3 col-span-3 bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none shadow-2xs rounded-xl p-4 md:p-5 white:bg-neutral-900 white:border-neutral-700 white:text-neutral-400">
     <div class="p-2 flex items-center border-b border-gray-200 rounded-t-xl dark:border-neutral-700">
-        <img class="inline-block rounded-full" style="width:50px; height:50px; object-fit:cover" src="{{ asset('images/include/powerplants.jpg') }}" alt="Avatar">
-        <h4 class="mx-4 text-md">
+        <img class="inline-block rounded-full" style="width:50px; height:50px; object-fit:cover"
+            src="{{ asset('images/include/powerplants.jpg') }}" alt="Avatar">
+        <h4 class="mx-4 text-md text-gray-800 dark:text-slate-100">
             Visa Rizky
         </h4>
     </div>
@@ -12,42 +12,47 @@
         <div class=" pb-0 px-2  w-full flex flex-col flex-wrap">
             <ul class="space-y-1">
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-100 rounded-lg hover:bg-neutral-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                         href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round">
-                            <circle cx="12" cy="8" r="5" />
-                            <path d="M20 21a8 8 0 0 0-16 0" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-circle-user-round-icon lucide-circle-user-round">
+                            <path d="M18 20a6 6 0 0 0-12 0" />
+                            <circle cx="12" cy="10" r="4" />
+                            <circle cx="12" cy="12" r="10" />
                         </svg>
                         Profile Saya
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-100 rounded-lg hover:bg-neutral-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                         href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-plane-icon lucide-plane">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-send-icon lucide-send">
                             <path
-                                d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
+                                d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+                            <path d="m21.854 2.147-10.94 10.939" />
                         </svg>
-                        My Application
+                        Lamaran Saya
                     </a>
                 </li>
                 <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-100 rounded-lg hover:bg-neutral-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                         href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark">
-                            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-book-marked-icon lucide-book-marked">
+                            <path d="M10 2v8l3-3 3 3V2" />
+                            <path
+                                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
                         </svg>
-                        Saved Job
+                        Lowongan tersimpan
                     </a>
                 </li>
-                <li>
-                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                {{-- <li>
+                    <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-100 rounded-lg hover:bg-dark-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                         href="#">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
@@ -58,7 +63,7 @@
                         </svg>
                         Setting
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </nav>

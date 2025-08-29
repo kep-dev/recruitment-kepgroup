@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('achievments', function (Blueprint $table) {
+        Schema::create('social_accounts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->string('achievement_name');
-            $table->string('organization_name');
-            $table->year('year');
+            $table->bigInteger('user_id');
+            $table->string('provider_id')->unique();
+            $table->string('provider_name');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('achievments');
+        Schema::dropIfExists('social_accounts');
     }
 };

@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
-class Achievment extends Model
+class SocialAccount extends Model
 {
     use HasUuids;
 
-    protected $fillable  = [
+    protected $fillable = [
         'user_id',
-        'achievement_name',
-        'organization_name',
-        'year',
+        'provider_id',
+        'provider_name',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
+
 }

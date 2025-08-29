@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Role;
 use Filament\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -62,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                'role:super_admin',
             ])
             ->navigationGroups([
                 'Lowongan',

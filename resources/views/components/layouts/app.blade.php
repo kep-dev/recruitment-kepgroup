@@ -9,13 +9,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-50 transition-all duration-300 lg:hs-overlay-layout-open:ps-65 dark:bg-neutral-900">
+<body class="bg-stone-100 transition-all duration-300 lg:hs-overlay-layout-open:ps-65 dark:bg-neutral-900">
     <div class="wrapper">
         <x-organism.user-header />
         {{ $slot }}
         <x-organism.footer />
     </div>
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-B73TDMXKF5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro@latest/build/vanilla-calendar.min.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 

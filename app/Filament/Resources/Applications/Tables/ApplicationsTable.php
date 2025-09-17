@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Applications\Tables;
 
 use App\Models\User;
 use App\Enums\status;
+use App\Models\JobVacancy;
 use Filament\Tables\Table;
 use App\Models\Application;
 use Filament\Actions\Action;
@@ -23,6 +24,7 @@ use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
+use Filament\Tables\Filters\SelectFilter;
 
 class ApplicationsTable
 {
@@ -60,7 +62,9 @@ class ApplicationsTable
                     ->hidden(),
             ])
             ->filters([
-                //
+                SelectFilter::make('job_vacancy_id')
+                    ->label('Lowongan')
+                    ->options(JobVacancy::query()->pluck('title', 'id'))
             ])
             ->recordActions([
                 // Action::make('createStageProgress')

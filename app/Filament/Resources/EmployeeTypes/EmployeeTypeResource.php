@@ -52,7 +52,10 @@ class EmployeeTypeResource extends Resource
                 FileUpload::make('icon')
                     ->columnSpanFull()
                     ->label('Icon')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('employee-types')
+                    ->preserveFilenames()
             ]);
     }
 
@@ -64,7 +67,8 @@ class EmployeeTypeResource extends Resource
                     ->label('Jenis Karyawan'),
                 TextEntry::make('description')
                     ->label('Deskripsi'),
-                ImageEntry::make('icon'),
+                ImageEntry::make('icon')
+                    ->disk('public'),
                 TextEntry::make('created_at')
                     ->hidden()
                     ->dateTime(),
@@ -85,7 +89,8 @@ class EmployeeTypeResource extends Resource
                 TextColumn::make('description')
                     ->label('Deskripsi')
                     ->searchable(),
-                ImageColumn::make('icon'),
+                ImageColumn::make('icon')
+                ->disk('public'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

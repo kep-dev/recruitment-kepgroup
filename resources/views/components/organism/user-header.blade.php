@@ -1,5 +1,5 @@
 <!-- ========== HEADER ========== -->
-<header class="bg-stone-50 dark:bg-neutral-900 flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full py-7 top-0">
+<header class="bg-stone-100 dark:bg-neutral-900 flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full py-7 top-0">
     <nav
         class="relative max-w-7xl w-full flex flex-wrap lg:grid lg:grid-cols-12 basis-full items-center px-4 md:px-6 lg:px-8 mx-auto">
         <div class="lg:col-span-3 flex items-center">
@@ -79,8 +79,10 @@
                             Profile
 
                         </a>
-                        {{-- <button type="button"
-                            class="w-full flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
+                        <a href="{{ route('frontend.profile.application') }}"
+                            class="w-full flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
+                            wire:navigate
+                            >
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -91,9 +93,11 @@
                             </svg>
 
                             Lamaran Saya
-                        </button>
-                        <button type="button"
-                            class="w-full flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
+                        </a>
+                        <a href="{{ route('frontend.profile.saved-job') }}"
+                            class="w-full flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
+                            wire:navigate
+                            >
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -104,15 +108,16 @@
                             </svg>
 
                             Lowongan Tersimpan
-                        </button> --}}
+                        </a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit"
                                 class="w-full flex items-center gap-x-2 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-log-out-icon lucide-log-out">
                                     <path d="m16 17 5-5-5-5" />
                                     <path d="M21 12H9" />
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -168,7 +173,7 @@
                 </div>
                 <div>
                     <a class="inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 dark:text-white dark:hover:text-neutral-300 dark:focus:text-neutral-300"
-                        href="{{ route('frontend.job') }}">Jobs</a>
+                        href="{{ route('frontend.job') }}" wire:navigate>Jobs</a>
                 </div>
                 <div>
                     <a class="inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 dark:text-white dark:hover:text-neutral-300 dark:focus:text-neutral-300"

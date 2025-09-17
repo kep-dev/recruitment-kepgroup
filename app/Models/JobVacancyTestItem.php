@@ -12,6 +12,8 @@ class JobVacancyTestItem extends Model
     protected $fillable = [
         'job_vacancy_test_id',
         'test_id',
+        'number_of_question',
+        'duration_in_minutes',
         'order',
     ];
 
@@ -23,5 +25,15 @@ class JobVacancyTestItem extends Model
     public function jobVacancyTest()
     {
         return $this->belongsTo(JobVacancyTest::class);
+    }
+
+    public function attempts()
+    {
+        return $this->hasMany(ApplicantTestAttempt::class, 'job_vacancy_test_item_id');
+    }
+
+    public function finishedAttempts()
+    {
+        return $this->attempts()->whereIn('status', ['submitted', 'graded']);
     }
 }

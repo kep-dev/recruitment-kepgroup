@@ -12,7 +12,11 @@ enum status: string implements HasLabel, HasIcon
     case passed = 'passed';
     case failed = 'failed';
     case skipped = 'skipped';
-
+    case assigned = 'assigned';
+    case completed = 'completed';
+    case expired = 'expired';
+    case submitted = 'submitted';
+    case graded = 'graded';
     public function getLabel(): ?string
     {
         return match ($this) {
@@ -21,6 +25,11 @@ enum status: string implements HasLabel, HasIcon
             self::passed => 'Lulus',
             self::failed => 'Gagal',
             self::skipped => 'Dilewati',
+            self::assigned => 'Ditugaskan',
+            self::completed => 'Selesai',
+            self::expired => 'Kadaluarsa',
+            self::submitted => 'Dikirim',
+            self::graded => 'Dinilai',
         };
     }
 
@@ -32,6 +41,11 @@ enum status: string implements HasLabel, HasIcon
             self::passed => 'success',
             self::failed => 'danger',
             self::skipped => 'secondary',
+            self::assigned => 'secondary',
+            self::completed => 'success',
+            self::expired => 'danger',
+            self::submitted => 'secondary',
+            self::graded => 'secondary',
         };
     }
 
@@ -43,6 +57,11 @@ enum status: string implements HasLabel, HasIcon
             self::passed => 'heroicon-s-check-circle',
             self::failed => 'heroicon-s-x-circle',
             self::skipped => 'heroicon-s-x-circle',
+            self::assigned => 'heroicon-s-check-circle',
+            self::completed => 'heroicon-s-check-circle',
+            self::expired => 'heroicon-s-x-circle',
+            self::submitted => 'heroicon-s-check-circle',
+            self::graded => 'heroicon-s-check-circle',
         };
     }
 }

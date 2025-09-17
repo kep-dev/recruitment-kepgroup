@@ -2,27 +2,31 @@
 
 namespace App\Filament\Resources\JobVacancies\RelationManagers;
 
+use App\Filament\Resources\JobVacancies\JobVacancyResource;
 use App\Models\StageType;
-use Filament\Tables\Table;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use Illuminate\Validation\Rule;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\RelationManagers\RelationManager;
-use App\Filament\Resources\JobVacancies\JobVacancyResource;
-use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
+use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 
 class JobVacancyStagesRelationManager extends RelationManager
 {
     protected static string $relationship = 'jobVacancyStages';
+
+    protected static ?string $title = 'Tahap dalam lowongan ini';
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
 
     // protected static ?string $relatedResource = JobVacancyResource::class;
 
@@ -31,15 +35,14 @@ class JobVacancyStagesRelationManager extends RelationManager
         return [
             Select::make('stage_type_id')
                 ->label('Tahap')
-                ->options(fn() => StageType::query()->pluck('name', 'id')->toArray())
+                ->options(fn () => StageType::query()->pluck('name', 'id')->toArray())
                 ->searchable()
                 ->preload()
                 ->required()
                 // pastikan 1 stage_type hanya sekali per job_vacancy
                 ->rule(function (RelationManager $livewire) {
                     return Rule::unique('job_vacancy_stages', 'stage_type_id')
-                        ->where('job_vacancy_id', $livewire->getOwnerRecord()->getKey())
-                        ->ignore($this->record); // saat edit
+                        ->where('job_vacancy_id', $livewire->getOwnerRecord()->getKey()); // saat edit
                 }),
 
             TextInput::make('order')
@@ -55,8 +58,7 @@ class JobVacancyStagesRelationManager extends RelationManager
                 // unique "order" per job_vacancy
                 ->rule(function (RelationManager $livewire) {
                     return Rule::unique('job_vacancy_stages', 'order')
-                        ->where('job_vacancy_id', $livewire->getOwnerRecord()->getKey())
-                        ->ignore($this->record);
+                        ->where('job_vacancy_id', $livewire->getOwnerRecord()->getKey());
                 }),
 
             Toggle::make('is_required')
@@ -77,11 +79,11 @@ class JobVacancyStagesRelationManager extends RelationManager
                 IconColumn::make('is_required')
                     ->label('Dibutuhkan')
                     ->boolean()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         '1' => 'success',
                         '0' => 'danger',
                         default => 'gray',
-                    })
+                    }),
             ])
             ->headerActions([
                 Action::make('createStage')
@@ -94,7 +96,7 @@ class JobVacancyStagesRelationManager extends RelationManager
                             'order' => $data['order'],
                             'is_required' => $data['is_required'],
                         ]);
-                    })
+                    }),
             ])
             ->recordActions([
                 EditAction::make()

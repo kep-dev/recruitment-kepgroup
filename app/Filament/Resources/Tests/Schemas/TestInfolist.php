@@ -14,12 +14,11 @@ class TestInfolist
                 TextEntry::make('user_id')
                     ->hidden(),
                 TextEntry::make('title')
-                    ->label('Judul'),
-                TextEntry::make('duration_in_minutes')
-                    ->label('Durasi (menit)')
-                    ->numeric(),
+                    ->label('Judul')
+                    ->columnSpanFull(),
                 TextEntry::make('description')
-                    ->label('Deskripsi'),
+                    ->label('Deskripsi')
+                    ->columnSpanFull(),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->hidden(),

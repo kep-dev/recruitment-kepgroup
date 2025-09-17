@@ -24,9 +24,9 @@ class TestResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = LucideIcon::ClipboardList;
     protected static string | UnitEnum | null $navigationGroup = 'Test';
-    protected static ?string $navigationLabel = 'Test';
-    protected static ?string $modelLabel = 'Test';
-    protected static ?string $pluralModelLabel = 'Test';
+    protected static ?string $navigationLabel = 'Bank Soal';
+    protected static ?string $modelLabel = 'Bank Soal';
+    protected static ?string $pluralModelLabel = 'Bank Soal';
 
     public static function form(Schema $schema): Schema
     {

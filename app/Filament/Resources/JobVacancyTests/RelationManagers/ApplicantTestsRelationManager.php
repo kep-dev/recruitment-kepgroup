@@ -5,6 +5,7 @@ namespace App\Filament\Resources\JobVacancyTests\RelationManagers;
 use Filament\Tables\Table;
 use App\Models\Application;
 use Illuminate\Support\Str;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -13,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Pages\ApplicantTestAttemptPage;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
@@ -56,25 +58,15 @@ class ApplicantTestsRelationManager extends RelationManager
                     ]
                 ),
             DateTimePicker::make('started_at')
-                ->label('Mulai')
-                ->required(),
+                ->label('Mulai'),
             DateTimePicker::make('completed_at')
-                ->label('Selesai')
-                ->required(),
+                ->label('Selesai'),
             TextInput::make('score')
                 ->label('Skor')
                 ->hiddenOn('create')
 
         ];
     }
-
-    // 'application_id',
-    //     'job_vacancy_test_id',
-    //     'access_token',
-    //     'status',
-    //     'started_at',
-    //     'completed_at',
-    //     'total_score',
 
     public function table(Table $table): Table
     {
@@ -100,10 +92,14 @@ class ApplicantTestsRelationManager extends RelationManager
                     ->label('Selesai')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('score')
+                TextColumn::make('total_score')
                     ->label('Skor')
             ])
             ->recordActions([
+                Action::make('ViewChoices')
+                    ->label('Periksa Jawaban')
+                    ->icon(LucideIcon::Eye)
+                    ->url(fn($record) => ApplicantTestAttemptPage::getUrl(['ApplicantTest' => $record->getKey()])),
                 EditAction::make()
                     ->schema($this->getFormSchema())
                     ->action(function ($record, array $data) {

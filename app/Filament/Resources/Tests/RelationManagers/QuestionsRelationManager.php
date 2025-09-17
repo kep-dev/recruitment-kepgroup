@@ -21,6 +21,7 @@ use App\Filament\Resources\Tests\Pages\QuestionChoice;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Forms\Components\RichEditor;
 use Filament\Resources\RelationManagers\RelationManager;
+use Illuminate\Support\HtmlString;
 
 class QuestionsRelationManager extends RelationManager
 {
@@ -90,7 +91,8 @@ class QuestionsRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('question_text')
                     ->label('Pertanyaan')
-                    ->searchable(),
+                    ->searchable()
+                    ->formatStateUsing(fn (string $state): HtmlString => new HtmlString($state)),
                 TextColumn::make('type')
                     ->label('Tipe')
                     ->searchable(),

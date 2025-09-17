@@ -18,7 +18,9 @@ class JobVacancyTestForm
                 Select::make('job_vacancy_id')
                     ->label('Lowongan')
                     ->options(
-                        JobVacancy::all()->where('status', true)->pluck('title', 'id')
+                        JobVacancy::all()
+                            // ->where('status', true)
+                            ->pluck('title', 'id')
                     )
                     ->searchable()
                     ->required()

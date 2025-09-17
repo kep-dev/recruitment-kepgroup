@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Enums\status;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class ApplicantTest extends Model
 {
@@ -19,6 +20,13 @@ class ApplicantTest extends Model
         'total_score',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'status' => status::class
+        ];
+    }
+
     public function application()
     {
         return $this->belongsTo(Application::class);
@@ -26,7 +34,11 @@ class ApplicantTest extends Model
 
     public function jobVacancyTest()
     {
-        return $this->belongsTo(JobVacancyTest::class);
+        return $this->belongsTo(JobVacancyTest::class, 'job_vacancy_test_id');
     }
 
+    public function attempts()
+    {
+        return $this->hasMany(ApplicantTestAttempt::class, 'applicant_test_id');
+    }
 }

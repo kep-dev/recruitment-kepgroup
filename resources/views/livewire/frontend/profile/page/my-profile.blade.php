@@ -30,6 +30,10 @@
     <livewire:frontend.profile.partials.training-certification :user="$user" />
     <livewire:frontend.profile.partials.achievement :user="$user" />
     <livewire:frontend.profile.partials.language :user="$user" />
+    <livewire:frontend.profile.partials.applicant-skill :user="$user" />
+    <livewire:frontend.profile.partials.applicant-social-media :user="$user" />
+    <livewire:frontend.profile.partials.applicant-salary :user="$user" />
+    <livewire:frontend.profile.partials.applicant-document :user="$user" />
 
     {{-- Years of Full-time Work Experience --}}
     {{-- <div class="col-span-full md:col-span-full lg:col-span-9">
@@ -49,6 +53,6 @@
     </div> --}}
     {{-- Years of Full-time Work Experience --}}
 
-<x-molecules.alerts.alert />
+    <x-molecules.alerts.alert />
 
 </div>

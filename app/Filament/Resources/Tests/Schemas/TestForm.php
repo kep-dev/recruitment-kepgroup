@@ -22,11 +22,6 @@ class TestForm
                     ->label('Deskripsi')
                     ->required()
                     ->columnSpanFull(),
-                TextInput::make('duration_in_minutes')
-                    ->label('Durasi (menit)')
-                    ->required()
-                    ->numeric()
-                    ->columnSpanFull(),
             ]);
     }
 }

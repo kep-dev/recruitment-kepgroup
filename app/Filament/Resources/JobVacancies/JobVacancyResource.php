@@ -14,6 +14,7 @@ use App\Filament\Resources\JobVacancies\Pages\EditJobVacancy;
 use App\Filament\Resources\JobVacancies\Pages\ViewJobVacancy;
 use App\Filament\Resources\JobVacancies\Pages\CreateJobVacancy;
 use App\Filament\Resources\JobVacancies\Pages\ListJobVacancies;
+use App\Filament\Resources\JobVacancies\RelationManagers\ApplicationsRelationManager;
 use App\Filament\Resources\JobVacancies\Schemas\JobVacancyForm;
 use App\Filament\Resources\JobVacancies\Tables\JobVacanciesTable;
 use App\Filament\Resources\JobVacancies\Schemas\JobVacancyInfolist;
@@ -48,7 +49,8 @@ class JobVacancyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            JobVacancyStagesRelationManager::class
+            'jobVacancyStages' => JobVacancyStagesRelationManager::class,
+            'applications' => ApplicationsRelationManager::class,
         ];
     }
 

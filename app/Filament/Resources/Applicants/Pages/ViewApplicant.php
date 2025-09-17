@@ -22,4 +22,18 @@ class ViewApplicant extends ViewRecord
             // EditAction::make(),
         ];
     }
+
+    public function mount($record): void
+    {
+        parent::mount($record);
+
+        $this->record->load([
+            'user.roles',
+            'skills',
+            'functionOfInterests',
+            'languages',
+            'socialMedias',
+            'salaries',
+        ]);
+    }
 }

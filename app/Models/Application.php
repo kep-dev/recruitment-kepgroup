@@ -14,6 +14,7 @@ class Application extends Model
         'user_id',
         'job_vacancy_id',
         'current_stage_id',
+        'applied_at',
         'final_status',
         'note'
     ];

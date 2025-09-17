@@ -49,6 +49,9 @@ class BenefitCategoryResource extends Resource
                 FileUpload::make('icon')
                     ->label('Icon')
                     ->image()
+                    ->disk('public')                // penting: simpan di disk public
+                    ->directory('benefit-categories')    // opsional: folder khusus
+                    ->preserveFilenames()
                     ->columnSpanFull(),
 
             ]);
@@ -61,7 +64,8 @@ class BenefitCategoryResource extends Resource
                 TextEntry::make('name')
                     ->size(TextSize::Large)
                     ->label('Nama Kategori'),
-                ImageEntry::make('icon'),
+                ImageEntry::make('icon')
+                    ->disk('public'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->hidden(),
@@ -79,7 +83,8 @@ class BenefitCategoryResource extends Resource
                 TextColumn::make('name')
                     ->label('Nama Kategori')
                     ->searchable(),
-                ImageColumn::make('icon'),
+                ImageColumn::make('icon')
+                    ->disk('public'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

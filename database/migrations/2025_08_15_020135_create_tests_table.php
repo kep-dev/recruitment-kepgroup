@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignUuid('user_id')->nullable();
             $table->string('title');
             $table->string('description');
-            $table->integer('duration_in_minutes');
             $table->timestamps();
         });
     }

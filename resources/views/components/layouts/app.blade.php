@@ -9,10 +9,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-stone-100 transition-all duration-300 lg:hs-overlay-layout-open:ps-65 dark:bg-neutral-900">
-    <div class="wrapper">
+<body
+    class="min-h-screen flex flex-col bg-stone-100 transition-all duration-300 lg:hs-overlay-layout-open:ps-65 dark:bg-neutral-900">
+    <div class="wrapper flex flex-col flex-1">
         <x-organism.user-header />
-        {{ $slot }}
+        <main class="flex-1">
+            {{ $slot }}
+        </main>
         <x-organism.footer />
     </div>
 

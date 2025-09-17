@@ -1,7 +1,7 @@
     {{-- Bahasa --}}
     <div class="col-span-full md:col-span-full lg:col-span-9">
         <div
-            class="flex flex-col bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none shadow-sm rounded-xl">
+            class="flex flex-col bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none rounded-xl">
             <!-- Header -->
             <div class="flex flex-col rounded-t-xl py-3 px-4 md:px-5">
                 <h3 class="text-lg font-bold text-gray-800 dark:text-slate-100 mb-3">

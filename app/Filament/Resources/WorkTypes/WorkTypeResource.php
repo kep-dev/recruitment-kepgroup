@@ -51,6 +51,9 @@ class WorkTypeResource extends Resource
                 FileUpload::make('icon')
                     ->label('Icon')
                     ->image()
+                    ->disk('public')
+                    ->directory('work-types')
+                    ->preserveFilenames()
                     ->columnSpanFull(),
             ]);
     }
@@ -63,7 +66,8 @@ class WorkTypeResource extends Resource
                     ->label('Nama Jenis Pekerjaan'),
                 TextEntry::make('description')
                     ->label('Deskripsi'),
-                ImageEntry::make('icon'),
+                ImageEntry::make('icon')
+                    ->disk('public'),
                 TextEntry::make('created_at')
                     ->dateTime()
                     ->hidden(),
@@ -84,7 +88,8 @@ class WorkTypeResource extends Resource
                 TextColumn::make('description')
                     ->label('Deskripsi')
                     ->searchable(),
-                ImageColumn::make('icon'),
+                ImageColumn::make('icon')
+                    ->disk('public'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

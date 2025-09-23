@@ -18,11 +18,10 @@ class DashboardIndex extends Component
                 'workType',
                 'employeeType',
                 'jobLevel',
-                'benefits',
-                'placements'
             ])
             ->where('status', true)
             ->latest()
+            ->take(6)
             ->get();
     }
 

@@ -36,11 +36,21 @@ class JobVacancyTestItemsRelationManager extends RelationManager
             Select::make('test_id')
                 ->label('Soal')
                 ->options(
-                    Test::all()->pluck('title', 'id')
+                    Test::all()
+                        ->whereNotIn('id', $this->getOwnerRecord()->jobVacancyTestItems()->pluck('test_id'))
+                        ->pluck('title', 'id')
                 )
                 ->default($this->record->test_id ?? null)
                 ->searchable()
                 ->required(),
+            TextInput::make('number_of_question')
+                ->label('Jumlah Soal')
+                ->required()
+                ->numeric(),
+            TextInput::make('duration_in_minutes')
+                ->label('Durasi (menit)')
+                ->required()
+                ->numeric(),
             TextInput::make('order')
                 ->label('Urutan')
                 ->required()
@@ -57,6 +67,12 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                 TextColumn::make('test.title')
                     ->label('Soal')
                     ->searchable(),
+                TextColumn::make('number_of_question')
+                    ->label('Jumlah Soal')
+                    ->sortable(),
+                TextColumn::make('duration_in_minutes')
+                    ->label('Durasi (menit)')
+                    ->sortable(),
                 TextColumn::make('order')
                     ->label('Urutan')
                     ->sortable(),

@@ -1,24 +1,23 @@
-<x-layouts.guest>
+<x-layouts.guest title="Daftar">
     <div
         class="w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-2xs
               dark:bg-neutral-900 dark:border-neutral-700">
         <div class="p-4 sm:p-7">
             <div class="text-center">
-                <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Sign up</h1>
+                <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Daftar</h1>
                 <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-                    Already have an account?
+                    Sudah memiliki akun?
                     <a class="text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium dark:text-blue-500"
-                        href="{{ route('login') }}">Sign in here</a>
+                        href="{{ route('login') }}">Masuk Disini</a>
                 </p>
             </div>
 
             <div class="mt-5">
                 <!-- Google button -->
-                {{-- <button type="button"
+                <a href="/auth/google"
                     class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg
                  border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50
                  dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                    <!-- Google Icon -->
                     <svg class="w-4 h-auto" width="46" height="47" viewBox="0 0 46 47" fill="none"
                         aria-hidden="true">
                         <path
@@ -34,8 +33,8 @@
                             d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z"
                             fill="#EB4335" />
                     </svg>
-                    Sign up with Google
-                </button>
+                    Daftar dengan Google
+                </a>
 
                 <div
                     class="py-3 flex items-center text-xs text-gray-400 uppercase
@@ -43,13 +42,31 @@
                     after:flex-1 after:border-t after:border-gray-200 after:ms-6
                     dark:text-neutral-500 dark:before:border-neutral-600 dark:after:border-neutral-600">
                     Or
-                </div> --}}
+                </div>
 
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <!-- Form -->
-                <form>
+                <form action="{{ route('register') }}" method="POST">
+                    @csrf
                     <div class="grid gap-y-4">
                         <div>
-                            <label for="email" class="block text-sm mb-2 dark:text-white">Email address</label>
+                            <label for="name" class="block text-sm mb-2 dark:text-white">Nama</label>
+                            <input type="text" id="name" name="name"
+                                class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm
+                       focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700
+                       dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm mb-2 dark:text-white">Alamat Email</label>
                             <input type="email" id="email" name="email"
                                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm
                        focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700
@@ -67,9 +84,9 @@
                         </div>
 
                         <div>
-                            <label for="confirm-password" class="block text-sm mb-2 dark:text-white">Confirm
+                            <label for="password_confirmation" class="block text-sm mb-2 dark:text-white">Confirm
                                 Password</label>
-                            <input type="password" id="confirm-password" name="confirm-password"
+                            <input type="password" id="password_confirmation" name="password_confirmation"
                                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm
                        focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700
                        dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"

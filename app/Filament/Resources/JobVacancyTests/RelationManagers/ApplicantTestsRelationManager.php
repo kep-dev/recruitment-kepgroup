@@ -5,20 +5,28 @@ namespace App\Filament\Resources\JobVacancyTests\RelationManagers;
 use Filament\Tables\Table;
 use App\Models\Application;
 use Illuminate\Support\Str;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
+use Illuminate\Support\Collection;
+use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Pages\ApplicantTestAttemptPage;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
+use App\Traits\SendToken;
 
 class ApplicantTestsRelationManager extends RelationManager
 {
+    use SendToken;
     protected static string $relationship = 'applicantTests';
     protected static ?string $title = 'Pelamar Dalam Tes Ini';
 
@@ -56,25 +64,15 @@ class ApplicantTestsRelationManager extends RelationManager
                     ]
                 ),
             DateTimePicker::make('started_at')
-                ->label('Mulai')
-                ->required(),
+                ->label('Mulai'),
             DateTimePicker::make('completed_at')
-                ->label('Selesai')
-                ->required(),
+                ->label('Selesai'),
             TextInput::make('score')
                 ->label('Skor')
                 ->hiddenOn('create')
 
         ];
     }
-
-    // 'application_id',
-    //     'job_vacancy_test_id',
-    //     'access_token',
-    //     'status',
-    //     'started_at',
-    //     'completed_at',
-    //     'total_score',
 
     public function table(Table $table): Table
     {
@@ -100,16 +98,41 @@ class ApplicantTestsRelationManager extends RelationManager
                     ->label('Selesai')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('score')
+                TextColumn::make('total_score')
                     ->label('Skor')
             ])
             ->recordActions([
+                Action::make('ViewChoices')
+                    ->label('Periksa Jawaban')
+                    ->icon(LucideIcon::Eye)
+                    ->url(fn($record) => ApplicantTestAttemptPage::getUrl(['ApplicantTest' => $record->getKey()])),
                 EditAction::make()
                     ->schema($this->getFormSchema())
                     ->action(function ($record, array $data) {
                         $record->update($data);
                     }),
                 DeleteAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('sendToken')
+                        ->label('Kirim Token')
+                        ->action(function (Collection $records, array $data) {
+                            $records->each(function ($record) {
+                                // dd($record->application->user->applicant->phone_number);
+                                $this->generateWhatsappMessage([
+                                    'name'        => $record->application->user->name,
+                                    'job_title'   => $record->application->jobVacancy->title,
+                                    'company_name' => config('app.company_name', 'KEP Group'),
+                                    'token'       => $record->access_token,
+                                    'link'        => 'https://exam.kepgroup.com',
+                                    'active_from' => $record->jobVacancyTest->active_from,
+                                    'active_until' => $record->jobVacancyTest->active_until,
+                                    'contact'     => $record->application->user->applicant->phone_number,
+                                ]);
+                            });
+                        }),
+                ]),
             ])
             ->headerActions([
                 CreateAction::make()

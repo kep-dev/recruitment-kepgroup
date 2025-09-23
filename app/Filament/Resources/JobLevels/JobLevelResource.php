@@ -2,24 +2,27 @@
 
 namespace App\Filament\Resources\JobLevels;
 
-use App\Filament\Resources\JobLevels\Pages\ManageJobLevels;
-use App\Models\JobLevel;
+use UnitEnum;
 use BackedEnum;
-use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
+use App\Models\JobLevel;
+use Filament\Tables\Table;
+use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
+use Filament\Actions\DeleteAction;
 use Filament\Support\Icons\Heroicon;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-use UnitEnum;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ImageEntry;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
+use App\Filament\Resources\JobLevels\Pages\ManageJobLevels;
+use Filament\Tables\Columns\ImageColumn;
 
 class JobLevelResource extends Resource
 {
@@ -43,6 +46,14 @@ class JobLevelResource extends Resource
                     ->placeholder('Cont. Supervisor, Staff, Manager, dll')
                     ->columnSpanFull()
                     ->required(),
+                FileUpload::make('icon')
+                    ->columnSpanFull()
+                    ->label('Icon')
+                    ->image()
+                    ->disk('public')
+                    ->directory('job-levels')
+                    ->preserveFilenames()
+                    ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Deskripsi')
                     ->required()
@@ -56,6 +67,8 @@ class JobLevelResource extends Resource
             ->components([
                 TextEntry::make('name')
                     ->label('Level Jabatan'),
+                ImageEntry::make('icon')
+                    ->disk('public'),
                 TextEntry::make('description')
                     ->label('Deskripsi'),
                 TextEntry::make('created_at')
@@ -75,6 +88,8 @@ class JobLevelResource extends Resource
                 TextColumn::make('name')
                     ->label('Level Jabatan')
                     ->searchable(),
+                ImageColumn::make('icon')
+                    ->disk('public'),
                 TextColumn::make('description')
                     ->label('Deskripsi')
                     ->searchable(),

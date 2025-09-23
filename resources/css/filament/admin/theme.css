@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* (Opsional) tambahkan folder lain yang kamu gunakan */
+@source "../../../../resources/views";
+@source "../../../../app/Livewire";
+@source "../../../../resources/js";

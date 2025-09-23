@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('job_vacancy_test_id')->constrained('job_vacancy_tests')->cascadeOnDelete();
             $table->foreignUuid('test_id')->constrained('tests')->cascadeOnDelete();
+            $table->integer('number_of_question');
             $table->unsignedInteger('order')->default(1);
             $table->timestamps();
 

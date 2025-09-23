@@ -13,7 +13,6 @@ class Test extends Model
         'user_id',
         'title',
         'description',
-        'duration_in_minutes',
     ];
 
     public function questions()

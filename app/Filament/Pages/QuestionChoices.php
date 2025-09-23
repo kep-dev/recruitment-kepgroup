@@ -25,6 +25,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\DeleteAction;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Tables\Columns\ToggleColumn;
 
 class QuestionChoices extends Page implements HasActions, HasSchemas, HasTable
 {
@@ -114,7 +115,7 @@ class QuestionChoices extends Page implements HasActions, HasSchemas, HasTable
                     ->searchable(),
                 TextColumn::make('choice_text')
                     ->label('Jawaban')->searchable(),
-                TextColumn::make('is_correct')
+                ToggleColumn::make('is_correct')
                     ->label('Benar'),
             ])
             ->filters([

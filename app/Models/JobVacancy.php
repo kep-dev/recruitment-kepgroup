@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class JobVacancy extends Model implements HasMedia
 {
@@ -44,6 +46,7 @@ class JobVacancy extends Model implements HasMedia
     protected function casts()
     {
         return [
+            'status' => 'boolean',
             'start_date' => 'date:Y-m-d',
             'end_date' => 'date:Y-m-d',
         ];
@@ -88,4 +91,5 @@ class JobVacancy extends Model implements HasMedia
     {
         return $this->hasMany(JobVacancyStage::class);
     }
+
 }

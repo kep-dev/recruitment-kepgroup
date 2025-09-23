@@ -175,7 +175,7 @@ class JobVacancyForm
                                             ->required()
                                             ->columnSpanFull(),
                                         Select::make('job_level_id')
-                                        ->relationship('jobLevel', 'name')
+                                            ->relationship('jobLevel', 'name')
                                             ->label('Level Jabatan')
                                             // ->searchable()
                                             ->options(JobLevel::all()->pluck('name', 'id'))
@@ -207,6 +207,9 @@ class JobVacancyForm
                                         FileUpload::make('image')
                                             ->required()
                                             ->image()
+                                            ->disk('public')                // penting: simpan di disk public
+                                            ->directory('job-vacancies')    // opsional: folder khusus
+                                            ->preserveFilenames()
                                             ->columnSpanFull(),
                                     ])
                             ])

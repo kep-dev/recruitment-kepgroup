@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Enums\QuestionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -18,18 +19,11 @@ class Question extends Model
         'points',
     ];
 
-    public function type(): Attribute
+    protected function casts()
     {
-        return Attribute::make(
-            get: fn() => match ($this->attributes['type'] ?? null) {
-                'multiple_choice' => 'Pilihan Ganda',
-                'essay'           => 'Essay',
-                'true_false'      => 'Salah Benar',
-                'fill_in_blank'   => 'Isi Kosong',
-                'matching'        => 'Pencocokan',
-                default           => ucfirst(str_replace('_', ' ', $this->attributes['type'] ?? '')),
-            }
-        );
+        return [
+            'type' => QuestionType::class
+        ];
     }
 
     public function test()

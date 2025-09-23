@@ -8,6 +8,7 @@ class JobLevel extends Model
 {
     protected $fillable = [
         'name',
+        'icon',
         'description'
     ];
 }

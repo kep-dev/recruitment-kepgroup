@@ -25,6 +25,12 @@ class StageProgressesRelationManager extends RelationManager
 {
     protected static string $relationship = 'stageProgresses';
     protected static ?string $title = 'Tahap Lamaran';
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     // protected static ?string $relatedResource = ApplicationResource::class;
 
     protected function getFormSchema(): array

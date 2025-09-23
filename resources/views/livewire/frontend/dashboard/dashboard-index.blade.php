@@ -39,7 +39,6 @@
                                 </h2>
 
                                 <p class="mt-2 font-semibold text-black dark:text-white">
-                                    {{ $jobVacancy->start_date->format('d F Y') }} -
                                     {{ $jobVacancy->end_date->format('d F Y') }}
                                 </p>
                             </div>
@@ -100,7 +99,7 @@
 
                         <div class="mt-auto">
                             <a class="py-2 px-3 w-full inline-flex justify-center items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-yellow-400 text-black hover:bg-yellow-500 focus:outline-hidden focus:bg-yellow-500 transition disabled:opacity-50 disabled:pointer-events-none"
-                                href="#">
+                                href="">
                                 Lihat Lowongan
                             </a>
                         </div>
@@ -112,7 +111,7 @@
 
             <div class="mt-10 lg:mt-20 text-center">
                 <a class="relative inline-block font-medium md:text-lg text-black before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-yellow-400 hover:before:bg-black focus:outline-hidden focus:before:bg-black dark:text-white dark:hover:before:bg-white dark:focus:before:bg-white"
-                    href="#">
+                    href="{{ route('frontend.job') }}" wire:navigate>
                     Lihat Semua Lowongan
                 </a>
             </div>
@@ -137,8 +136,7 @@
                                 A Family Tradition of Rich, Aromatic Coffee
                             </p>
 
-                            <p
-                                class="text-xl sm:text-2xl lg:text-3xl lg:leading-normal text-gray-800">
+                            <p class="text-xl sm:text-2xl lg:text-3xl lg:leading-normal text-gray-800">
                                 Coffee has the power to connect generations – whether it's learning grandma's brewing
                                 techniques and trying to perfect them just like her or the intense memories triggered by
                                 the rich flavors and aromas of our favorite coffee blends.
@@ -279,4 +277,5 @@
         <!-- End Contact -->
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
+
 </div>

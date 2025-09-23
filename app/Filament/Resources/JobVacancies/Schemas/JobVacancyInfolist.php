@@ -10,6 +10,7 @@ use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
+use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
@@ -170,6 +171,7 @@ class JobVacancyInfolist
                                     ->schema([
                                         ImageEntry::make('image')
                                             ->label('Poster')
+                                            ->disk('public')
                                             ->hiddenLabel()
                                     ]),
                             ])

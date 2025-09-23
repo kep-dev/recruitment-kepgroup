@@ -7,17 +7,21 @@
     </div>
 
     <div
-        class="col-span-9 bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none shadow-2xs rounded-xl p-4 md:p-5 white:bg-neutral-900 white:border-neutral-700 white:text-neutral-400">
-        <h4 class="text-lg font-bold text-gray-800 dark:text-slate-100 mb-6">Availability</h4>
-        <div class="flex justify-between">
-            <span class="justify-start text-gray-800 dark:text-slate-100">I am open for job opportunities</span>
-            <label for="hs-basic-usage" class="relative inline-block w-11 h-6 cursor-pointer justify-end">
-                <input type="checkbox" id="hs-basic-usage" class="peer sr-only">
-                <span
-                    class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
-                <span
-                    class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
-            </label>
+        class="col-span-9 bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none shadow-2xs rounded-xl p-4 md:p-5">
+        <h4 class="text-lg font-bold text-gray-800 dark:text-slate-100 mb-6">Email Verification</h4>
+        <div class="flex justify-between items-center">
+            @if (auth()->user()->hasVerifiedEmail())
+                <span class="text-green-600 font-semibold">Email sudah terverifikasi</span>
+            @else
+                <span class="text-red-600 font-semibold">Email belum terverifikasi</span>
+                <form method="POST" action="{{ route('verification.send') }}">
+                    @csrf
+                    <button type="submit"
+                        class="px-4 py-2 ml-3 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Verifikasi Email
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 

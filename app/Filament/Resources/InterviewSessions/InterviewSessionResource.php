@@ -14,6 +14,7 @@ use App\Filament\Resources\InterviewSessions\Pages\EditInterviewSession;
 use App\Filament\Resources\InterviewSessions\Pages\ViewInterviewSession;
 use App\Filament\Resources\InterviewSessions\Pages\ListInterviewSessions;
 use App\Filament\Resources\InterviewSessions\Pages\CreateInterviewSession;
+use App\Filament\Resources\InterviewSessions\Pages\DetailInterviewPage;
 use App\Filament\Resources\InterviewSessions\Schemas\InterviewSessionForm;
 use App\Filament\Resources\InterviewSessions\Tables\InterviewSessionsTable;
 use App\Filament\Resources\InterviewSessions\Schemas\InterviewSessionInfolist;
@@ -61,6 +62,7 @@ class InterviewSessionResource extends Resource
             'create' => CreateInterviewSession::route('/create'),
             'view' => ViewInterviewSession::route('/{record}'),
             'edit' => EditInterviewSession::route('/{record}/edit'),
+            'detail-interview' => DetailInterviewPage::route('/{record}/detail-interview'),
         ];
     }
 }

@@ -4,14 +4,17 @@ namespace App\Filament\Resources\InterviewSessions\RelationManagers;
 
 use Filament\Tables\Table;
 use App\Models\Application;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\InterviewSessions\InterviewSessionResource;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\InterviewSessions\Pages\DetailInterviewPage;
 
 class InterviewApplicationsRelationManager extends RelationManager
 {
@@ -97,6 +100,12 @@ class InterviewApplicationsRelationManager extends RelationManager
                     }),
             ])
             ->recordActions([
+                Action::make('GiveAnAssessment')
+                    ->color('primary')
+                    ->icon(LucideIcon::Eye)
+                    ->label('Detail Penilaian')
+                    ->url(fn($record) => DetailInterviewPage::getUrl(['record' => $record->getKey()])),
+
                 EditAction::make()
                     ->label('Edit')
                     ->schema($this->getFormSchema())

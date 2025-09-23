@@ -55,11 +55,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel(Panel $panel): bool
     {
-        if ($this->hasAnyRole(['super_admin'])) {
+        if ($this->hasAnyRole(['super_admin', 'interviewer'])) {
             return true;
         }
 
-        // kalau bukan role yang diizinkan → redirect
         Redirect::to(url()->previous() ?: '/');
         return false;
     }

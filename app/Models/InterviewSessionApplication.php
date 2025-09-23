@@ -30,4 +30,9 @@ class InterviewSessionApplication extends Model
         return $this->belongsTo(Application::class);
     }
 
+    public function evaluations()
+    {
+        return $this->hasMany(InterviewEvaluation::class, 'interview_session_application_id');
+    }
+
 }

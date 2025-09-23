@@ -35,12 +35,14 @@ class ListCriterias extends Page implements HasActions, HasSchemas, HasTable
     protected string $view = 'filament.resources.interviews.pages.list-criterias';
     public $label;
     public $key;
+    public $interviewId;
 
     public function mount(int|string $record): void
     {
         $this->record = InterviewCriteria::find($record);
         $this->label = $this->record->label;
         $this->key = $this->record->getKey();
+        $this->interviewId = $this->record->interview_id;
     }
 
     public function getFormSchema(): array
@@ -64,7 +66,7 @@ class ListCriterias extends Page implements HasActions, HasSchemas, HasTable
                 ->label('Kembali')
                 ->url(fn(): string => route(
                     'filament.admin.resources.interviews.view',
-                    ['record' => $this->record->interview_id] // sesuaikan
+                    ['record' => $this->interviewId] // sesuaikan
                 )),
         ];
     }

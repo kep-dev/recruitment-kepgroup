@@ -5,20 +5,14 @@ namespace App\Filament\Resources\JobVacancies\Schemas;
 use App\Models\JobVacancy;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
-use Filament\Actions\CreateAction;
-use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
-use Illuminate\Support\Facades\Storage;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
-use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Forms\Components\RichEditor\RichContentRenderer;
 
 class JobVacancyInfolist
 {

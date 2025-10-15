@@ -52,6 +52,16 @@ class JobVacancy extends Model implements HasMedia
         ];
     }
 
+    public function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) =>
+            $value
+                ? Storage::disk('public')->url($value) . '?v=' . md5($value . filemtime(Storage::disk('public')->path($value)))
+                : null
+        );
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -91,5 +101,4 @@ class JobVacancy extends Model implements HasMedia
     {
         return $this->hasMany(JobVacancyStage::class);
     }
-
 }

@@ -54,13 +54,13 @@
     </div>
 
     <div class="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto space-y-4 ">
-        @foreach ($this->jobs as $job)
+        @forelse ($this->jobs as $job)
             <a href="{{ route('frontend.job.show', $job->slug) }}" wire:navigate
                 class="block rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition dark:bg-neutral-900 dark:border-neutral-800">
                 <div class="flex items-start gap-4 p-4 md:p-5">
                     <!-- Logo -->
                     <div class="shrink-0">
-                        <img src="{{ Storage::disk('public')->url($job->image) }}" alt="Company Logo"
+                        <img src="{{ $job->image }}" alt="Company Logo"
                             class="size-12 md:size-14 rounded-md object-cover">
                     </div>
 
@@ -70,33 +70,30 @@
                         <h3 class="text-base md:text-lg font-semibold text-gray-800 leading-snug dark:text-neutral-100">
                             {{ $job->title }}
                         </h3>
+
                         <!-- Company & meta line -->
                         <div class="mt-1 flex items-center gap-2 text-sm text-gray-500 dark:text-neutral-400">
-                            {{-- <span class="truncate "></span> --}}
                             <span class="hidden md:inline">{!! Str::limit($job->description, 20) !!}</span>
-                            <!-- Chips -->
                             <div class="flex flex-wrap gap-2">
                                 <span
-                                    class="inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700
-                        dark:bg-violet-400/10 dark:text-violet-300">
+                                    class="inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">
                                     {{ $job->employeeType->name }}
                                 </span>
                                 <span
-                                    class="inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700
-                        dark:bg-violet-400/10 dark:text-violet-300">
+                                    class="inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">
                                     {{ $job->jobLevel->name }}
                                 </span>
                                 <span
-                                    class="inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700
-                        dark:bg-violet-400/10 dark:text-violet-300">
+                                    class="inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">
                                     {{ $job->workType->name }}
                                 </span>
                             </div>
                         </div>
 
                         <!-- Quota -->
-                        <p class="my-2 text-xs text-gray-400 dark:text-neutral-500">Jumlah pelamar saat ini :
-                            {{ $job->applications_count }}</p>
+                        <p class="my-2 text-xs text-gray-400 dark:text-neutral-500">
+                            Jumlah pelamar saat ini : {{ $job->applications_count }}
+                        </p>
 
                         @auth
                             @if (in_array($job->id, $applications))
@@ -113,13 +110,11 @@
                                 </span>
                             @endif
                         @endauth
-
                     </div>
 
-                    <!-- Right: location + save -->
+                    <!-- Right -->
                     <div class="ms-auto flex items-center gap-4">
                         <div class="hidden sm:flex items-center text-sm text-gray-600 dark:text-neutral-300">
-                            <!-- map-pin icon -->
                             <div>
                                 <span
                                     class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium text-teal-800 rounded-full dark:text-teal-500">
@@ -132,20 +127,18 @@
                                         <path d="m9 12 2 2 4-4"></path>
                                     </svg>
                                     Berakhir dalam
-                                    {{ (int) \Carbon\Carbon::parse(now())->diffInDays(\Carbon\Carbon::parse($job->end_date)) }}
+                                    {{ (int) now()->diffInDays(\Carbon\Carbon::parse($job->end_date)) }}
                                     hari
                                 </span>
                             </div>
                         </div>
 
                         @auth
-                            <!-- Save / Bookmark -->
                             <button type="button"
-                                class="hs-tooltip inline-flex size-9 items-center justify-center rounded-lg
-                                    focus:outline-hidden
-                                    {{ in_array($job->id, $bookmarks)
-                                        ? 'text-yellow-500 hover:bg-yellow-50 dark:text-yellow-400 dark:hover:bg-yellow-400/10'
-                                        : 'text-violet-700 hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-400/10' }}"
+                                class="hs-tooltip inline-flex size-9 items-center justify-center rounded-lg focus:outline-hidden
+                            {{ in_array($job->id, $bookmarks)
+                                ? 'text-yellow-500 hover:bg-yellow-50 dark:text-yellow-400 dark:hover:bg-yellow-400/10'
+                                : 'text-violet-700 hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-400/10' }}"
                                 aria-label="Save" @click="$wire.addRemoveJobVacancy('{{ $job->id }}')">
                                 <svg class="size-5" xmlns="http://www.w3.org/2000/svg"
                                     fill="{{ in_array($job->id, $bookmarks) ? 'currentColor' : 'none' }}"
@@ -158,8 +151,30 @@
                     </div>
                 </div>
             </a>
-        @endforeach
+        @empty
+            <!-- Empty state -->
+            <div
+                class="col-span-full flex flex-col items-center justify-center text-center p-10 rounded-2xl border border-dashed border-gray-300 dark:border-neutral-700 bg-white/60 dark:bg-neutral-900/40">
+                <div
+                    class="mb-4 inline-flex items-center justify-center size-16 rounded-2xl bg-gray-100 dark:bg-neutral-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8 text-gray-600 dark:text-neutral-300"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M3 7v10a2 2 0 0 0 2 2h5m11-8v6a2 2 0 0 1-2 2h-7m9-12V7M7 7h10M7 11h6" />
+                    </svg>
+                </div>
+
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+                    Belum ada lowongan tersedia
+                </h3>
+                <p class="mt-2 text-sm text-gray-600 dark:text-neutral-300 max-w-md">
+                    Saat ini tidak ada pekerjaan yang diposting. Silakan cek kembali nanti atau aktifkan notifikasi.
+                </p>
+            </div>
+        @endforelse
+
         {{ $this->jobs->links() }}
     </div>
+
     <x-molecules.alerts.alert />
 </main>

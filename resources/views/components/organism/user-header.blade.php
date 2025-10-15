@@ -6,8 +6,13 @@
             <!-- Logo -->
             <a class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-hidden focus:opacity-80"
                 href="{{ route('frontend.dashboard') }}" aria-label="Cahaya Fajar Kaltim" wire:navigate>
-                <img src="{{ asset('images/include/cfk1new.png') }}" class="img-fluid" style="width:150px; height:100%;"
-                    alt="">
+
+                <img src="{{ asset('images/include/kep-black.png') }}" class="block dark:hidden"
+                    style="width:150px; height:100%;" alt="CFK Logo Light">
+
+                <!-- Logo saat Dark Mode -->
+                <img src="{{ asset('images/include/kep-white.png') }}" class="hidden dark:block"
+                    style="width:150px; height:100%;" alt="CFK Logo Dark">
             </a>
             <!-- End Logo -->
         </div>
@@ -165,22 +170,29 @@
             aria-labelledby="hs-pro-hcail-collapse">
             <div
                 class="flex flex-col gap-y-4 gap-x-0 mt-5 lg:flex-row lg:justify-center lg:items-center lg:gap-y-0 lg:gap-x-7 lg:mt-0">
+
+                {{-- Home --}}
                 <div>
-                    <a class="relative inline-block text-black focus:outline-hidden before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-yellow-400 dark:text-white"
-                        href="{{ route('frontend.dashboard') }}" aria-current="page" wire:navigate>Home</a>
+                    <a href="{{ route('frontend.dashboard') }}" wire:navigate
+                        class="relative inline-block pb-1 transition
+                {{ request()->routeIs('frontend.dashboard')
+                    ? 'text-black dark:text-white before:absolute before:bottom-0 before:left-0 before:w-full before:h-1 before:bg-yellow-400'
+                    : 'text-black hover:text-gray-600 dark:text-white dark:hover:text-neutral-300' }}">
+                        Home
+                    </a>
                 </div>
+
+                {{-- Jobs --}}
                 <div>
-                    <a class="inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 dark:text-white dark:hover:text-neutral-300 dark:focus:text-neutral-300"
-                        href="{{ route('frontend.job') }}" wire:navigate>Jobs</a>
+                    <a href="{{ route('frontend.job') }}" wire:navigate
+                        class="relative inline-block pb-1 transition
+                {{ request()->routeIs('frontend.job')
+                    ? 'text-black dark:text-white before:absolute before:bottom-0 before:left-0 before:w-full before:h-1 before:bg-yellow-400'
+                    : 'text-black hover:text-gray-600 dark:text-white dark:hover:text-neutral-300' }}">
+                        Jobs
+                    </a>
                 </div>
-                {{-- <div>
-                    <a class="inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 dark:text-white dark:hover:text-neutral-300 dark:focus:text-neutral-300"
-                        href="#">Product</a>
-                </div>
-                <div>
-                    <a class="inline-block text-black hover:text-gray-600 focus:outline-hidden focus:text-gray-600 dark:text-white dark:hover:text-neutral-300 dark:focus:text-neutral-300"
-                        href="#">Checkout</a>
-                </div> --}}
+
             </div>
         </div>
         <!-- End Collapse -->

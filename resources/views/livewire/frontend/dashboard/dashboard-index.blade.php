@@ -30,7 +30,7 @@
                         <div class="relative">
                             <div class="aspect-4/4 overflow-hidden rounded-2xl">
                                 <img class="size-full object-cover rounded-2xl"
-                                    src="{{ Storage::disk('public')->url($jobVacancy->image) }}" alt="Thumbnail">
+                                    src="{{ $jobVacancy->image }}" alt="Thumbnail">
                             </div>
 
                             <div class="pt-4">
@@ -114,7 +114,7 @@
                                 Belum ada lowongan tersedia
                             </h3>
                             <p class="mt-2 text-sm text-gray-600 dark:text-neutral-300 max-w-md">
-                                Saat ini tidak ada pekerjaan yang diposting. Silakan kembali lagi nanti atau buat
+                                Saat ini tidak ada pekerjaan yang diposting. Silakan kembali lagi nanti saat ada
                                 lowongan baru.
                             </p>
                         </div>
@@ -155,12 +155,15 @@
 
             <!-- End Card Grid -->
 
-            <div class="mt-10 lg:mt-20 text-center">
-                <a class="relative inline-block font-medium md:text-lg text-black before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-yellow-400 hover:before:bg-black focus:outline-hidden focus:before:bg-black dark:text-white dark:hover:before:bg-white dark:focus:before:bg-white"
-                    href="{{ route('frontend.job') }}" wire:navigate>
-                    Lihat Semua Lowongan
-                </a>
-            </div>
+            @if ($this->jobVacancies->count() > 0)
+                <div class="mt-10 lg:mt-20 text-center">
+                    <a class="relative inline-block font-medium md:text-lg text-black before:absolute before:bottom-0.5 before:start-0 before:-z-1 before:w-full before:h-1 before:bg-yellow-400 hover:before:bg-black focus:outline-hidden focus:before:bg-black dark:text-white dark:hover:before:bg-white dark:focus:before:bg-white"
+                        href="{{ route('frontend.job') }}" wire:navigate>
+                        Lihat Semua Lowongan
+                    </a>
+                </div>
+            @endif
+
         </div>
         <!-- End Works -->
 

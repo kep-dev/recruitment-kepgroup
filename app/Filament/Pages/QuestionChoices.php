@@ -105,8 +105,8 @@ class QuestionChoices extends Page implements HasActions, HasSchemas, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Pertanyaan')
-            ->description($this->question_id->question_text)
+            // ->heading('Pertanyaan')
+            // ->description($this->question_id->question_text)
             ->columns([
                 TextColumn::make('id')->rowIndex()
                     ->label('No'),

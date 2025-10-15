@@ -9,11 +9,9 @@
 
         <!-- Banner -->
         <div class="relative w-full rounded-xl overflow-hidden">
-            <img src="{{ Storage::disk('public')->url($JobVacancy->image) }}" alt="Banner"
-                class="w-full h-56 object-cover">
+            <img src="{{ $JobVacancy->image }}" alt="Banner" class="w-full h-56 object-cover">
             <div class="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow">
-                <img src="{{ Storage::disk('public')->url($JobVacancy->image) }}"
-                    class="size-12 md:size-14 rounded-md object-cover">
+                <img src="{{ $JobVacancy->image }}" class="size-12 md:size-14 rounded-md object-cover">
             </div>
         </div>
 

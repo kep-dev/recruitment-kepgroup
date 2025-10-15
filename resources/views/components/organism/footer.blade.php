@@ -5,7 +5,13 @@
             <div class="text-center md:text-start">
                 <!-- Logo -->
                 <a href="index.html" aria-label="Cahaya Fajar Kaltim">
-                    <img src="{{ asset('images/include/cfk1new.png') }}" class="img-fluid" style="width:150px; height:100%;" alt="">
+                    {{-- <img src="{{ asset('images/include/cfk1new.png') }}" class="img-fluid" style="width:150px; height:100%;" alt=""> --}}
+                    <img src="{{ asset('images/include/kep-black.png') }}" class="block dark:hidden"
+                        style="width:150px; height:100%;" alt="CFK Logo Light">
+
+                    <!-- Logo saat Dark Mode -->
+                    <img src="{{ asset('images/include/kep-white.png') }}" class="hidden dark:block"
+                        style="width:150px; height:100%;" alt="CFK Logo Dark">
                 </a>
                 <!-- End Logo -->
             </div>

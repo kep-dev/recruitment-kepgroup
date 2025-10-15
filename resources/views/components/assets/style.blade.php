@@ -1,5 +1,5 @@
     <!-- Favicon -->
-    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="shortcut icon" href="{{ asset('images/include/cfk-underword.png') }}">
     <!-- Font -->
     {{-- css --}}
     <link href={{ asset('css/addition.css') }} rel="stylesheet" />

@@ -25,9 +25,19 @@ class Applicant extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'user_id', 'user_id');
+    }
+
     public function educations()
     {
         return $this->hasMany(Education::class, 'user_id', 'user_id');
+    }
+
+    public function latestEducation()
+    {
+        return $this->hasOne(Education::class, 'user_id', 'user_id')->latestOfMany();
     }
 
     public function workExperiences()
@@ -74,4 +84,5 @@ class Applicant extends Model
     {
         return $this->hasMany(Salary::class, 'user_id', 'user_id');
     }
+
 }

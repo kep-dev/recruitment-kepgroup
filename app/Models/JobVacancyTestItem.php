@@ -12,6 +12,7 @@ class JobVacancyTestItem extends Model
     protected $fillable = [
         'job_vacancy_test_id',
         'test_id',
+        'minimum_score',
         'number_of_question',
         'duration_in_minutes',
         'order',

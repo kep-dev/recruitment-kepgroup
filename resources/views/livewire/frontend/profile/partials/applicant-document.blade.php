@@ -22,7 +22,7 @@
                                 <div class="flex justify-between w-full">
                                     {{ $document->vacancyDocument->name }}
                                     <div>
-                                        <a href="">
+                                        <a href="{{ $document->getFirstMediaUrl($document->vacancyDocument->name) }}">
                                             <span
                                                 class="inline-flex items-center py-1 px-2 rounded-full text-xs font-medium text-blue-600">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -35,9 +35,7 @@
                                                 </svg>
                                             </span>
                                         </a>
-                                        <a href="javascript:;"
-                                        @click="$wire.deleteDocument('{{ $document->id }}')"
-                                        >
+                                        <a href="javascript:;" @click="$wire.deleteDocument('{{ $document->id }}')">
                                             <span
                                                 class="inline-flex items-center py-1 px-2 rounded-full text-xs font-medium text-red-600">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"

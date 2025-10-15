@@ -44,7 +44,7 @@ class ApplicantDocument extends Component
                 'vacancy_document_id' => 'required|exists:vacancy_documents,id',
                 'applicantDocument' => 'required|mimes:pdf|max:2048',
             ]);
-            $vacancyDocument = VacancyDocument::find($validated['vacancy_document_id'])->value('name');
+            $vacancyDocument = VacancyDocument::find($validated['vacancy_document_id'])->name;
             // dd($vacancyDocument);
             $document = Auth::user()->documents()->create([
                 'vacancy_document_id' => $validated['vacancy_document_id'],

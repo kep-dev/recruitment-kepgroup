@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\JobVacancies\RelationManagers;
 
-use App\Filament\Resources\JobVacancies\JobVacancyResource;
-use Filament\Actions\CreateAction;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\Applicants\ApplicantResource;
 use Filament\Tables\Table;
+use Filament\Actions\ViewAction;
+use Filament\Actions\CreateAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Resources\RelationManagers\RelationManager;
+use App\Filament\Resources\JobVacancies\JobVacancyResource;
 
 class ApplicationsRelationManager extends RelationManager
 {
@@ -33,16 +35,23 @@ class ApplicationsRelationManager extends RelationManager
                     ->label('Tanggal Lamaran')
                     ->dateTime(),
                 TextColumn::make('latestEducation_education_level')
-                    ->state(fn ($record) => $record->user?->latestEducation?->education_level)
-                    ->formatStateUsing(fn ($state) => $state ?? '-')
+                    ->state(fn($record) => $record->user?->latestEducation?->education_level)
+                    ->formatStateUsing(fn($state) => $state ?? '-')
                     ->label('Tingkat Pendidikan'),
                 TextColumn::make('latestEducation_major')
-                    ->state(fn ($record) => $record->user?->latestEducation?->major)
-                    ->formatStateUsing(fn ($state) => $state ?? '-')
+                    ->state(fn($record) => $record->user?->latestEducation?->major)
+                    ->formatStateUsing(fn($state) => $state ?? '-')
                     ->label('Jurusan'),
             ])
+            ->recordActions([
+                ViewAction::make()
+                    ->url(fn($record): string => route(
+                        'filament.admin.resources.applicants.view',
+                        ['record' => $record->applicant->id] // sesuaikan
+                    ))
+            ])
             ->headerActions([
-                CreateAction::make(),
+                // CreateAction::make(),
             ]);
     }
 }

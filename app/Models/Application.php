@@ -19,6 +19,11 @@ class Application extends Model
         'note'
     ];
 
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class, 'user_id', 'user_id');
+    }
+
     public function jobVacancy()
     {
         return $this->belongsTo(JobVacancy::class);
@@ -49,4 +54,8 @@ class Application extends Model
         return $this->hasMany(ApplicationStatusHistory::class);
     }
 
+    public function applicantTests()
+    {
+        return $this->hasOne(ApplicantTest::class, 'application_id');
+    }
 }

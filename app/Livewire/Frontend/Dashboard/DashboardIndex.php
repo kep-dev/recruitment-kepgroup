@@ -2,8 +2,9 @@
 
 namespace App\Livewire\Frontend\Dashboard;
 
-use App\Models\JobVacancy;
 use Livewire\Component;
+use App\Models\JobVacancy;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Layout, Title, Computed};
 
 #[Layout('components.layouts.app')]
@@ -19,6 +20,7 @@ class DashboardIndex extends Component
                 'employeeType',
                 'jobLevel',
             ])
+            ->whereDate('end_date', '>', \Carbon\Carbon::now())
             ->where('status', true)
             ->latest()
             ->take(6)

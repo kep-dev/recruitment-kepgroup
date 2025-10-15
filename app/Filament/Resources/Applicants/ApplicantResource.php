@@ -16,6 +16,7 @@ use App\Filament\Resources\Applicants\Pages\CreateApplicant;
 use App\Filament\Resources\Applicants\Schemas\ApplicantForm;
 use App\Filament\Resources\Applicants\Tables\ApplicantsTable;
 use App\Filament\Resources\Applicants\Schemas\ApplicantInfolist;
+use App\Filament\Resources\Applicants\RelationManagers\DocumentsRelationManager;
 use App\Filament\Resources\Applicants\RelationManagers\LanguagesRelationManager;
 use App\Filament\Resources\Applicants\RelationManagers\EducationsRelationManager;
 use App\Filament\Resources\Applicants\RelationManagers\AchievmentsRelationManager;
@@ -57,6 +58,7 @@ class ApplicantResource extends Resource
             OrganizationalExperiencesRelationManager::class,
             TrainingCertificationsRelationManager::class,
             AchievementsRelationManager::class,
+            DocumentsRelationManager::class
         ];
     }
 

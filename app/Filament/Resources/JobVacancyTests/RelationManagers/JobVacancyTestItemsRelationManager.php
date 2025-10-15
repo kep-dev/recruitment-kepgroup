@@ -40,11 +40,15 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                         ->whereNotIn('id', $this->getOwnerRecord()->jobVacancyTestItems()->pluck('test_id'))
                         ->pluck('title', 'id')
                 )
-                ->default($this->record->test_id ?? null)
+                ->hidden(EditAction::class)
                 ->searchable()
                 ->required(),
             TextInput::make('number_of_question')
                 ->label('Jumlah Soal')
+                ->required()
+                ->numeric(),
+            TextInput::make('minimum_score')
+                ->label('Skor Minimal')
                 ->required()
                 ->numeric(),
             TextInput::make('duration_in_minutes')
@@ -70,6 +74,9 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                 TextColumn::make('number_of_question')
                     ->label('Jumlah Soal')
                     ->sortable(),
+                TextColumn::make('minimum_score')
+                    ->label('Skor Minimal')
+                    ->sortable(),
                 TextColumn::make('duration_in_minutes')
                     ->label('Durasi (menit)')
                     ->sortable(),
@@ -82,6 +89,7 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                     ->label('Edit')
                     ->schema($this->getFormSchema())
                     ->action(function ($record, array $data) {
+                        ds($data);
                         $record->update($data);
                     }),
 

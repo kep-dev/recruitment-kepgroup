@@ -80,7 +80,7 @@
                         class="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-800">
                         <div class="flex items-start justify-between gap-4">
                             <h3 class="text-base md:text-lg font-semibold text-gray-800 dark:text-neutral-100">
-                                {!! nl2br(e($q->question_text)) !!}
+                               {!! $q->question_text  !!}
                             </h3>
                             <span
                                 class="inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-neutral-800 dark:text-neutral-300">
@@ -91,23 +91,45 @@
                         <div class="mt-4 space-y-4 text-sm text-gray-700 dark:text-neutral-200">
                             {{-- MULTIPLE CHOICE --}}
                             @if ($q->type === QuestionType::multiple_choice)
-                                @php $selected = $answers[$q->id] ?? null; @endphp
+                                @php
+                                    // 1) Sort choices by label naturally: A,B,C,D,...
+                                    $choices = collect($q->choices ?? [])
+                                        ->sortBy('choice_label', SORT_NATURAL | SORT_FLAG_CASE)
+                                        ->values();
+
+                                    // 2) Ambil jawaban yang sudah tersimpan (jika ada)
+                                    $selected = $answers[$q->id] ?? null;
+                                @endphp
+
+                                {{-- Tampilkan stem/soal dari RichText Filament (HTML apa adanya) --}}
+                                <div class="mb-4">
+                                    <div class="richtext-content">
+                                        {!! $q->question_html ?? ($q->question ?? '') !!}
+                                    </div>
+                                </div>
+
                                 <div class="space-y-2">
-                                    @foreach ($q->choices ?? [] as $opt)
+                                    @foreach ($choices as $opt)
                                         <label
-                                            class="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 cursor-pointer dark:border-neutral-800 dark:bg-neutral-800/60">
+                                            class="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3 cursor-pointer dark:border-neutral-800 dark:bg-neutral-800/60"
+                                            wire:key="q{{ $q->id }}-{{ $opt->choice_label }}">
                                             <input type="radio" class="mt-1 shrink-0"
                                                 id="answer-{{ $q->id }}-{{ $opt->choice_label }}"
                                                 name="answer-{{ $q->id }}"
                                                 wire:change="setAnswer('{{ $q->id }}', '{{ $opt->choice_label }}')"
                                                 @checked($selected === $opt->choice_label) />
+
                                             <div class="min-w-0">
                                                 <div class="font-medium">
                                                     <span
                                                         class="inline-flex size-6 items-center justify-center rounded-md bg-gray-200 text-gray-700 text-xs mr-2 dark:bg-neutral-700 dark:text-neutral-200">
                                                         {{ $opt->choice_label }}
                                                     </span>
-                                                    {!! nl2br(e($opt->choice_text)) !!}
+
+                                                    {{-- Choice text dari RichText: render HTML (biar <p>, <img>, <ul> tampil) --}}
+                                                    <span class="richtext-content align-middle">
+                                                        {!! $opt->choice_text !!}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </label>

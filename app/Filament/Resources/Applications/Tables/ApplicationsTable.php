@@ -9,22 +9,25 @@ use Filament\Tables\Table;
 use App\Models\Application;
 use Filament\Actions\Action;
 use App\Models\JobVacancyStage;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\BulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Grouping\Group;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Blade;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
-use Filament\Tables\Filters\SelectFilter;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 
 class ApplicationsTable
 {
@@ -36,6 +39,9 @@ class ApplicationsTable
                 Group::make('jobVacancy.title')
                     ->label('Lowongan')
                     ->collapsible(),
+            ])
+            ->headerActions([
+                FilamentExportHeaderAction::make('export')
             ])
             ->columns([
                 TextColumn::make('user.name')
@@ -107,6 +113,20 @@ class ApplicationsTable
 
                 //         $record->stageProgresses()->create($data);
                 //     }),
+                Action::make('printResume')
+                    ->label('Cetak Resume')
+                    ->icon(LucideIcon::Printer)
+                    ->action(function (Model $record) {
+                        ds($record->applicantTests->attempts
+                            ->load('jobVacancyTestItem.test'));
+                        return response()->streamDownload(function () use ($record) {
+                            echo Pdf::loadHtml(
+                                Blade::render('print.application.application-pdf', ['record' => $record])
+                            )->stream();
+                        }, 'tes' . '.pdf');
+                    }),
+                // ->url(fn(Model $reco,rd) => route('applications.print', $record))
+                // ->openUrlInNewTab(),
                 ViewAction::make(),
                 EditAction::make(),
             ])

@@ -1,4 +1,4 @@
-<main id="content" x-data="{word: 'aaaaaa'}">
+<main id="content" x-data="{ word: 'aaaaaa' }">
     <div class="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto space-y-4 py-12">
         <div class="relative">
             <input type="text" wire:model.live.debounce.500ms='search'
@@ -60,7 +60,7 @@
                 <div class="flex items-start gap-4 p-4 md:p-5">
                     <!-- Logo -->
                     <div class="shrink-0">
-                        <img src="{{ $job->image }}" alt="Company Logo"
+                        <img src="{{ Storage::disk('public')->url($job->image) }}" alt="Company Logo"
                             class="size-12 md:size-14 rounded-md object-cover">
                     </div>
 

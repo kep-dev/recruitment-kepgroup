@@ -12,7 +12,7 @@
             <div class="flex items-start gap-4 p-4 md:p-5">
                 <!-- Logo -->
                 <div class="shrink-0">
-                    <img src="{{ $savedVacancy->jobVacancy->image }}" alt="Company Logo"
+                    <img src="{{ Storage::disk('public')->url($savedVacancy->jobVacancy->image) }}" alt="Company Logo"
                         class="size-12 md:size-14 rounded-md object-cover">
                 </div>
 

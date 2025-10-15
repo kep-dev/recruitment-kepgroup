@@ -25,12 +25,12 @@
             <!-- Card Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
                 <!-- Card -->
-                @foreach ($this->jobVacancies as $jobVacancy)
+                @forelse ($this->jobVacancies as $jobVacancy)
                     <div class="group flex flex-col">
                         <div class="relative">
                             <div class="aspect-4/4 overflow-hidden rounded-2xl">
-                                <img class="size-full object-cover rounded-2xl" src="{{ $jobVacancy->image }}"
-                                    alt="Product Image">
+                                <img class="size-full object-cover rounded-2xl"
+                                    src="{{ Storage::disk('public')->url($jobVacancy->image) }}" alt="Thumbnail">
                             </div>
 
                             <div class="pt-4">
@@ -47,66 +47,124 @@
                         </div>
 
                         <div class="mb-2 mt-4 text-sm">
-                            <!-- List -->
                             <div class="flex flex-col">
-                                <!-- Item -->
                                 <div class="py-3 border-t border-gray-200 dark:border-neutral-700">
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <span class="font-medium text-black dark:text-white">Jenis Pekerjaan</span>
                                         </div>
-
                                         <div class="text-end">
                                             <span
                                                 class="text-black dark:text-white">{{ $jobVacancy->workType->name }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End Item -->
 
-                                <!-- Item -->
                                 <div class="py-3 border-t border-gray-200 dark:border-neutral-700">
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <span class="font-medium text-black dark:text-white">Level Pekerjaan</span>
                                         </div>
-
                                         <div class="text-end">
                                             <span
                                                 class="text-black dark:text-white">{{ $jobVacancy->employeeType->name }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End Item -->
 
-                                <!-- Item -->
                                 <div class="py-3 border-t border-gray-200 dark:border-neutral-700">
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <span class="font-medium text-black dark:text-white">Status Karyawan</span>
                                         </div>
-
                                         <div class="flex justify-end">
                                             <span
                                                 class="text-black dark:text-white">{{ $jobVacancy->jobLevel->name }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End Item -->
                             </div>
-                            <!-- End List -->
                         </div>
 
                         <div class="mt-auto">
                             <a class="py-2 px-3 w-full inline-flex justify-center items-center gap-x-2 text-sm font-medium text-nowrap rounded-xl border border-transparent bg-yellow-400 text-black hover:bg-yellow-500 focus:outline-hidden focus:bg-yellow-500 transition disabled:opacity-50 disabled:pointer-events-none"
-                                href="">
+                                href="{{ route('frontend.job.show', $jobVacancy->slug) }}" wire:navigate>
                                 Lihat Lowongan
                             </a>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <!-- Empty State (spans full width) -->
+                    <div class="col-span-full">
+                        <div
+                            class="flex flex-col items-center justify-center text-center p-10 rounded-2xl border border-dashed border-gray-300 dark:border-neutral-700 bg-white/60 dark:bg-neutral-900/40">
+                            <!-- Icon -->
+                            <div
+                                class="mb-4 inline-flex items-center justify-center size-16 rounded-2xl bg-gray-100 dark:bg-neutral-800">
+                                <!-- simple SVG icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="size-8 text-gray-600 dark:text-neutral-300" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M3 7v10a2 2 0 0 0 2 2h5m11-8v6a2 2 0 0 1-2 2h-7m9-12V7M7 7h10M7 11h6" />
+                                </svg>
+                            </div>
+
+                            <h3 class="text-base/6 font-semibold text-gray-900 dark:text-white">
+                                Belum ada lowongan tersedia
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-600 dark:text-neutral-300 max-w-md">
+                                Saat ini tidak ada pekerjaan yang diposting. Silakan kembali lagi nanti atau buat
+                                lowongan baru.
+                            </p>
+
+                            <div class="mt-6 flex items-center gap-3">
+                                {{-- tombol opsional, sesuaikan rutenya --}}
+                                <a href="{{ route('job-vacancies.create') }}"
+                                    class="inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-sm font-medium bg-yellow-400 text-black hover:bg-yellow-500 focus:outline-hidden focus:bg-yellow-500 transition">
+                                    Tambah Lowongan
+                                </a>
+                                <button type="button" data-hs-overlay="#filter-lowongan"
+                                    class="inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-sm font-medium border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-800">
+                                    Filter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Empty State -->
+                @endforelse
                 <!-- End Card -->
             </div>
+
+            <!-- Contoh Preline Overlay untuk filter (opsional) -->
+            {{-- <div id="filter-lowongan"
+                class="hs-overlay hs-overlay-open:mt-0 hidden fixed top-0 start-0 size-full z-[60] overflow-y-auto">
+                <div class="m-3 sm:mx-auto sm:w-full sm:max-w-lg">
+                    <div class="bg-white dark:bg-neutral-900 rounded-2xl shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-base font-semibold text-gray-900 dark:text-white">Filter Lowongan</h4>
+                            <button type="button"
+                                class="size-8 inline-flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
+                                data-hs-overlay="#filter-lowongan">
+                                <span class="sr-only">Close</span>
+                                ✕
+                            </button>
+                        </div>
+                        <div class="mt-5 space-y-4">
+                            <!-- isi filter kamu -->
+                            <input type="text" class="w-full rounded-xl border-gray-300 dark:border-neutral-700"
+                                placeholder="Cari posisi…">
+                        </div>
+                        <div class="mt-6 flex justify-end gap-3">
+                            <button
+                                class="px-4 py-2 rounded-xl border border-gray-300 dark:border-neutral-700">Reset</button>
+                            <button
+                                class="px-4 py-2 rounded-xl bg-yellow-400 text-black hover:bg-yellow-500">Terapkan</button>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+
             <!-- End Card Grid -->
 
             <div class="mt-10 lg:mt-20 text-center">
@@ -223,9 +281,9 @@
                         <div class="grid sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
                             <div class="flex gap-4">
                                 <svg class="shrink-0 size-5 text-gray-500 dark:text-neutral-500"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <path
                                         d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z">
                                     </path>

@@ -12,7 +12,7 @@
             <div class="flex items-start gap-4 p-4 md:p-5">
                 <!-- Logo -->
                 <div class="shrink-0">
-                    <img src="{{ $application->jobVacancy->image }}" alt="Company Logo"
+                    <img src="{{ Storage::disk('public')->url($application->jobVacancy->imag) }}" alt="Company Logo"
                         class="size-12 md:size-14 rounded-md object-cover">
                 </div>
 
@@ -193,7 +193,7 @@
                     </button>
                     <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none"
                         href="javascript:;"
-                        @click="$wire.cancelApplication('{{ $application->id }}'); $nextTick(() => {
+                        @click="$wire.cancelApplication(); $nextTick(() => {
                             HSOverlay.close('#CancelModal')
                         })">
                         Batalkan Lamaran

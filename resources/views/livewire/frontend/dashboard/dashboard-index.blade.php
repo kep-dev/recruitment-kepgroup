@@ -117,18 +117,6 @@
                                 Saat ini tidak ada pekerjaan yang diposting. Silakan kembali lagi nanti atau buat
                                 lowongan baru.
                             </p>
-
-                            <div class="mt-6 flex items-center gap-3">
-                                {{-- tombol opsional, sesuaikan rutenya --}}
-                                <a href="{{ route('job-vacancies.create') }}"
-                                    class="inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-sm font-medium bg-yellow-400 text-black hover:bg-yellow-500 focus:outline-hidden focus:bg-yellow-500 transition">
-                                    Tambah Lowongan
-                                </a>
-                                <button type="button" data-hs-overlay="#filter-lowongan"
-                                    class="inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-sm font-medium border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-800">
-                                    Filter
-                                </button>
-                            </div>
                         </div>
                     </div>
                     <!-- /Empty State -->

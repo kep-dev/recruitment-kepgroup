@@ -40,7 +40,7 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                         ->whereNotIn('id', $this->getOwnerRecord()->jobVacancyTestItems()->pluck('test_id'))
                         ->pluck('title', 'id')
                 )
-                ->hidden(EditAction::class)
+                // ->hidden(EditAction::class)
                 ->searchable()
                 ->required(),
             TextInput::make('number_of_question')

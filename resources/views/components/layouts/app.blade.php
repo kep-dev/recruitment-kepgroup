@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title . ' | Recruitment KEP Group' ?? 'Recruitment KEP Group' }}</title>
     <x-assets.style />
+    <style>[x-cloak]{display:none!important}</style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 

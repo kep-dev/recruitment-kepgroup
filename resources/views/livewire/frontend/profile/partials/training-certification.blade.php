@@ -35,8 +35,7 @@
                     <div class="flex items-center gap-3 shrink-0">
                         <!-- Edit -->
                         <button class="text-indigo-600 hover:text-indigo-800" title="Edit"
-                        @click="$dispatch('updateTrainingCertification', {id: '{{ $trainingCertification->id }}'})"
-                        >
+                            @click="$dispatch('updateTrainingCertification', {id: '{{ $trainingCertification->id }}'})">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil">
@@ -169,10 +168,26 @@
                         data-hs-overlay="#latestTrainingCertification">
                         Close
                     </button>
-                    <button type="button" @click="$wire.updateTrainingCertification"
+                    <button type="button" @click="$wire.updateTrainingCertification" wire:loading.attr="disabled"
+                        wire:target="updateTrainingCertification"
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                        Save changes
+                        <!-- Teks normal -->
+                        <span wire:loading.remove wire:target="updateTrainingCertification">
+                            Save changes
+                        </span>
+
+                        <!-- Teks saat loading -->
+                        <span wire:loading wire:target="updateTrainingCertification" class="flex items-center gap-2">
+                            {{-- <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg> --}}
+                            Loading...
+                        </span>
                     </button>
+
                 </div>
             </div>
         </div>

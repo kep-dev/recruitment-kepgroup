@@ -45,12 +45,12 @@ class JobsShow extends Component
                     'applied_at' => now(),
                 ]);
 
-                $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil mendaftar.', timeout: 1500);
+                $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil mendaftar.', timeout: 3000);
                 $this->dispatch('closeModal');
                 unset($this->applied);
             }
         } catch (\Exception $th) {
-            $this->dispatch('notification', type: 'error', title: 'Gagal!', message: $th->getMessage(), timeout: 1500);
+            $this->dispatch('notification', type: 'error', title: 'Gagal!', message: $th->getMessage(), timeout: 3000);
             $this->dispatch('closeModal');
         }
     }

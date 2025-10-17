@@ -64,7 +64,7 @@
     <livewire:frontend.profile.partials.language :user="$user" />
     <livewire:frontend.profile.partials.applicant-skill :user="$user" />
     <livewire:frontend.profile.partials.applicant-social-media :user="$user" />
-    <livewire:frontend.profile.partials.applicant-salary :user="$user" />
+    {{-- <livewire:frontend.profile.partials.applicant-salary :user="$user" /> --}}
     <livewire:frontend.profile.partials.applicant-document :user="$user" />
 
     {{-- Years of Full-time Work Experience --}}

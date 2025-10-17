@@ -34,7 +34,7 @@ class ApplicantSkill extends Component
 
             unset($this->skills);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui keahlian.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui keahlian.', timeout: 3000);
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
@@ -46,7 +46,7 @@ class ApplicantSkill extends Component
     {
         Skill::find($id)->delete();
         unset($this->skills);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus keahlian.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus keahlian.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

@@ -6,7 +6,7 @@
                 class="row-span-3 col-span-12 md:col-span-12 lg:col-span-3 bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none shadow-2xs rounded-xl p-4 md:p-5 white:bg-neutral-900 white:border-neutral-700 white:text-neutral-400">
                 <div class="p-2 flex items-center border-b border-gray-200 rounded-t-xl dark:border-neutral-700">
                     <img class="inline-block rounded-full" style="width:50px; height:50px; object-fit:cover"
-                        src="{{ asset('images/include/powerplants.jpg') }}" alt="Avatar">
+                        src="{{ Auth::user()->applicant->photo }}" alt="Avatar">
                     <h4 class="mx-4 text-md text-gray-800 dark:text-slate-100">
                         {{ Auth::user()->name }}
                     </h4>

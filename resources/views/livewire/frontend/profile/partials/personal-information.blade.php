@@ -27,52 +27,40 @@
                         <path d="m15 5 4 4" />
                     </svg>
                 </button>
+
             </div>
         </div>
 
         <!-- Body -->
         <div class="p-5 md:p-6">
             <!-- Avatar di ATAS tulisan -->
-            <img src="{{ asset('images/include/powerplants.jpg') }}" alt="Avatar" class="rounded-full"
+            <img src="{{ $user->applicant->photo }}" alt="Avatar" class="rounded-full"
                 style="width:100px; height:100px; object-fit:cover" />
 
             <!-- Grid informasi -->
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-6">
                 <!-- Name -->
                 <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Name</p>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Nama</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->name }}</p>
                 </div>
 
                 <!-- NIK -->
                 <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">NIK</p>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Nomor Induk Kependudukan</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->nik }}</p>
                 </div>
 
                 <!-- Date of Birth -->
                 <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Date of Birth</p>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Tanggal Lahir</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->date_of_birth }}</p>
                 </div>
 
                 <!-- Gender -->
                 <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Gender</p>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Jenis Kelamin</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->gender }}</p>
-                </div>
-
-                <!-- Location -->
-                <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Location</p>
-                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->city }},
-                        {{ $user->applicant->province }}</p>
-                </div>
-
-                <!-- Phone -->
-                <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Phone</p>
-                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->phone_number }}</p>
                 </div>
 
                 <!-- Email -->
@@ -87,6 +75,26 @@
                         </svg> --}}
                     </div>
                 </div>
+
+                <!-- Phone -->
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Nomer Handphone</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->phone_number }}</p>
+                </div>
+                <!-- Location -->
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Alamat</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">
+                        {{ $user->applicant->province->name .
+                            ', ' .
+                            $user->applicant->district->name .
+                            ', ' .
+                            $user->applicant->regency->name .
+                            ', ' .
+                            $user->applicant->village->name }}
+                    </p>
+                </div>
+
                 <!-- LinkedIn -->
                 {{-- <div class="sm:col-span-2">
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Linkedin Profile</p>
@@ -105,11 +113,15 @@
     <div id="hs-vertically-centered-scrollable-modal"
         class="hs-overlay hidden size-full fixed top-0 start-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
         role="dialog" tabindex="-1" aria-labelledby="hs-vertically-centered-scrollable-modal-label"
-        @close.window="$wire.rererer()" wire:ignore wire:ignore.self>
+        @close.window="$wire.rererer()" wire:ignore.self>
+
+        <!-- wrapper: vertically centered -->
         <div
-            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto h-[calc(100%-56px)] min-h-[calc(100%-56px)] flex items-center">
+            class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all md:max-w-2xl md:w-full m-3 md:mx-auto min-h-[calc(100%-56px)] flex items-center">
             <div
                 class="w-full max-h-full overflow-hidden flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+
+                <!-- HEADER -->
                 <div
                     class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
                     <h3 id="hs-vertically-centered-scrollable-modal-label"
@@ -117,7 +129,7 @@
                         Informasi Pribadi
                     </h3>
                     <button type="button"
-                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
                         aria-label="Close" data-hs-overlay="#hs-vertically-centered-scrollable-modal">
                         <span class="sr-only">Close</span>
                         <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -128,69 +140,166 @@
                         </svg>
                     </button>
                 </div>
+
+                <!-- BODY -->
                 <div class="p-4 overflow-y-auto">
-                    <div class="space-y-4">
-                        {{-- <div class="max-w-full">
-                            <label for="name" class="block text-sm font-medium mb-2 dark:text-white">Nama</label>
-                            <input wire:model='name' type="text" id="name"
-                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
-                        </div> --}}
-                        <div class="max-w-full">
-                            <label for="nik" class="block text-sm font-medium mb-2 dark:text-white">NIK</label>
-                            <input wire:model='nik' type="number" id="nik" minlength="16"
-                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    <div x-data="{
+                        preview: null,
+                        defaultUrl: @js($user->applicant->photo ?? asset('images/avatar-placeholder.png')),
+                        pick() { $refs.file.click() },
+                        change(e) {
+                            const f = e.target.files[0];
+                            if (!f) return;
+                            if (!['image/jpeg', 'image/png', 'image/webp'].includes(f.type) || f.size > 2 * 1024 * 1024) {
+                                alert('Hanya JPEG/PNG/WEBP, maks. 2MB');
+                                e.target.value = '';
+                                return;
+                            }
+                            this.preview = URL.createObjectURL(f);
+                        }
+                    }" class="flex items-start gap-5 mb-6">
+                        <div
+                            class="relative w-32 h-32 rounded-full overflow-hidden ring-2 ring-gray-200 dark:ring-neutral-700 flex-none">
+                            <div class="absolute inset-0 bg-gray-100 dark:bg-neutral-700"></div>
+                            <img class="absolute inset-0 w-full h-full object-cover" :src="preview || defaultUrl"
+                                alt="Profile Photo" width="128" height="128" loading="lazy"
+                                @load="$el.previousElementSibling.style.display='none'">
                         </div>
-                        <div class="max-w-full">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-neutral-200 mb-2">
+                                Profile Picture
+                            </label>
+                            <button type="button" @click="pick"
+                                class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 shadow-2xs dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700">
+                                Upload Photo
+                            </button>
+                            <span class="ml-2 text-sm text-gray-500 dark:text-neutral-400" wire:loading
+                                wire:target="photo">
+                                Mengunggah…
+                            </span>
+                            <p class="mt-2 text-xs text-gray-500 dark:text-neutral-400">JPEG/PNG/WEBP, maks. 2 MB.</p>
+                            <input x-ref="file" type="file" class="hidden" accept="image/*" @change="change"
+                                wire:model="photo">
+                            @error('photo')
+                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- FORM FIELD -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="nik" class="block text-sm font-medium mb-2 dark:text-white">Nomer Induk
+                                Kependudukan</label>
+                            <input wire:model='nik' type="number" id="nik" minlength="16"
+                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                        </div>
+                        <div>
+                            <label for="phone_number" class="block text-sm font-medium mb-2 dark:text-white">Nomor
+                                Handphone</label>
+                            <input wire:model='phone_number' type="number" id="phone_number"
+                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                        </div>
+                        <div>
                             <label for="date_of_birth" class="block text-sm font-medium mb-2 dark:text-white">Tanggal
                                 Lahir</label>
                             <input wire:model='date_of_birth' type="date" id="date_of_birth"
-                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
-
+                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
                         </div>
-                        <div class="max-w-full">
+                        <div>
                             <label for="gender" class="block text-sm font-medium mb-2 dark:text-white">Jenis
                                 Kelamin</label>
                             <select wire:model='gender'
-                                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
                                 <option selected="">Open this select menu</option>
                                 <option value="male">Laki-laki</option>
                                 <option value="female">Perempuan</option>
                             </select>
                         </div>
-                        <div class="max-w-full">
-                            <label for="city" class="block text-sm font-medium mb-2 dark:text-white">Kota</label>
-                            <input wire:model='city' type="text" id="city"
-                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
-                        </div>
-                        <div class="max-w-full">
-                            <label for="province"
+                        <div>
+                            <label for="provinceId"
                                 class="block text-sm font-medium mb-2 dark:text-white">Provinsi</label>
-                            <input wire:model='province' type="text" id="province"
-                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                            <select wire:model.change='provinceId'
+                                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                                <option selected="">Open this select menu</option>
+                                @foreach ($provinces as $key => $value)
+                                    <option value="{{ $key }}" @selected($provinceId == $key)>
+                                        {{ $value }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="max-w-full">
-                            <label for="phone_number" class="block text-sm font-medium mb-2 dark:text-white">Nomor
-                                Handphone</label>
-                            <input wire:model='phone_number' type="number" id="phone_number"
-                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                        <div>
+                            <label for="regencyId"
+                                class="block text-sm font-medium mb-2 dark:text-white">Kabupaten</label>
+                            <select wire:model.change='regencyId'
+                                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                                <option selected="">Open this select menu</option>
+                                @foreach ($this->regencies as $key => $value)
+                                    <option value="{{ $key }}" @selected($regencyId == $key)>
+                                        {{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="districtId"
+                                class="block text-sm font-medium mb-2 dark:text-white">Kecamatan</label>
+                            <select wire:model.change='districtId'
+                                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                                <option selected="">Open this select menu</option>
+                                @foreach ($this->districts as $key => $value)
+                                    <option value="{{ $key }}" @selected($districtId == $key)>
+                                        {{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="village_code"
+                                class="block text-sm font-medium mb-2 dark:text-white">Desa</label>
+                            <select wire:model.change='village_code'
+                                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                                <option selected="">Open this select menu</option>
+                                @foreach ($this->villages as $key => $value)
+                                    <option value="{{ $key }}" @selected($village_code == $key)>
+                                        {{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="postal_code" class="block text-sm font-medium mb-2 dark:text-white">Kode
+                                Pos</label>
+                            <input wire:model='postal_code' type="number" id="postal_code" minlength="16"
+                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                        </div>
+                        <div>
+                            <label for="textarea-label" class="block text-sm font-medium mb-2 dark:text-white">Alamat
+                                Lengkap</label>
+                            <textarea id="textarea-label" wire:model='address_line'
+                                class="py-2 px-3 sm:py-3 sm:px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                                rows="3" placeholder="RT/RW, ..."></textarea>
                         </div>
                     </div>
                 </div>
+
+                <!-- FOOTER -->
                 <div
                     class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
                     <button type="button"
-                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700"
                         data-hs-overlay="#hs-vertically-centered-scrollable-modal">
                         Close
                     </button>
-                    <button type="button" @click="$wire.updateApplicant"
-                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                        Save changes
+                    <button type="button" @click="$wire.updateApplicant" wire:loading.attr="disabled"
+                        wire:target="updateApplicant"
+                        class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50">
+                        <span wire:loading.remove wire:target="updateApplicant">Save changes</span>
+                        <span wire:loading wire:target="updateApplicant">Loading...</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+
     @script
         <script>
             document.addEventListener('openModal', (e) => {

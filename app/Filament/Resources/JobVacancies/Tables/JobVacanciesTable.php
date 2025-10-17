@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class JobVacanciesTable
@@ -48,8 +49,7 @@ class JobVacanciesTable
                     ->date()
                     ->sortable()
                     ->label('Tanggal Penutupan'),
-                IconColumn::make('status')
-                    ->boolean()
+                ToggleColumn::make('status')
                     ->label('Status'),
                 TextColumn::make('salary')
                     ->numeric()

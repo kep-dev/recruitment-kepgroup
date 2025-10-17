@@ -81,7 +81,7 @@ class TrainingCertification extends Component
 
             unset($this->trainingCertifications);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pelatihan dan sertifikasi.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pelatihan dan sertifikasi.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
@@ -94,7 +94,7 @@ class TrainingCertification extends Component
     {
         ModelsTrainingCertification::find($this->trainingCertificationId)->delete();
         unset($this->trainingCertifications);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pelatihan dan sertifikasi.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pelatihan dan sertifikasi.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

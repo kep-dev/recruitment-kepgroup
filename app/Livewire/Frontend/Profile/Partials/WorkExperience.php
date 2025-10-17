@@ -29,7 +29,7 @@ class WorkExperience extends Component
     {
         Work::find($this->workExperienceId)->delete();
         unset($this->workExperiences);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman kerja.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman kerja.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 
@@ -95,7 +95,7 @@ class WorkExperience extends Component
 
             unset($this->workExperiences);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pengalaman kerja.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pengalaman kerja.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);

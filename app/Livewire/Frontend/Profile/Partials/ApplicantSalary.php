@@ -41,7 +41,7 @@ class ApplicantSalary extends Component
 
             unset($this->salary);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui gaji.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui gaji.', timeout: 3000);
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
@@ -53,7 +53,7 @@ class ApplicantSalary extends Component
     {
         Salary::find($id)->delete();
         unset($this->salary);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus gaji.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus gaji.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

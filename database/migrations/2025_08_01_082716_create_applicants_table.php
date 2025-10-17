@@ -18,8 +18,6 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('phone_number');
             $table->enum('gender', ['male', 'female']);
-            $table->string('city');
-            $table->string('province');
             $table->timestamps();
         });
     }

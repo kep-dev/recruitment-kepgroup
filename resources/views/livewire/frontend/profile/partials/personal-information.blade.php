@@ -64,7 +64,7 @@
                 </div>
 
                 <!-- Email -->
-                <div class="sm:col-span-2">
+                <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Email</p>
                     <div class="mt-1 inline-flex items-center gap-2">
                         <span class="text-gray-700 dark:text-slate-200">{{ $user->email }}</span>
@@ -84,7 +84,7 @@
                 <!-- Location -->
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Alamat</p>
-                    <p class="mt-1 text-gray-700 dark:text-slate-200">
+                    <p class="mt-1 text-gray-700 dark:text-slate-200 capitalize">
                         {{ $user->applicant?->province?->name .
                             ', ' .
                             $user->applicant?->district?->name .
@@ -93,6 +93,16 @@
                             ', ' .
                             $user->applicant?->village?->name }}
                     </p>
+                </div>
+
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Detail Alamat</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->address_line }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Kode Pos</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->postal_code }}</p>
                 </div>
 
                 <!-- LinkedIn -->

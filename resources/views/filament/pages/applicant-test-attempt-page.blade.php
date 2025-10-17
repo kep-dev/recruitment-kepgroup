@@ -36,11 +36,11 @@
                                             {{ $applicantTestAttempt->jobVacancyTestItem->test->title }}</td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            {{ $applicantTestAttempt->status->getLabel() }}
+                                            {{ $applicantTestAttempt->status?->getLabel() }}
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            {{ $applicantTestAttempt->ended_reason->getLabel() }}</td>
+                                            {{ $applicantTestAttempt->ended_reason?->getLabel() }}</td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                             {{ $applicantTestAttempt->started_at }}</td>

@@ -51,6 +51,13 @@ class ApplicantTestAttemptPage extends Page implements HasActions, HasSchemas, H
             ->get();
     }
 
+    public function deleteApplicantTestAttempt($id)
+    {
+        ApplicantTestAttempt::find($id)->delete();
+        unset($this->applicantTestAttempts);
+        // $this->resetTable();
+    }
+
     public function updatedApplicantTestAttemptId(): void
     {
         $this->resetTable();  // paksa reload query tabel

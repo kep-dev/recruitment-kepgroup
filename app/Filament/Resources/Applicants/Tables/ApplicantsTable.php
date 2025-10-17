@@ -37,12 +37,6 @@ class ApplicantsTable
                     ->searchable(),
                 TextColumn::make('gender')
                     ->label('Jenis Kelamin'),
-                TextColumn::make('city')
-                    ->label('Kota')
-                    ->searchable(),
-                TextColumn::make('province')
-                    ->label('Provinsi')
-                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

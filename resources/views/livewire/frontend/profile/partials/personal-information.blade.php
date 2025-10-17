@@ -85,13 +85,13 @@
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Alamat</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">
-                        {{ $user->applicant->province->name .
+                        {{ $user->applicant?->province?->name .
                             ', ' .
-                            $user->applicant->district->name .
+                            $user->applicant?->district?->name .
                             ', ' .
-                            $user->applicant->regency->name .
+                            $user->applicant?->regency?->name .
                             ', ' .
-                            $user->applicant->village->name }}
+                            $user->applicant?->village?->name }}
                     </p>
                 </div>
 

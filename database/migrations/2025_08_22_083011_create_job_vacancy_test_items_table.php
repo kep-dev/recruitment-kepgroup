@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignUuid('test_id')->constrained('tests')->cascadeOnDelete();
             $table->integer('minimum_score')->default(0);
             $table->integer('number_of_question');
+            $table->integer('duration_in_minutes');
             $table->unsignedInteger('order')->default(1);
             $table->timestamps();
 

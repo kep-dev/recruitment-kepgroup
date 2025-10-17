@@ -12,6 +12,7 @@
         "codewithdennis/filament-lucide-icons": "^4.0",
         "filament/filament": "^4.0",
         "filament/spatie-laravel-media-library-plugin": "^4.0",
+        "laradumps/laradumps": "^4.5",
         "laravel/fortify": "^1.27",
         "laravel/framework": "^12.0",
         "laravel/socialite": "^5.23",
@@ -23,7 +24,6 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
         "fakerphp/faker": "^1.23",
-        "laradumps/laradumps": "^4.5",
         "laradumps/laradumps-core": "^3.2",
         "laravel/boost": "^1.1",
         "laravel/pail": "^1.2.2",

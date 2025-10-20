@@ -1,7 +1,6 @@
     {{-- Bahasa --}}
     <div class="col-span-full md:col-span-full lg:col-span-9">
-        <div
-            class="flex flex-col bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none rounded-xl">
+        <div class="flex flex-col bg-white border border-gray-200 dark:bg-neutral-800 dark:border-none rounded-xl">
             <!-- Header -->
             <div class="flex flex-col rounded-t-xl py-3 px-4 md:px-5">
                 <h3 class="text-lg font-bold text-gray-800 dark:text-slate-100 mb-3">
@@ -76,9 +75,24 @@
                             data-hs-overlay="#latestSkill">
                             Close
                         </button>
-                        <button type="button" @click="$wire.updateSkill"
+                        <button type="button" @click="$wire.updateSkill" wire:loading.attr="disabled"
+                            wire:target="updateSkill"
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                            Save changes
+                            <!-- Teks normal -->
+                            <span wire:loading.remove wire:target="updateSkill">
+                                Save changes
+                            </span>
+
+                            <!-- Teks saat loading -->
+                            <span wire:loading wire:target="updateSkill" class="flex items-center gap-2">
+                                {{-- <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                </svg> --}}
+                                Loading...
+                            </span>
                         </button>
                     </div>
                 </div>

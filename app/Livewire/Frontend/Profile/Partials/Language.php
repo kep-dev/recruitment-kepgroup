@@ -26,14 +26,16 @@ class Language extends Component
                 'level' => 'required',
             ]);
 
-            Auth::user()->languages()->create([
+            $user = $this->user;
+
+            $user->languages()->create([
                 'language' => $validated['language'],
                 'level' => $validated['level'],
             ]);
 
             unset($this->languages);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui bahasa.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui bahasa.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
@@ -46,7 +48,7 @@ class Language extends Component
     {
         ModelsLanguage::find($id)->delete();
         unset($this->languages);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus bahasa.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus bahasa.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

@@ -42,7 +42,7 @@ class ApplicantSocialMedia extends Component
 
             unset($this->socialMedias);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui media sosial.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui media sosial.', timeout: 3000);
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
@@ -54,7 +54,7 @@ class ApplicantSocialMedia extends Component
     {
         SocialMedia::find($id)->delete();
         unset($this->socialMedias);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus media sosial.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus media sosial.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

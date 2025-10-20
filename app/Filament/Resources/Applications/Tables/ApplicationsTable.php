@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
+use Filament\Tables\Columns\SelectColumn;
 
 class ApplicationsTable
 {
@@ -56,6 +57,13 @@ class ApplicationsTable
                 TextColumn::make('latestStageProgress.status')
                     ->badge()
                     ->label('Status'),
+                SelectColumn::make('final_status')
+                    ->label('Status Akhir')
+                    ->options([
+                        'pending' => 'Pending',
+                        'hired' => 'Diterima',
+                        'reject' => 'Ditolak',
+                    ]),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

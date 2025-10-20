@@ -80,7 +80,7 @@ class OrganizationExperience extends Component
 
             unset($this->organizationalExperiences);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pengalaman organisasi.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pengalaman organisasi.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
@@ -93,7 +93,7 @@ class OrganizationExperience extends Component
     {
         OrganizationalExperience::find($this->organizationalExperienceId)->delete();
         unset($this->organizationalExperiences);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman organisasi.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman organisasi.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

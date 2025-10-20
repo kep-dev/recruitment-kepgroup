@@ -79,12 +79,12 @@ class LatestEducation extends Component
 
             unset($this->educations);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pendidikan terakhir.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pendidikan terakhir.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
-            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 1500);
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
-            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 1500);
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
     }
 
@@ -92,7 +92,7 @@ class LatestEducation extends Component
     {
         Education::find($this->educationId)->delete();
         unset($this->educations);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pendidikan terakhir.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pendidikan terakhir.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

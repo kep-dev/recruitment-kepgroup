@@ -99,15 +99,34 @@
                                     @endforelse
                                 </select>
                             </div>
-                            <div class="max-w-full">
-                                <label for="file"
-                                    class="block text-sm font-medium mb-2 dark:text-white">File</label>
-                                <input type="file" name="file-input" id="file-input" wire:model='applicantDocument'
-                                    class="block w-full border border-gray-200 rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400
-                                        file:bg-gray-50 file:border-0
-                                        file:me-4
-                                        file:py-3 file:px-4
+                            <div x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
+                                x-on:livewire-upload-finish="uploading = false; progress = 0"
+                                x-on:livewire-upload-cancel="uploading = false; progress = 0"
+                                x-on:livewire-upload-error="uploading = false"
+                                x-on:livewire-upload-progress="progress = $event.detail.progress">
+                                <!-- Input File -->
+                                <div class="max-w-full mb-2">
+                                    <label for="file-input"
+                                        class="block text-sm font-medium mb-2 dark:text-white">File</label>
+                                    <input type="file" id="file-input" wire:model="applicantDocument"
+                                        class="block w-full border border-gray-200 rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400
+                                        file:bg-gray-50 file:border-0 file:me-4 file:py-3 file:px-4
                                         dark:file:bg-neutral-700 dark:file:text-neutral-400">
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div x-show="uploading" class="flex items-center gap-x-3 whitespace-nowrap mt-2">
+                                    <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
+                                        role="progressbar" :aria-valuenow="progress" aria-valuemin="0"
+                                        aria-valuemax="100">
+                                        <div class="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition-all duration-300 dark:bg-blue-500"
+                                            :style="`width: ${progress}%;`"></div>
+                                    </div>
+                                    <div class="w-10 text-end">
+                                        <span class="text-sm text-gray-800 dark:text-white"
+                                            x-text="`${progress}%`"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,9 +137,24 @@
                             data-hs-overlay="#latestDocument">
                             Close
                         </button>
-                        <button type="button" @click="$wire.updateDocument"
+                        <button type="button" @click="$wire.updateDocument" wire:loading.attr="disabled"
+                            wire:target="updateDocument"
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                            Save changes
+                            <!-- Teks normal -->
+                            <span wire:loading.remove wire:target="updateDocument">
+                                Save changes
+                            </span>
+
+                            <!-- Teks saat loading -->
+                            <span wire:loading wire:target="updateDocument" class="flex items-center gap-2">
+                                {{-- <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                </svg> --}}
+                                Loading...
+                            </span>
                         </button>
                     </div>
                 </div>

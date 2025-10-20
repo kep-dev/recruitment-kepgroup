@@ -61,7 +61,7 @@ class Achievement extends Component
 
             unset($this->achievements);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui prestasi.', timeout: 1500);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui prestasi.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
@@ -74,7 +74,7 @@ class Achievement extends Component
     {
         Achievment::find($this->achievementId)->delete();
         unset($this->achievements);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus prestasi.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus prestasi.', timeout: 3000);
         $this->dispatch('closeModal');
     }
 

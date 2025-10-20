@@ -138,10 +138,27 @@
                         data-hs-overlay="#latestOrganizationalExperienceModal">
                         Close
                     </button>
-                    <button type="button" @click="$wire.updateOrganizationalExperience"
+                    <button type="button" @click="$wire.updateOrganizationalExperience" wire:loading.attr="disabled"
+                        wire:target="updateOrganizationalExperience"
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                        Save changes
+                        <!-- Teks normal -->
+                        <span wire:loading.remove wire:target="updateOrganizationalExperience">
+                            Save changes
+                        </span>
+
+                        <!-- Teks saat loading -->
+                        <span wire:loading wire:target="updateOrganizationalExperience"
+                            class="flex items-center gap-2">
+                            {{-- <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg> --}}
+                            Loading...
+                        </span>
                     </button>
+
                 </div>
             </div>
         </div>

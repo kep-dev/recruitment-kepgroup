@@ -86,7 +86,7 @@
 
                     <button type="button" @disabled($this->applied) aria-haspopup="dialog" aria-expanded="false"
                         aria-controls="applyJobModal" data-hs-overlay="#applyJobModal"
-                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-hidden focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20">
+                        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-badge-check-icon lucide-badge-check">
@@ -100,7 +100,12 @@
 
                 <button disabled
                     class="inline-flex items-center px-3 py-1.5 rounded-lg bg-gray-200 text-gray-600 text-sm">
-                    {{ $JobVacancy->status === 1 ? 'Terbuka' : 'Tertutup' }}
+                    {{-- {{ $JobVacancy->status === true ? 'Terbuka' : 'Tertutup' }} --}}
+                    @if ($JobVacancy->status === true || now()->gte(\Carbon\Carbon::parse($JobVacancy->end_date)))
+                        Terbuka
+                    @else
+                        Tertutup
+                    @endif
                 </button>
             </div>
         </div>

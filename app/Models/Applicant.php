@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Education;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Applicant extends Model
@@ -16,9 +18,40 @@ class Applicant extends Model
         'date_of_birth',
         'phone_number',
         'gender',
-        'city',
-        'province',
+        'photo',
+        'village_code',
+        'address_line',
+        'postal_code',
     ];
+
+    public function photo(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) =>
+            $value
+                ? Storage::disk('public')->url($value) . '?v=' . md5($value . filemtime(Storage::disk('public')->path($value)))
+                : null
+        );
+    }
+
+    public function village()
+    {
+        return $this->belongsTo(Village::class, 'village_code', 'code');
+    }
+    public function getDistrictAttribute()
+    {
+        return $this->village?->district;
+    }
+
+    public function getRegencyAttribute()
+    {
+        return $this->district?->regency;
+    }
+
+    public function getProvinceAttribute()
+    {
+        return $this->regency?->province;
+    }
 
     public function user()
     {
@@ -84,5 +117,4 @@ class Applicant extends Model
     {
         return $this->hasMany(Salary::class, 'user_id', 'user_id');
     }
-
 }

@@ -54,7 +54,8 @@ class ApplicantDocument extends Component
 
             unset($this->documents);
             $this->resetProperty();
-            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui dokument pendukung.', timeout: 1500);
+            $this->dispatch('closeModal');
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui dokumen pendukung.', timeout: 3000);
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
@@ -68,7 +69,7 @@ class ApplicantDocument extends Component
         $document->clearMediaCollection();
         $document->delete();
         unset($this->documents);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus dokumen.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus dokumen.', timeout: 3000);
     }
 
     public function resetProperty()

@@ -5,6 +5,7 @@
     <link href={{ asset('css/addition.css') }} rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Theme Check and Update -->
+
     <script>
         const html = document.querySelector('html');
         const isLightOrAuto = localStorage.getItem('hs_theme') === 'light' || (localStorage.getItem('hs_theme') ===

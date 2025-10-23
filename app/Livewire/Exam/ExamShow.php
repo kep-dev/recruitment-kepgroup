@@ -148,7 +148,7 @@ class ExamShow extends Component
 
         $rows = [];
         $totalScore = 0;
-
+        // dd($questions);
         foreach ($questionIds as $qid) {
             /** @var \App\Models\Question|null $q */
             $q = $questions->get($qid);
@@ -165,14 +165,15 @@ class ExamShow extends Component
             $answerText = null;
             $answerJson = null;
 
-            switch ($q->type) {
+            switch ($q->type->value) {
                 case 'multiple_choice':
                 case 'true_false': {
                         // value diharapkan label: 'A','B',dst. Cari choice berdasarkan label
                         $selected = optional($q->choices->firstWhere('choice_label', $value));
-                        $correct  = optional($q->choices->firstWhere('is_correct', 1));
+                        $correct  = optional($q->choices->firstWhere('is_correct', true));
 
                         $selectedChoiceId = $selected?->id;
+
                         if ($selectedChoiceId && $correct->id) {
                             $isCorrect = $selectedChoiceId === $correct->id;
                             $score     = $isCorrect ? ($q->points ?? 0) : 0; // kebijakan: salah = 0
@@ -223,6 +224,7 @@ class ExamShow extends Component
 
         $this->updateAttempt($status, $endedReason, $totalScore);
 
+        // dd($rows);
         // 3) Upsert jawaban (kalau sudah ada sebagian jawaban tidak dobel)
         //    pastikan ada unique index di (applicant_test_attempt_id, question_id)
         if (! empty($rows)) {

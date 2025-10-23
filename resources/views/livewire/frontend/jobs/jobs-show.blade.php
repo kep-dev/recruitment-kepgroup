@@ -19,7 +19,7 @@
         <div>
             <p class="text-sm text-gray-500 dark:text-neutral-400">Lamar sebelum
                 {{ \Carbon\Carbon::parse($JobVacancy->end_date)->format('d F Y') }}</p>
-            <h1 class="text-2xl font-bold mt-1">{{ $JobVacancy->title }}</h1>
+            <h1 class="text-2xl font-bold mt-1 dark:text-neutral-100">{{ $JobVacancy->title }}</h1>
             <p class="text-gray-500 dark:text-neutral-400 mt-1">
                 @foreach ($JobVacancy->placements as $placement)
                     {{ $placement->placement->name }},
@@ -114,7 +114,7 @@
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 md:col-span-8 lg:col-span-8">
                 <div
-                    class="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm p-6 space-y-8">
+                    class="bg-white dark:bg-neutral-800 border dark:text-neutral-100 border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm p-6 space-y-8">
                     <!-- Job Description -->
                     <section>
                         <h2 class="text-lg font-semibold mb-2">Deskripsi Pekerjaan</h2>
@@ -135,7 +135,7 @@
 
             <div class="col-span-12 md:col-span-4 lg:col-span-4">
                 <div
-                    class="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm p-6 space-y-8">
+                    class="bg-white dark:bg-neutral-800 border dark:text-neutral-100 border-gray-200 dark:border-neutral-700 rounded-xl shadow-sm p-6 space-y-8">
                     <h2 class="text-lg font-semibold mb-2">Tunjangan dan Manfaat</h2>
                     <div class="max-w-full flex flex-col">
                         @foreach ($JobVacancy->benefits as $benefit)

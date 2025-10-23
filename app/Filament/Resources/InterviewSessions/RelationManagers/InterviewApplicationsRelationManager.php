@@ -83,6 +83,7 @@ class InterviewApplicationsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
+                    ->label('Tambah Pelamar')
                     ->schema($this->getFormSchema())
                     ->action(function ($record, array $data) {
                         // Karena multiple select, kita perlu buat record untuk tiap application_id

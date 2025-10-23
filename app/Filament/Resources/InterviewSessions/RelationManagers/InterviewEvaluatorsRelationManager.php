@@ -57,6 +57,7 @@ class InterviewEvaluatorsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
+                    ->label('Tambah Pewawancara')
                     ->schema($this->getFormSchema())
                     ->action(function (array $data) {
                         foreach ($data['user_id'] as $userId) {

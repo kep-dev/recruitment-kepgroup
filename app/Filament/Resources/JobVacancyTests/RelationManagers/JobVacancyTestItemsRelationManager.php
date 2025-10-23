@@ -89,7 +89,6 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                     ->label('Edit')
                     ->schema($this->getFormSchema())
                     ->action(function ($record, array $data) {
-                        ds($data);
                         $record->update($data);
                     }),
 

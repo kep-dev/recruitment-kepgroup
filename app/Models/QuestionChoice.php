@@ -20,4 +20,11 @@ class QuestionChoice extends Model
     {
         return $this->belongsTo(Question::class);
     }
+
+    protected function casts()
+    {
+        return [
+            'is_correct' => 'boolean',
+        ];
+    }
 }

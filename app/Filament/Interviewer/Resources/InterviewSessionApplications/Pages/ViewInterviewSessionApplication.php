@@ -4,9 +4,10 @@ namespace App\Filament\Interviewer\Resources\InterviewSessionApplications\Pages;
 
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
-use Filament\Support\Enums\Width;
+
 use Filament\Resources\Pages\ViewRecord;
 use App\Filament\Interviewer\Resources\InterviewSessionApplications\InterviewSessionApplicationResource;
+use Filament\Support\Enums\Width;
 
 class ViewInterviewSessionApplication extends ViewRecord
 {

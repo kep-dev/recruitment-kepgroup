@@ -17,7 +17,7 @@ class ApplicationInfolist
                     ->label('Email'),
                 TextEntry::make('jobVacancy.title')
                     ->label('Pekerjaan'),
-                TextEntry::make('status')
+                TextEntry::make('final_status')
                     ->label('Status'),
             ]);
     }

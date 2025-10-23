@@ -27,6 +27,7 @@ class ParamedicPanelProvider extends PanelProvider
         return $panel
             ->id('paramedic')
             ->path('paramedic')
+            ->login()
             ->spa()
             ->colors([
                 'primary' => Color::Rose,

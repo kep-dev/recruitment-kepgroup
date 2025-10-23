@@ -30,7 +30,7 @@
                         <div class="relative">
                             <div class="aspect-4/4 overflow-hidden rounded-2xl">
                                 <img class="size-full object-cover rounded-2xl"
-                                    src="{{ asset(ltrim($jobVacancy->image, '/')) }}" alt="Thumbnail">
+                                    src="{{ $jobVacancy->image }}" alt="Thumbnail">
                             </div>
 
                             <div class="pt-4">

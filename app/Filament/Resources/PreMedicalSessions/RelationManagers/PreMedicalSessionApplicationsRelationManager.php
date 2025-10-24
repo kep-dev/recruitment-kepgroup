@@ -229,6 +229,7 @@ class PreMedicalSessionApplicationsRelationManager extends RelationManager
                                     ->placeholder('-'),
 
                                 TextEntry::make('result_note')
+                                ->html()
                                     ->label('Catatan Hasil')
                                     ->columnSpanFull()
                                     ->placeholder('-'),

@@ -21,6 +21,8 @@ class LatestEducation extends Component
     public $location;
     public $graduation_year;
     public $gpa;
+    public $certificate_number;
+    public $main_number;
     public $education;
 
     public $educationId;
@@ -37,6 +39,8 @@ class LatestEducation extends Component
         $this->location = $this->education->location ?? null;
         $this->graduation_year = $this->education->graduation_year ?? null;
         $this->gpa = $this->education->gpa ?? null;
+        $this->certificate_number = $this->education->certificate_number ?? null;
+        $this->main_number = $this->education->main_number ?? null;
     }
 
     public function updateEducation()
@@ -50,6 +54,8 @@ class LatestEducation extends Component
                 'location' => 'required',
                 'graduation_year' => 'required|numeric|min:1900|max:' . date('Y'),
                 'gpa' => 'required|numeric|min:0|max:10',
+                'certificate_number' => 'required|unique:educations,certificate_number',
+                'main_number' => 'required|unique:educations,main_number',
             ]);
 
             if ($this->education) {
@@ -64,6 +70,8 @@ class LatestEducation extends Component
                         'location' => $validated['location'],
                         'graduation_year' => $validated['graduation_year'],
                         'gpa' => $validated['gpa'],
+                        'certificate_number' => $validated['certificate_number'],
+                        'main_number' => $validated['main_number'],
                     ]
                 );
             } else {
@@ -74,6 +82,8 @@ class LatestEducation extends Component
                     'location' => $validated['location'],
                     'graduation_year' => $validated['graduation_year'],
                     'gpa' => $validated['gpa'],
+                    'certificate_number' => $validated['certificate_number'],
+                    'main_number' => $validated['main_number'],
                 ]);
             }
 
@@ -105,7 +115,9 @@ class LatestEducation extends Component
             'university',
             'location',
             'graduation_year',
-            'gpa'
+            'gpa',
+            'certificate_number',
+            'main_number',
         ]);
     }
 

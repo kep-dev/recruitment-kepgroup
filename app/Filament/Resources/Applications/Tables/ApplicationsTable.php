@@ -125,13 +125,12 @@ class ApplicationsTable
                     ->label('Cetak Resume')
                     ->icon(LucideIcon::Printer)
                     ->action(function (Model $record) {
-                        ds($record->applicantTests->attempts
-                            ->load('jobVacancyTestItem.test'));
+                        // ds($record);
                         return response()->streamDownload(function () use ($record) {
                             echo Pdf::loadHtml(
                                 Blade::render('print.application.application-pdf', ['record' => $record])
                             )->stream();
-                        }, 'tes' . '.pdf');
+                        }, $record->user->name . '-' . $record->jobVacancy->title . '.pdf');
                     }),
                 // ->url(fn(Model $reco,rd) => route('applications.print', $record))
                 // ->openUrlInNewTab(),

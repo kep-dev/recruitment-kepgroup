@@ -4,10 +4,13 @@ namespace App\Livewire\Frontend\Jobs;
 
 use Livewire\Component;
 use App\Models\JobVacancy;
+use App\Models\Application;
+use PhpParser\Node\Expr\Throw_;
 use App\Models\JobVacancyBookmark;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Computed, Layout, Title};
-use PhpParser\Node\Expr\Throw_;
 
 #[Layout('components.layouts.app')]
 #[Title('Detail Lowongan')]
@@ -29,6 +32,7 @@ class JobsShow extends Component
 
     public function apply($JobVacancyId)
     {
+        DB::beginTransaction();
 
         try {
             if (!Auth::check()) {
@@ -40,6 +44,27 @@ class JobsShow extends Component
                     // atau redirect:
                     // return redirect()->route('verification.notice');
                 }
+
+                $cooldownDays = (int) (DB::table('recruitment_policies')
+                    ->where('key', 'reapply_cooldown_days')
+                    ->value('value') ?? 180);
+
+                $cutoff = now()->subDays($cooldownDays);
+
+                // Blokir semua lamaran yang dibuat dalam 6 bulan terakhir (lintas lowongan)
+                $exists = Application::query()
+                    ->where('user_id', auth()->id())
+                    ->where('created_at', '>=', $cutoff)
+                    ->exists();
+
+                if ($exists) {
+                    $last = Application::where('user_id', auth()->id())
+                        ->latest('created_at')->first();
+                    $eligibleAt = $last->created_at->addDays($cooldownDays);
+                    // abort(422, 'Anda baru bisa melamar lagi setelah ' . $eligibleAt->isoFormat('D MMM Y HH:mm'));
+                    throw new \Exception('Anda baru bisa melamar lagi setelah ' . $eligibleAt->isoFormat('D MMM Y HH:mm'));
+                }
+
                 Auth::user()->applications()->create([
                     'job_vacancy_id' => $JobVacancyId,
                     'applied_at' => now(),
@@ -49,7 +74,11 @@ class JobsShow extends Component
                 $this->dispatch('closeModal');
                 unset($this->applied);
             }
+
+            DB::commit();
         } catch (\Exception $th) {
+            DB::rollBack();
+            Log::error($th);
             $this->dispatch('notification', type: 'error', title: 'Gagal!', message: $th->getMessage(), timeout: 3000);
             $this->dispatch('closeModal');
         }

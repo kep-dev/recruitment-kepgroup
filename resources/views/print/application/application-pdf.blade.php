@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -167,4 +167,254 @@
 
 </body>
 
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en" class="minimal-theme">
+
+<head>
+    <meta charset="utf-8">
+    <title>Invoice Verification</title>
+
+    <!-- Normalize or reset CSS with your favorite library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {{-- @include('include.style') --}}
+
+    <!-- Load paper.css for happy printing -->
+    <link rel="stylesheet" href={{ asset('css/paper.css') }}>
+
+    <!-- Set page size here: A5, A4 or A3 -->
+    <style>
+        @page {
+            size: A4
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid rgb(201, 201, 201);
+            border-collapse: collapse;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .borderless th,
+        .borderless td {
+            border: none;
+        }
+        .title {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #014e45;
+        }
+
+        .section-title {
+            font-weight: bold;
+            padding-bottom: 4px;
+            color: rgb(6, 105, 94);
+        }
+        .section-border {
+            border-bottom: 2px solid #ffcc00;
+        }
+        .rata-rata {
+            background: #fdd;
+            font-weight: bold;
+        }
+    </style>
+    <!-- Set also "landscape" if you need -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+</head>
+
+<!-- Set "A5", "A4" or "A3" for class name -->
+<!-- Set also "landscape" if you need -->
+
+<body class="A4">
+
+    <!-- Each sheet element should have the class "sheet" -->
+    <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+    <section class="sheet padding-10mm">
+
+        <img class="logo-icon mx-auto my-auto d-block img-fluid" style="height: 75px" src={{ asset($logoCompanyUrl) }} alt="logo icon">
+        <div class="title mt-3">RESUME</div>
+
+        <div class="section-title section-border mt-2">BIODATA</div>
+        <table id="example" class="table borderless" style="font-size:12px; border-color:rgba(255, 255, 255, 0)">
+            <tbody id="data">
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Nama</td>
+                    <td>: Wiki Jayaditama</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Tempat, Tanggal Lahir</td>
+                    <td>: Samarinda, 17 Juli 2000 | 25 Tahun</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Alamat</td>
+                    <td>: Jl. Loa Ipuh Gg. Nusa Indah RT. 48 No. 74 Kecamatan Tenggarong Kabupaten Kutai Kartanegara</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">No Whatsapp</td>
+                    <td>: 081250559399</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Catatan</td>
+                    <td>: Catatan Resume</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-border mt-2">
+            <div>
+                <span style="font-weight: bold; color: rgb(6, 105, 94)">DATA AKADEMIK</span>
+                <span style="font-size: 12px; color: rgb(0, 0, 0)">(Terverifikasi melalui https://pisn.kemdiktisaintek.go.id dan https://pddikti.kemdiktisaintek.go.id)</span>
+            </div>
+        </div>
+        <table id="example" class="table borderless" style="font-size:12px; border-color:rgba(255, 255, 255, 0)">
+            <tbody id="data">
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Perguruan Tinggi</td>
+                    <td>: Universitas Mulawarman</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">NIM</td>
+                    <td>: 1809075041</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Program Pendidikan</td>
+                    <td>: Teknik Elektro</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Program Studi</td>
+                    <td>: Sarjana - Teknik Elektro</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Nomor Ijazah</td>
+                    <td>: No SKL : 7758/UN17.9/PK.05.00/S1/2025 (belum wisuda)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title section-border mt-2">TES POTENS AKADEMIK</div>
+        <table id="example" class="table table-bordered" style="font-size:12px;">
+            <thead>
+                <tr class="text-center" style="color: rgb(255, 255, 255); background-color: rgb(6, 105, 94)">
+                    <th>JENIS SOAL</th>
+                    <th>NILAI MINIMUM</th>
+                    <th>NILAI HASIL TES</th>
+                    <th>KETERANGAN</th>
+                </tr>
+            </thead>
+            <tbody id="data">
+                <tr>
+                    <td>Pengetahuan Dasar</td>
+                    <td class="text-center"><mark>50</mark></td>
+                    <td class="text-center" style="font-weight: bold">60</td>
+                    <td>Diatas Nilai Minimum</td>
+                </tr>
+                <tr>
+                    <td>Matematika Dasar</td>
+                    <td class="text-center"><mark>50</mark></td>
+                    <td class="text-center" style="font-weight: bold">60</td>
+                    <td>Diatas Nilai Minimum</td>
+                </tr>
+                <tr>
+                    <td>Perbandingan Kata</td>
+                    <td class="text-center"><mark>50</mark></td>
+                    <td class="text-center" style="font-weight: bold">60</td>
+                    <td>Diatas Nilai Minimum</td>
+                </tr>
+                <tr>
+                    <td>Angka Dalam Cerita</td>
+                    <td class="text-center"><mark>50</mark></td>
+                    <td class="text-center" style="font-weight: bold">60</td>
+                    <td>Diatas Nilai Minimum</td>
+                </tr>
+                <tr>
+                    <td>Kewarganegaraan</td>
+                    <td class="text-center"><mark>50</mark></td>
+                    <td class="text-center" style="font-weight: bold">60</td>
+                    <td>Diatas Nilai Minimum</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="rata-rata text-center" style="font-weight: bold">66</td>
+                    <td class="rata-rata" style="font-weight: bold">Rata-Rata Nilai</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title section-border mt-2">PRE-MEDICAL CHECK UP SUMMARY</div>
+        <table id="example" class="table borderless" style="font-size:12px; border-color:rgba(255, 255, 255, 0)">
+            <tbody id="data">
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Medical record Number</td>
+                    <td>: 036/CFK-Klinik/P-MCU/VIII/2025</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Tangal MCU</td>
+                    <td>: 21 Agustus 2025</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Golongan Darah</td>
+                    <td>: B +</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Hasil</td>
+                    <td>: Fit to Work</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%; background-color: #d3d3d3">Keterangan</td>
+                    <td>: Ada Keterangan</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="section-title section-border mt-5">TES WAWANCARA</div>
+        <table id="example" class="table table-bordered" style="font-size:12px;">
+            <thead>
+                <tr class="text-center" style="color: rgb(255, 255, 255); background-color: rgb(6, 105, 94)">
+                    <th>URAIAN</th>
+                    <th>PENGUJI 1</th>
+                    <th>PENGUJI 2</th>
+                    <th>PENGUJI 3</th>
+                </tr>
+            </thead>
+            <tbody id="data">
+                <tr>
+                    <td class="text-center" style="vertical-align: middle; font-weight: bold" rowspan="4">Pengetahuan Teknis/akademik</td>
+                    <td><input type="checkbox"/> Kurang</td>
+                    <td><input type="checkbox"/> Kurang</td>
+                    <td><input type="checkbox"/> Kurang</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"/> Cukup</td>
+                    <td><input type="checkbox"/> Cukup</td>
+                    <td><input type="checkbox"/> Cukup</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"/> Baik</td>
+                    <td><input type="checkbox"/> Baik</td>
+                    <td><input type="checkbox"/> Baik</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"/> Sangat Baik</td>
+                    <td><input type="checkbox"/> Sangat Baik</td>
+                    <td><input type="checkbox"/> Sangat Baik</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </section>
+
+</body>
+
 </html>
+

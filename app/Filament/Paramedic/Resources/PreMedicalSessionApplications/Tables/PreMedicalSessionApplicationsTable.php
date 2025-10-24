@@ -4,6 +4,7 @@ namespace App\Filament\Paramedic\Resources\PreMedicalSessionApplications\Tables;
 
 use App\Models\JobVacancy;
 use Filament\Tables\Table;
+use Illuminate\Support\Arr;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -492,19 +493,136 @@ class PreMedicalSessionApplicationsTable
                     ])
                     ->label('Pemeriksaan')
                     ->modalWidth(Width::SevenExtraLarge)
-                    ->action(function (array $data, $record) {
-                        // dd($data);
-                        $preMedicalResult = $record->preMedicalResult()->create(array_merge($data['preMedicalResults'], [
-                            'examined_by' => auth()->id(),
-                        ]));
+                    ->fillForm(function ($record): array {
+                        $pre = $record->preMedicalResult()
+                            ->with([
+                                'preMedicalHistory',
+                                'preMedicalPhysical',
+                                'preMedicalEnt',
+                                'preMedicalEye',
+                                'preMedicalDental.preMedicalDentalFindings',
+                                'preMedicalObgyn',
+                            ])->first();
 
-                        $preMedicalResult->preMedicalHistory()->create($data['preMedicalHistory']);
-                        $preMedicalResult->preMedicalPhysical()->create($data['preMedicalPhysical']);
-                        $preMedicalResult->preMedicalEnt()->create($data['preMedicalEnt']);
-                        $preMedicalResult->preMedicalEye()->create($data['preMedicalEyes']);
-                        $preMedicalDental = $preMedicalResult->preMedicalDental()->create($data['preMedicalDentals']);
-                        $preMedicalDental->preMedicalDentalFindings()->createMany($data['preMedicalDentalFindings']);
-                        $preMedicalResult->preMedicalObgyn()->create($data['preMedicalObgyns']);
+                        if (! $pre) {
+                            return []; // pertama kali (create), biarkan kosong
+                        }
+
+                        $only = fn($model, array $fields) =>
+                        Arr::only(($model?->toArray() ?? []), $fields);
+
+                        return [
+                            'preMedicalResults' => $only($pre, [
+                                'overall_status',
+                                'overall_note',
+                                'examined_at',
+                            ]),
+
+                            'preMedicalHistory' => $only($pre->preMedicalHistory, [
+                                'personal_history',
+                                'family_history',
+                                'allergies',
+                                'current_medications',
+                                'past_surgeries',
+                                'smoking_status',
+                                'alcohol_use',
+                                'other_notes',
+                            ]),
+
+                            'preMedicalPhysical' => $only($pre->preMedicalPhysical, [
+                                'height_cm',
+                                'weight_kg',
+                                'temperature_c',
+                                'bp_systolic',
+                                'bp_diastolic',
+                                'heart_rate_bpm',
+                                'resp_rate_per_min',
+                                'head_neck',
+                                'chest_heart',
+                                'chest_lung',
+                                'abdomen_liver',
+                                'abdomen_spleen',
+                                'extremities',
+                                'others',
+                                'bmi',
+                            ]),
+
+                            'preMedicalEnt' => $only($pre->preMedicalEnt, [
+                                'ear',
+                                'nose',
+                                'throat',
+                                'others',
+                            ]),
+
+                            'preMedicalEyes' => $only($pre->preMedicalEye, [
+                                'va_unaided_right',
+                                'va_unaided_left',
+                                'va_aided_right',
+                                'va_aided_left',
+                                'color_vision',
+                                'conjunctiva',
+                                'sclera',
+                                'others',
+                            ]),
+
+                            'preMedicalDentals' => $only($pre->preMedicalDental, [
+                                'general_condition',
+                                'occlusion',
+                                'others',
+                            ]),
+
+                            'preMedicalDentalFindings' => $pre->preMedicalDental?->preMedicalDentalFindings
+                                ->map(fn($f) => Arr::only($f->toArray(), [
+                                    'dental_teeth_id',
+                                    'dental_status_id',
+                                    'surfaces',
+                                    'severity',
+                                    'notes',
+                                ]))->all() ?? [],
+
+                            'preMedicalObgyns' => $only($pre->preMedicalObgyn, [
+                                'is_pregnant',
+                                'lmp_date',
+                                'gravida',
+                                'para',
+                                'abortus',
+                                'uterus_exam',
+                                'adnexa_exam',
+                                'cervix_exam',
+                                'others',
+                            ]),
+                        ];
+                    })
+
+                    ->action(function (array $data, $record) {
+                        // header (result)
+                        $pre = $record->preMedicalResult()->first();
+
+                        if (! $pre) {
+                            $pre = $record->preMedicalResult()->create(array_merge(
+                                $data['preMedicalResults'] ?? [],
+                                ['examined_by' => auth()->id()],
+                            ));
+                        } else {
+                            $pre->update(array_merge(
+                                $data['preMedicalResults'] ?? [],
+                                ['examined_by' => auth()->id()],
+                            ));
+                        }
+
+                        // hasOne: aman gunakan updateOrCreate([],...)
+                        $pre->preMedicalHistory()->updateOrCreate([], $data['preMedicalHistory'] ?? []);
+                        $pre->preMedicalPhysical()->updateOrCreate([], $data['preMedicalPhysical'] ?? []);
+                        $pre->preMedicalEnt()->updateOrCreate([], $data['preMedicalEnt'] ?? []);
+                        $pre->preMedicalEye()->updateOrCreate([], $data['preMedicalEyes'] ?? []);
+                        $pre->preMedicalObgyn()->updateOrCreate([], $data['preMedicalObgyns'] ?? []);
+
+                        // dental header + findings (hasMany): replace sederhana
+                        $dental = $pre->preMedicalDental()->updateOrCreate([], $data['preMedicalDentals'] ?? []);
+                        $dental->preMedicalDentalFindings()->delete();
+                        if (! empty($data['preMedicalDentalFindings'])) {
+                            $dental->preMedicalDentalFindings()->createMany($data['preMedicalDentalFindings']);
+                        }
                     }),
                 ViewAction::make(),
                 EditAction::make(),

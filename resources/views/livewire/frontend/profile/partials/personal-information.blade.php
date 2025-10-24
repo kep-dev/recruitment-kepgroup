@@ -51,17 +51,25 @@
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->nik }}</p>
                 </div>
 
+                <!-- Gender -->
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Jenis Kelamin</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">
+                        {{ $user->applicant->gender = 'male' ? 'Laki-laki' : 'Perempuan' }}</p>
+                </div>
+
                 <!-- Date of Birth -->
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Tempat Lahir</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->place_of_birth ?? '-' }}</p>
+                </div>
+
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Tanggal Lahir</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->date_of_birth }}</p>
                 </div>
 
-                <!-- Gender -->
-                <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Jenis Kelamin</p>
-                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->gender }}</p>
-                </div>
+
 
                 <!-- Email -->
                 <div>
@@ -81,6 +89,12 @@
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Nomer Handphone</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->phone_number }}</p>
                 </div>
+
+                <div>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Kode Pos</p>
+                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->postal_code }}</p>
+                </div>
+
                 <!-- Location -->
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Alamat</p>
@@ -98,11 +112,6 @@
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Detail Alamat</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->address_line }}</p>
-                </div>
-
-                <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Kode Pos</p>
-                    <p class="mt-1 text-gray-700 dark:text-slate-200">{{ $user->applicant->postal_code }}</p>
                 </div>
 
                 <!-- LinkedIn -->
@@ -208,6 +217,12 @@
                             <label for="phone_number" class="block text-sm font-medium mb-2 dark:text-white">Nomor
                                 Handphone</label>
                             <input wire:model='phone_number' type="number" id="phone_number"
+                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                        </div>
+                        <div>
+                            <label for="place_of_birth" class="block text-sm font-medium mb-2 dark:text-white">Tempat
+                                Lahir</label>
+                            <input wire:model='place_of_birth' type="text" id="place_of_birth"
                                 class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
                         </div>
                         <div>

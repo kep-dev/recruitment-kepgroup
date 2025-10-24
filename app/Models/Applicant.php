@@ -16,6 +16,7 @@ class Applicant extends Model
         'user_id',
         'nik',
         'date_of_birth',
+        'place_of_birth',
         'phone_number',
         'gender',
         'photo',
@@ -70,7 +71,7 @@ class Applicant extends Model
 
     public function latestEducation()
     {
-        return $this->hasOne(Education::class, 'user_id', 'user_id')->latestOfMany();
+        return $this->hasOne(Education::class, 'user_id', 'user_id')->latestOfMany('graduation_year');
     }
 
     public function workExperiences()

@@ -28,6 +28,7 @@ class PersonalInformation extends Component
     public $name;
     public $nik;
     public $date_of_birth;
+    public $place_of_birth;
     public $gender;
     public $phone_number;
     public $address_line;
@@ -50,6 +51,7 @@ class PersonalInformation extends Component
         $this->name = $this->applicant->name ?? null;
         $this->nik = $this->applicant->nik ?? null;
         $this->date_of_birth = $this->applicant->date_of_birth ?? null;
+        $this->place_of_birth = $this->applicant->place_of_birth ?? null;
         $this->gender = $this->applicant->gender ?? null;
         $this->phone_number = $this->applicant->phone_number ?? null;
         $this->address_line = $this->applicant->address_line ?? null;
@@ -106,6 +108,7 @@ class PersonalInformation extends Component
                     Rule::unique('applicants', 'nik')->ignore($this->applicant?->id)
                 ],
                 'date_of_birth' => 'required',
+                'place_of_birth' => 'required',
                 'gender' => 'required',
                 'phone_number' => [
                     'required',
@@ -124,6 +127,7 @@ class PersonalInformation extends Component
                     // 'name' => $validated['name'],
                     'nik' => $validated['nik'],
                     'date_of_birth' => $validated['date_of_birth'],
+                    'place_of_birth' => $validated['place_of_birth'],
                     'gender' => $validated['gender'],
                     'phone_number' => $validated['phone_number'],
                     'address_line' => $validated['address_line'],
@@ -157,6 +161,7 @@ class PersonalInformation extends Component
             'name',
             'nik',
             'date_of_birth',
+            'place_of_birth',
             'gender',
             'phone_number',
             'address_line',

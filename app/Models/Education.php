@@ -17,11 +17,12 @@ class Education extends Model
         'location',
         'graduation_year',
         'gpa',
+        'certificate_number',
+        'main_number'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
 }

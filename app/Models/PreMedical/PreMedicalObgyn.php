@@ -27,4 +27,11 @@ class PreMedicalObgyn extends Model
         return $this->belongsTo(PreMedicalResult::class);
     }
 
+    protected function casts() : array
+    {
+        return [
+            'is_pregnant' => 'boolean',
+        ];
+    }
+
 }

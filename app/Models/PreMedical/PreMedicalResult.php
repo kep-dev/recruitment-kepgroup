@@ -2,10 +2,13 @@
 
 namespace App\Models\PreMedical;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use App\Observers\PreMedicalResultObserver;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(PreMedicalResultObserver::class)]
 class PreMedicalResult extends Model
 {
     use HasUuids;

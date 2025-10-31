@@ -192,7 +192,9 @@
                     </h3>
                     <p class="text-gray-500 dark:text-neutral-500">
                         Sebelum lowongan ditutup, anda dapat membatalkan lamaran anda kapan saja. Namun, anda tidak
-                        dapat membatalkan nya ketika lamaran sudah ditutup, apakah anda yakin ingin melamar pada
+                        dapat membatalkan nya ketika lamaran sudah ditutup. Semua data pribadi yang sudah anda isi, akan
+                        dikirimkan, pastikan anda sudah mengisinya secara lengkap sebelum melamar. Apakah anda yakin
+                        ingin melamar pada
                         lowongan ini?
                     </p>
 

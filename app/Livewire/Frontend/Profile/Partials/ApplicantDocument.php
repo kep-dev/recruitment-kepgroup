@@ -9,12 +9,15 @@ use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use App\Models\VacancyDocument;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class ApplicantDocument extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, BlocksWhenActiveApplication;
     public User $user;
     public $user_id;
     public $vacancy_document_id;
@@ -39,11 +42,15 @@ class ApplicantDocument extends Component
 
     public function updateDocument()
     {
+        DB::beginTransaction();
         try {
             $validated = $this->validate([
                 'vacancy_document_id' => 'required|exists:vacancy_documents,id',
                 'applicantDocument' => 'required|mimes:pdf|max:2048',
             ]);
+
+            $this->blockIfActive();
+
             $vacancyDocument = VacancyDocument::find($validated['vacancy_document_id'])->name;
             // dd($vacancyDocument);
             $document = Auth::user()->documents()->create([
@@ -52,24 +59,42 @@ class ApplicantDocument extends Component
 
             $document->addMedia($validated['applicantDocument'])->toMediaCollection($vacancyDocument);
 
+            DB::commit();
             unset($this->documents);
             $this->resetProperty();
-            $this->dispatch('closeModal');
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui dokumen pendukung.', timeout: 3000);
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
+        $this->dispatch('closeModal');
     }
 
     public function deleteDocument($id)
     {
-        $document = Document::find($id);
-        $document->clearMediaCollection();
-        $document->delete();
-        unset($this->documents);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus dokumen.', timeout: 3000);
+        DB::beginTransaction();
+
+        try {
+
+            $this->blockIfActive();
+            $document = Document::find($id);
+            $document->clearMediaCollection();
+            $document->delete();
+
+            DB::commit();
+            unset($this->documents);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus dokumen.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
     }
 
     public function resetProperty()

@@ -26,6 +26,7 @@ class PreMedicalPhysical extends Model
         'extremities',
         'others',
         'bmi',
+        'blood_type'
     ];
 
     public function preMedicalResult()

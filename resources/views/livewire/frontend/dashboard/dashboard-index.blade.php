@@ -168,7 +168,7 @@
         <!-- End Works -->
 
         <!-- Testimonials -->
-        <div class="py-10 md:py-16 lg:py-20 bg-orange-100">
+        {{-- <div class="py-10 md:py-16 lg:py-20 bg-orange-100">
             <div class="px-4 sm:px-6 lg:px-8">
                 <!-- Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 md:items-center">
@@ -192,7 +192,7 @@
                                 lebih bersih, dan membangun karier yang berarti bagi diri sendiri dan negeri.
                             </p>
 
-                            {{-- <footer class="mt-6 md:mt-10">
+                            <footer class="mt-6 md:mt-10">
                                 <div class="border-neutral-700">
                                     <button type="button"
                                         class="group inline-flex items-center gap-x-3 text-gray-800 dark:text-neutral-200 text-sm focus:outline-hidden disabled:opacity-50 disabled:pointer-events-none">
@@ -207,18 +207,18 @@
                                         Watch the Video
                                     </button>
                                 </div>
-                            </footer> --}}
+                            </footer>
                         </blockquote>
                     </div>
                     <!-- End Col -->
                 </div>
                 <!-- End Grid -->
             </div>
-        </div>
+        </div> --}}
         <!-- End Testimonials -->
 
         <!-- Contact -->
-        <div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-24 mx-auto">
+        {{-- <div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-24 mx-auto">
             <div class="mb-6 sm:mb-10 max-w-2xl text-center mx-auto">
                 <h2 class="font-medium text-black text-2xl sm:text-4xl dark:text-white">
                     Contacts
@@ -321,7 +321,7 @@
                 </div>
                 <!-- End Col -->
             </div>
-        </div>
+        </div> --}}
         <!-- End Contact -->
     </main>
     <!-- ========== END MAIN CONTENT ========== -->

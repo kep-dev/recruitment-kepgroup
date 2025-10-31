@@ -8,11 +8,16 @@ use App\Models\Education;
 use Livewire\Attributes\On;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class LatestEducation extends Component
 {
+    use BlocksWhenActiveApplication;
+
     public User $user;
     public $user_id;
     public $education_level;
@@ -45,6 +50,8 @@ class LatestEducation extends Component
 
     public function updateEducation()
     {
+        DB::beginTransaction();
+
         try {
             $validated = $this->validate([
                 // 'name' => 'required',
@@ -57,6 +64,8 @@ class LatestEducation extends Component
                 'certificate_number' => 'required|unique:educations,certificate_number',
                 'main_number' => 'required|unique:educations,main_number',
             ]);
+
+            $this->blockIfActive();
 
             if ($this->education) {
                 $this->education->updateOrCreate(
@@ -87,22 +96,38 @@ class LatestEducation extends Component
                 ]);
             }
 
+            DB::commit();
             unset($this->educations);
             $this->resetProperty();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pendidikan terakhir.', timeout: 3000);
-            $this->dispatch('closeModal');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
+        $this->dispatch('closeModal');
     }
 
     public function deleteEducation()
     {
-        Education::find($this->educationId)->delete();
-        unset($this->educations);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pendidikan terakhir.', timeout: 3000);
+        DB::beginTransaction();
+        try {
+            $this->blockIfActive();
+            Education::find($this->educationId)->delete();
+
+            DB::commit();
+            unset($this->educations);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pendidikan terakhir.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
         $this->dispatch('closeModal');
     }
 

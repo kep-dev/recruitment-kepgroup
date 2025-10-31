@@ -5,12 +5,17 @@ namespace App\Livewire\Frontend\Profile\Partials;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Language as ModelsLanguage;
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class Language extends Component
 {
+    use BlocksWhenActiveApplication;
+
     public User $user;
     public $user_id;
     public $language;
@@ -20,12 +25,15 @@ class Language extends Component
 
     public function updateLanguage()
     {
+        DB::beginTransaction();
+
         try {
             $validated = $this->validate([
                 'language' => 'required',
                 'level' => 'required',
             ]);
 
+            $this->blockIfActive();
             $user = $this->user;
 
             $user->languages()->create([
@@ -33,22 +41,38 @@ class Language extends Component
                 'level' => $validated['level'],
             ]);
 
+            DB::commit();
             unset($this->languages);
             $this->resetProperty();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui bahasa.', timeout: 3000);
-            $this->dispatch('closeModal');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
+        $this->dispatch('closeModal');
     }
 
     public function deleteLanguage($id)
     {
-        ModelsLanguage::find($id)->delete();
-        unset($this->languages);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus bahasa.', timeout: 3000);
+        DB::beginTransaction();
+        try {
+            $this->blockIfActive();
+            ModelsLanguage::find($id)->delete();
+
+            DB::commit();
+            unset($this->languages);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus bahasa.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
         $this->dispatch('closeModal');
     }
 

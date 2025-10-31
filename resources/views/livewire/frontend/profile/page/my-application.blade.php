@@ -52,7 +52,7 @@
                         class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-hidden focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20">
                         Lihat Lowongan
                     </a> --}}
-                    @if ($application->jobVacancy->status != 1 || !now()->gte(\Carbon\Carbon::parse($application->jobVacancy->end_date)))
+                    @if (!now()->gte(\Carbon\Carbon::parse($application->jobVacancy->end_date)))
                         <button type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="CancelModal"
                             data-hs-overlay="#CancelModal"
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-100 text-red-800 hover:bg-red-200 focus:outline-hidden focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:bg-red-800/30 dark:hover:bg-red-800/20 dark:focus:bg-red-800/20"

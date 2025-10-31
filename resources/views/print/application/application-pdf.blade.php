@@ -314,7 +314,8 @@
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Nomor Ijazah</td>
                     <td>: {{ $record->user->applicant->latestEducation->certificate_number }}
-                        {{ $record->user->applicant->latestEducation->certificate_number == null ? 'Belum Lulus' : '' }}</td>
+                        {{ $record->user->applicant->latestEducation->certificate_number == null ? 'Belum Lulus' : '' }}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -351,19 +352,20 @@
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Tangal MCU</td>
-                    <td>: 21 Agustus 2025</td>
+                    <td>: {{ $record->preMedicalSessionApplication->reviewed_at }} </td>
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Golongan Darah</td>
-                    <td>: B +</td>
+                    <td>: {{ $record->preMedicalSessionApplication->preMedicalResult->preMedicalPhysical->blood_type }}
+                    </td>
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Hasil</td>
-                    <td>: Fit to Work</td>
+                    <td>: {{ $record->preMedicalSessionApplication->preMedicalResult->overall_status }} </td>
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Keterangan</td>
-                    <td>: Ada Keterangan</td>
+                    <td>: {!! $record->preMedicalSessionApplication->preMedicalResult->overall_note !!} </td>
                 </tr>
             </tbody>
         </table>

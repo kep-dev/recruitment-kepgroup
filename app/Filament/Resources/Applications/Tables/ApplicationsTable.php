@@ -125,7 +125,7 @@ class ApplicationsTable
                     ->label('Cetak Resume')
                     ->icon(LucideIcon::Printer)
                     ->action(function (Model $record) {
-                        // ds($record);
+                        // ds($record->preMedicalSessionApplication);
                         return response()->streamDownload(function () use ($record) {
                             echo Pdf::loadHtml(
                                 Blade::render('print.application.application-pdf', ['record' => $record])

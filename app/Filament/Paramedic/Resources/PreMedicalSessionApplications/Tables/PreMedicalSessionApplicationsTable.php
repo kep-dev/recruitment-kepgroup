@@ -282,7 +282,11 @@ class PreMedicalSessionApplicationsTable
                                         TextInput::make('preMedicalPhysical.bmi')
                                             ->label('BMI')
                                             ->required()
-                                            ->columnSpanFull(),
+                                            ->columnSpan(6),
+                                        TextInput::make('preMedicalPhysical.blood_type')
+                                            ->label('Golongan Darah')
+                                            ->required()
+                                            ->columnSpan(6),
                                     ])
 
                             ]),
@@ -545,6 +549,7 @@ class PreMedicalSessionApplicationsTable
                                 'extremities',
                                 'others',
                                 'bmi',
+                                'blood_type'
                             ]),
 
                             'preMedicalEnt' => $only($pre->preMedicalEnt, [

@@ -5,9 +5,11 @@ namespace App\Livewire\Exam;
 use App\Enums\status;
 use Livewire\Component;
 use App\Models\Question;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use App\Models\QuestionChoice;
 use App\Models\ApplicantAnswer;
+use App\Models\ExamClientEvent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Models\ApplicantTestAttempt;
@@ -294,6 +296,12 @@ class ExamShow extends Component
         $this->submitAll();
     }
 
+    #[On('force-submit-exam')]
+    public function forceSubmit()
+    {
+        $this->submitAll();
+    }
+
     /** Submit semua jawaban (opsional) */
     public function submitAll()
     {
@@ -307,10 +315,37 @@ class ExamShow extends Component
 
             // redirect ke halaman daftar paket / ringkasan
             $jobVacancyTestId = (string) session('jobVacancyTestId'); // jika memang diset waktu awal
-            return redirect()->route('exam.index', $jobVacancyTestId);
+            // return redirect()->route('exam.index', $jobVacancyTestId);
+
+            $url = route('exam.index', $jobVacancyTestId);
+            $this->dispatch('submitTest', url: $url);
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+    }
+
+    #[On('exam-client-event')]
+    public function logClientEvent($name, $at = null)
+    {
+        ds($name);
+        ExamClientEvent::create([
+            'id' => (string) Str::uuid(),
+            'applicant_test_id' => $this->attempt->applicant_test_id,
+            'job_vacancy_test_item_id' => $this->attempt->job_vacancy_test_item_id,
+            'event' => $name ?? 'unknown',
+            'meta'  => json_encode(['at' => $event['at'] ?? now()->toIso8601String(), 'ua' => request()->userAgent(), 'ip' => request()->ip()]),
+        ]);
+
+        // Ambang auto-terminate dari server (tambahan)
+        $violationsCount = ExamClientEvent::query()
+            ->where('applicant_test_id', $this->attempt->applicant_test_id)
+            ->where('job_vacancy_test_item_id', $this->attempt->job_vacancy_test_item_id)
+            // ->whereIn('event', ['focus_lost_blur', 'focus_lost_visibilitychange', 'devtools_open', 'multi_window_detected'])
+            ->count();
+        // ds($violationsCount);
+        if ($violationsCount >= 5) {
+            $this->submitAll();
         }
     }
 

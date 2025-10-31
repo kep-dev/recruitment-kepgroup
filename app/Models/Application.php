@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Observers\ApplicationObserver;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Models\PreMedical\PreMedicalSessionApplication;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Models\ApplicationSnapshot\ApplicationProfileSnapshot;
 
-
+#[ObservedBy(ApplicationObserver::class)]
 class Application extends Model
 {
     use HasUuids;
@@ -57,5 +62,15 @@ class Application extends Model
     public function applicantTests()
     {
         return $this->hasOne(ApplicantTest::class, 'application_id');
+    }
+
+    public function preMedicalSessionApplication()
+    {
+        return $this->hasOne(PreMedicalSessionApplication::class, 'application_id');
+    }
+
+    public function profileSnapshot()
+    {
+        return $this->hasOne(ApplicationProfileSnapshot::class);
     }
 }

@@ -15,13 +15,15 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Filament\Notifications\Notification;
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class PersonalInformation extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, BlocksWhenActiveApplication;
 
     public User $user;
     public $applicant;
@@ -99,7 +101,7 @@ class PersonalInformation extends Component
 
     public function updateApplicant()
     {
-        // DB::transaction(function () {});
+        DB::beginTransaction();
 
         try {
             $validated = $this->validate([
@@ -118,6 +120,8 @@ class PersonalInformation extends Component
                 'postal_code' => 'required|numeric',
                 'village_code' => 'required|exists:villages,code'
             ]);
+
+            $this->blockIfActive();
 
             $this->user->applicant()->updateOrCreate(
                 [
@@ -146,13 +150,19 @@ class PersonalInformation extends Component
                 ]);
             }
 
+            DB::commit();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui data diri.', timeout: 4500);
-            $this->dispatch('closeModal');
+
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 4500);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 4500);
         }
+        $this->dispatch('closeModal');
     }
 
     public function resetProperty()

@@ -4,13 +4,18 @@ namespace App\Livewire\Frontend\Profile\Partials;
 
 use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Computed, On};
 use App\Models\OrganizationalExperience;
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class OrganizationExperience extends Component
 {
+    use BlocksWhenActiveApplication;
+
     public User $user;
     public $user_id;
     public $organization_name;
@@ -46,6 +51,8 @@ class OrganizationExperience extends Component
 
     public function updateOrganizationalExperience()
     {
+        DB::beginTransaction();
+
         try {
             $validated = $this->validate([
                 'organization_name' => 'required',
@@ -54,6 +61,8 @@ class OrganizationExperience extends Component
                 'start_date' => 'required|date',
                 'end_date' => 'nullable|date',
             ]);
+
+            $this->blockIfActive();
 
             if ($this->organizationalExperience) {
                 $this->organizationalExperience->updateOrCreate(
@@ -78,22 +87,39 @@ class OrganizationExperience extends Component
                 ]);
             }
 
+            DB::commit();
             unset($this->organizationalExperiences);
             $this->resetProperty();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pengalaman organisasi.', timeout: 3000);
             $this->dispatch('closeModal');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
     }
 
     public function deleteOrganizationalExperience()
     {
-        OrganizationalExperience::find($this->organizationalExperienceId)->delete();
-        unset($this->organizationalExperiences);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman organisasi.', timeout: 3000);
+        DB::beginTransaction();
+
+        try {
+            $this->blockIfActive();
+            OrganizationalExperience::find($this->organizationalExperienceId)->delete();
+
+            DB::commit();
+            unset($this->organizationalExperiences);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman organisasi.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
         $this->dispatch('closeModal');
     }
 

@@ -7,11 +7,16 @@ use Livewire\Component;
 use App\Models\SocialMedia;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class ApplicantSocialMedia extends Component
 {
+    use BlocksWhenActiveApplication;
+
     public User $user;
     public $user_id;
     public $name;
@@ -19,6 +24,8 @@ class ApplicantSocialMedia extends Component
 
     public function updateSocialMedia()
     {
+        DB::beginTransaction();
+
         try {
             $validated = $this->validate([
                 'name' => [
@@ -35,26 +42,44 @@ class ApplicantSocialMedia extends Component
                 ],
             ]);
 
+            $this->blockIfActive();
+
             Auth::user()->socialMedias()->create([
                 'name' => $validated['name'],
                 'url' => $validated['url'],
             ]);
 
+            DB::commit();
             unset($this->socialMedias);
             $this->resetProperty();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui media sosial.', timeout: 3000);
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
     }
 
     public function deleteSocialMedia($id)
     {
-        SocialMedia::find($id)->delete();
-        unset($this->socialMedias);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus media sosial.', timeout: 3000);
+        DB::beginTransaction();
+        try {
+            $this->blockIfActive();
+
+            SocialMedia::find($id)->delete();
+            DB::commit();
+            unset($this->socialMedias);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus media sosial.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
         $this->dispatch('closeModal');
     }
 

@@ -211,7 +211,7 @@ class ExamIndex extends Component
                 'user_'.auth()->user()->id.'_token',
             ]);
 
-            return redirect()->route('frontend.profile.test');
+            // return redirect()->route('frontend.profile.test');
         } catch (\Exception $e) {
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
 

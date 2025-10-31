@@ -33,40 +33,37 @@ class MyTest extends Component
             $nowDb = DB::raw('CURRENT_TIMESTAMP');
             $applicantTest = ApplicantTest::query()
                 ->where('access_token', $this->token)
-                ->where(function ($q) {
-                    $q->where('status', '!=', 'expired')
-                        ->where('status', '!=', 'completed');
-                })
+                ->whereNotIn('status', ['expired', 'completed'])
                 ->whereHas('jobVacancyTest', function ($q) use ($nowDb) {
                     $q->where('is_active', 1)
-                        ->where(function ($q) use ($nowDb) {
-                            $q->whereNull('active_from')
-                                ->orWhere('active_from', '<=', $nowDb);
-                        })
-                        ->where(function ($q) use ($nowDb) {
-                            $q->whereNull('active_until')
-                                ->orWhere('active_until', '>=', $nowDb);
-                        });
-                    // ->whereNull('deleted_at'); // kalau pakai SoftDeletes
+                        ->where(fn($q) => $q->whereNull('active_from')->orWhere('active_from', '<=', $nowDb))
+                        ->where(fn($q) => $q->whereNull('active_until')->orWhere('active_until', '>=', $nowDb));
                 })
                 ->first();
-            // dd($applicantTest);
-            if (!$applicantTest) {
-                throw new Exception('Token tidak valid / paket tidak aktif / anda sudah mengakhiri test');
+
+            if (! $applicantTest) {
+                throw new Exception('Token tidak valid / paket tidak aktif / anda sudah mengakhiri tes.');
             }
 
-            $applicantTest->update([
-                'started_at' => now(),
-                'status' => status::in_progress,
-            ]);
+            // Single-session gate (lihat bagian #3 untuk kolom/middleware)
+            $sessionId = session()->getId();
+            $applicantTest->forceFill([
+                'started_at' => $applicantTest->started_at ?? now(),
+                'status'     => Status::in_progress,
+                'current_session_id' => $sessionId, // kolom baru (lihat migrasi #3)
+            ])->save();
 
-            session()->put('user_' . Auth::user()->id . '_token', $this->token);
+            session()->put('user_' . Auth::id() . '_token', $this->token);
             session()->put('jobVacancyTestId', $applicantTest->job_vacancy_test_id);
+
             DB::commit();
-            return redirect()->route('exam.index', $applicantTest->job_vacancy_test_id);
-        } catch (\Exception $e) {
+
+            // >>> KUNCI: kirim event untuk dibuka di TAB BARU + fullscreen
+            $url = route('exam.index', $applicantTest->job_vacancy_test_id);
+            $this->dispatch('open-exam-tab', url: $url);
+        } catch (\Throwable $e) {
+            DB::rollBack();
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
-            // $this->dispatch('closeModal');
         }
     }
 

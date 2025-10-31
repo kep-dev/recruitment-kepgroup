@@ -5,12 +5,18 @@ namespace App\Livewire\Frontend\Profile\Partials;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\Achievment;
+use App\Models\Application;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\{Computed, On};
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class Achievement extends Component
 {
+    use BlocksWhenActiveApplication;
+
     public User $user;
     public $user_id;
     public $achievement_name;
@@ -33,12 +39,15 @@ class Achievement extends Component
 
     public function updateAchievement()
     {
+        DB::beginTransaction();
         try {
             $validated = $this->validate([
                 'achievement_name' => 'required',
                 'organization_name' => 'required',
                 'year' => 'required|numeric|min:1900|max:' . date('Y'),
             ]);
+
+            $this->blockIfActive();
 
             if ($this->achievement) {
                 $this->achievement->updateOrCreate(
@@ -59,22 +68,38 @@ class Achievement extends Component
                 ]);
             }
 
+            DB::commit();
             unset($this->achievements);
             $this->resetProperty();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui prestasi.', timeout: 3000);
-            $this->dispatch('closeModal');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
+        $this->dispatch('closeModal');
     }
 
     public function deleteAchievement()
     {
-        Achievment::find($this->achievementId)->delete();
-        unset($this->achievements);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus prestasi.', timeout: 3000);
+        DB::beginTransaction();
+        try {
+            $this->blockIfActive();
+            Achievment::find($this->achievementId)->delete();
+
+            DB::commit();
+            unset($this->achievements);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus prestasi.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
         $this->dispatch('closeModal');
     }
 

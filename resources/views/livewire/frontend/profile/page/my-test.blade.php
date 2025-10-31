@@ -47,8 +47,7 @@
                     </p> --}}
 
                     @if (
-                        ($test->status == status::assigned ||
-                            $test->status == status::in_progress) &&
+                        ($test->status == status::assigned || $test->status == status::in_progress) &&
                             Carbon::parse(now())->lt(Carbon::parse($test->jobVacancyTest->active_until)))
                         <button type='button'
                             class="my-2 py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-hidden focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20"
@@ -208,4 +207,50 @@
             })
         </script>
     @endscript
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            window.addEventListener('open-exam-tab', (e) => {
+                const url = e.detail.url;
+
+                // Buka jendela baru dengan parameter "popup" agar bisa diatur ukurannya
+                const feat = [
+                    'popup=yes',
+                    'resizable=yes',
+                    'scrollbars=no',
+                    'menubar=no',
+                    'toolbar=no',
+                    'status=no',
+                    `width=${Math.min(screen.availWidth, 1280)}`, // ukuran awal sebelum maximize
+                    `height=${Math.min(screen.availHeight, 800)}`,
+                    'top=100',
+                    'left=100'
+                ].join(',');
+
+                const examWin = window.open(url, '_blank', feat);
+
+                if (examWin) {
+                    // Fokus ke jendela baru
+                    examWin.focus();
+
+                    // Coba maksimalkan jendela baru
+                    try {
+                        examWin.moveTo(0, 0);
+                        examWin.resizeTo(screen.availWidth, screen.availHeight);
+                    } catch (error) {
+                        console.warn('Tidak bisa memaksimalkan jendela:', error);
+                    }
+
+                    // (Opsional) kirim sinyal ke halaman ujian kalau kamu ingin menandai bahwa ini window ujian
+                    const channel = new BroadcastChannel('exam_channel');
+                    channel.postMessage({
+                        type: 'exam-started'
+                    });
+
+                } else {
+                    alert('Pop-up diblokir. Mohon izinkan pop-up untuk memulai tes.');
+                }
+            });
+        });
+    </script>
 </div>

@@ -4,13 +4,18 @@ namespace App\Livewire\Frontend\Profile\Partials;
 
 use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\{Computed, On};
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\WorkExperience as Work;
+use Livewire\Attributes\{Computed, On};
+use App\Traits\BlocksWhenActiveApplication;
 use Illuminate\Validation\ValidationException;
 
 class WorkExperience extends Component
 {
+    use BlocksWhenActiveApplication;
+
     public User $user;
     public $user_id;
     public $job_title;
@@ -27,9 +32,21 @@ class WorkExperience extends Component
 
     public function deleteWorkExperience()
     {
-        Work::find($this->workExperienceId)->delete();
-        unset($this->workExperiences);
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman kerja.', timeout: 3000);
+        DB::beginTransaction();
+
+        try {
+            $this->blockIfActive();
+            Work::find($this->workExperienceId)->delete();
+
+            DB::commit();
+            unset($this->workExperiences);
+            $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil menghapus pengalaman kerja.', timeout: 3000);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
+        }
+
         $this->dispatch('closeModal');
     }
 
@@ -47,11 +64,12 @@ class WorkExperience extends Component
         $this->end_date = $this->workExperience->end_date ?? null;
         $this->currently_working = $this->workExperience->currently_working ?? null;
         $this->description = $this->workExperience->description ?? null;
-
     }
 
     public function updateWorkExperience()
     {
+        DB::beginTransaction();
+
         try {
             $validated = $this->validate([
                 'job_title' => 'required',
@@ -63,6 +81,8 @@ class WorkExperience extends Component
                 'currently_working' => 'nullable',
                 'description' => 'required',
             ]);
+
+            $this->blockIfActive();
 
             if ($this->workExperience) {
                 $this->workExperience->updateOrCreate(
@@ -93,15 +113,20 @@ class WorkExperience extends Component
                 ]);
             }
 
+            DB::commit();
             unset($this->workExperiences);
             $this->resetProperty();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui pengalaman kerja.', timeout: 3000);
-            $this->dispatch('closeModal');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
             $this->dispatch('notification', type: 'error', title: 'Error!', message: $e->getMessage(), timeout: 3000);
         }
+        $this->dispatch('closeModal');
     }
 
     public function resetProperty()

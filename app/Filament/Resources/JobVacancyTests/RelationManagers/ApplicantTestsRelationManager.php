@@ -67,7 +67,7 @@ class ApplicantTestsRelationManager extends RelationManager
                 ->label('Mulai'),
             DateTimePicker::make('completed_at')
                 ->label('Selesai'),
-            TextInput::make('score')
+            TextInput::make('total_score')
                 ->label('Skor')
                 ->hiddenOn('create')
 

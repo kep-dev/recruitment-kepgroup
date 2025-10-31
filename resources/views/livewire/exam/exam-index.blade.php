@@ -14,6 +14,155 @@
         </div>
     @endif
 
+    <div x-data="{ dismissed: false }" x-show="!dismissed" x-cloak
+        class="bg-yellow-50 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-900/10 dark:border-yellow-800 dark:text-yellow-300 mb-4"
+        role="alert" tabindex="-1" aria-labelledby="exam-rules-label">
+        <div class="flex gap-3">
+            <div class="shrink-0">
+                <!-- friendly warning icon -->
+                <svg class="w-6 h-6 text-yellow-700 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 9v4"></path>
+                    <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 17h.01"></path>
+                </svg>
+            </div>
+
+            <div class="flex-1">
+                <h3 id="exam-rules-label" class="text-sm font-semibold text-yellow-800 dark:text-yellow-200">
+                    Peraturan Ujian — Harap Dibaca Sebelum Memulai
+                </h3>
+
+                <p class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                    Agar ujian berjalan adil dan valid, mohon patuhi aturan berikut. Pelanggaran dapat berakibat
+                    peringatan otomatis, pembatalan hasil, atau diskualifikasi.
+                </p>
+
+                <ul class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3">
+                            </path>
+                        </svg>
+                        <div>
+                            <strong class="block">Jangan berpindah tab/jendela</strong>
+                            Jangan membuka tab/jendela lain untuk mencari jawaban.
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12h6M9 16h6M9 8h6"></path>
+                        </svg>
+                        <div>
+                            <strong class="block">Tidak menyalin soal</strong>
+                            Dilarang menyalin/menyimpan pertanyaan ke aplikasi lain (copy/paste/screenshot).
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 10l4.553-2.276A2 2 0 0122 9.618V14a2 2 0 01-1.553 1.894L15 18v-8zM3 7v10a2 2 0 002 2h8">
+                            </path>
+                        </svg>
+                        <div>
+                            <strong class="block">Jangan rekam atau foto layar</strong>
+                            Mengambil screenshot atau merekam layar selama tes tidak diperbolehkan.
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 7h4l3 9h8l3-9h4"></path>
+                        </svg>
+                        <div>
+                            <strong class="block">Gunakan satu perangkat</strong>
+                            Dilarang menggunakan perangkat lain (HP/laptop lain) untuk membantu selama tes.
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 2l2 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"></path>
+                        </svg>
+                        <div>
+                            <strong class="block">Jangan manipulasi halaman</strong>
+                            Dilarang membuka DevTools, mengubah skrip, atau memanipulasi DOM untuk keuntungan.
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8"></path>
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 3v1"></path>
+                        </svg>
+                        <div>
+                            <strong class="block">Jangan refresh untuk menambah waktu</strong>
+                            Waktu ujian dikontrol server. Refresh tidak akan menambah durasi ujian.
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M16 11V7">
+                            </path>
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 7v10">
+                            </path>
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 11v6">
+                            </path>
+                        </svg>
+                        <div>
+                            <strong class="block">Sesi tunggal per peserta</strong>
+                            Satu akun hanya boleh aktif pada satu sesi. Multi-login akan otomatis diblokir.
+                        </div>
+                    </li>
+
+                    <li class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-yellow-700 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 5h18M3 12h18M3 19h18"></path>
+                        </svg>
+                        <div>
+                            <strong class="block">Dilarang menggunakan bot/skrip</strong>
+                            Sistem kami memantau pola jawaban; tindakan otomatis (bot) akan terdeteksi dan diblokir.
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="mt-4 flex items-center gap-3">
+                    <button type="button" x-on:click="dismissed = true; $dispatch('exam-acknowledged')"
+                        class="px-3 py-2 rounded-lg bg-yellow-700 text-white text-sm font-medium hover:bg-yellow-600 focus:outline-none">
+                        Saya Mengerti
+                    </button>
+
+                    <button type="button" x-on:click="$dispatch('open-help')"
+                        class="px-3 py-2 rounded-lg bg-white border border-yellow-200 text-yellow-800 text-sm hover:bg-yellow-50 focus:outline-none">
+                        Butuh Bantuan?
+                    </button>
+
+                    <div class="ms-auto text-xs text-yellow-700 dark:text-yellow-300">
+                        <strong>Catatan:</strong> Semua aktivitas direkam untuk audit.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Grid -->
     {{-- <div
         class="mt-12 grid sm:grid-cols-1 lg:grid-cols-{{ $JobVacancyTest->jobVacancyTestItems->count() }} gap-4 lg:items-center">
@@ -136,9 +285,9 @@
             aria-haspopup="dialog" aria-expanded="false" aria-controls="end-test-alert"
             data-hs-overlay="#end-test-alert">
             <span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-ban-icon lucide-ban">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban">
                     <path d="M4.929 4.929 19.07 19.071" />
                     <circle cx="12" cy="12" r="10" />
                 </svg>
@@ -160,9 +309,9 @@
                         class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
                         aria-label="Close" data-hs-overlay="#end-test-alert">
                         <span class="sr-only">Close</span>
-                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 6 6 18" />
                             <path d="m6 6 12 12" />
                         </svg>
@@ -173,8 +322,8 @@
                     <!-- Icon -->
                     <span
                         class="mb-4 inline-flex justify-center items-center size-15.5 rounded-full border-4 border-yellow-50 bg-yellow-100 text-yellow-500 dark:bg-yellow-700 dark:border-yellow-600 dark:text-yellow-100">
-                        <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                            fill="currentColor" viewBox="0 0 16 16">
+                        <svg class="shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16"
+                            height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path
                                 d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                         </svg>
@@ -189,9 +338,18 @@
                     </p>
 
                     <div class="mt-6 flex justify-center gap-x-4">
-                        <button type="button"
-                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                            @click="$wire.endTest()">
+                        <button type="button" x-data
+                            @click="
+                                $wire.endTest();
+                                setTimeout(() => {
+                                    if (window.opener) {
+                                        window.close();
+                                    } else {
+
+                                    }
+                                }, 500);
+                            "
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                             Ya, Akhiri
                         </button>
                         <button type="button"
@@ -207,5 +365,47 @@
 
     <!-- End Grid -->
     <x-molecules.alerts.alert />
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            window.addEventListener('open-exam-tab', (e) => {
+                const url = e.detail.url;
+
+                // Buka jendela baru fullscreen-like
+                const feat = [
+                    'popup=yes',
+                    `width=${screen.availWidth}`,
+                    `height=${screen.availHeight}`,
+                    'top=0',
+                    'left=0',
+                    'resizable=no',
+                    'scrollbars=no',
+                    'menubar=no',
+                    'toolbar=no',
+                    'status=no'
+                ].join(',');
+
+                const examWin = window.open(url, '_blank', feat);
+
+                if (examWin) {
+                    examWin.focus();
+
+                    // Minta halaman ujian ikut fullscreen
+                    const channel = new BroadcastChannel('exam_channel');
+                    channel.postMessage({
+                        type: 'request-fullscreen'
+                    });
+
+                    // Fallback: minta fullscreen di halaman sekarang (jika diizinkan)
+                    const el = document.documentElement;
+                    (el.requestFullscreen?.bind(el) ?? el.webkitRequestFullscreen?.bind(el))?.().catch(
+                        () => {});
+                } else {
+                    alert('Pop-up diblokir. Mohon izinkan pop-up untuk memulai tes.');
+                }
+            });
+        });
+    </script>
+
 </div>
 <!-- End Pricing -->

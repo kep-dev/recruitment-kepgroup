@@ -1,5 +1,7 @@
 @use('App\Enums\QuestionType')
-<div class="max-w-[125rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+<div class="max-w-[125rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto" x-data="examGuard()" x-init="window.examGuard = this;
+init()"
+    x-on:keydown.window="blockKeys($event)">
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 md:col-span-12 lg:col-span-12order-2 lg:order-1">
             <div class="max-w-full mx-auto space-y-5">
@@ -80,7 +82,7 @@
                         class="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-800">
                         <div class="flex items-start justify-between gap-4">
                             <h3 class="text-base md:text-lg font-semibold text-gray-800 dark:text-neutral-100">
-                               {!! $q->question_text  !!}
+                                {!! $q->question_text !!}
                             </h3>
                             <span
                                 class="inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-neutral-800 dark:text-neutral-300">
@@ -357,6 +359,10 @@
 
                     <div class="mt-6 flex justify-center gap-x-4">
                         <button type="button" wire:click="submitAll"
+                            @click="
+                                window.examGuard?.disableUnloadGuard();
+                                $wire.submitAll;
+                            "
                             class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                             Ya, Submit
                         </button>
@@ -371,17 +377,251 @@
         </div>
     </div>
     <x-molecules.alerts.alert />
-    <script>
-        // window.addEventListener("beforeunload", function(event) {
-        //     event.preventDefault();
-        //     event.returnValue = "";
-        // });
 
-        window.addEventListener("unload", function() {
-            Livewire.dispatch('end-test')
+    <script>
+        window.examAttemptId = "{{ $attempt->id }}"; // sesuaikan variabelnya
+    </script>
+
+    <script>
+        /* ===== Global listener: submit dari Livewire → redirect tanpa dialog ===== */
+        window.addEventListener('submitTest', (e) => {
+            const url = e.detail?.url || '/';
+
+            // Lepas guard 'beforeunload' terlebih dulu
+            try {
+                window.examGuardInstance?.disableUnloadGuard();
+            } catch (_) {}
+
+            // Beri 1 tick agar pelepasan listener diproses sebelum navigasi
+            setTimeout(() => location.replace(url), 0);
         });
 
+        /* ================== EXAM GUARD ================== */
+        function examGuard() {
+            return {
+                // ---- state ----
+                sessionKey: null,
+                bc: null,
+                isExamWindow: false,
+                preventUnload: true,
+                beforeUnloadHandler: null,
 
+                // pelanggaran (contoh)
+                focusViolations: 0,
+                devtoolsViolations: 0,
+                maxViolations: 5,
+
+                /* ---------- init ---------- */
+                init() {
+                    // Simpan instance global untuk dipanggil di listener submit/end
+                    window.examGuardInstance = this;
+
+                    this.sessionKey = `exam_session_${window.examAttemptId || 'unknown'}`;
+                    this.isExamWindow = (window.opener != null);
+
+                    // ==== BroadcastChannel: cegah multi-window ====
+                    this.bc = new BroadcastChannel(this.sessionKey);
+                    this.bc.onmessage = (e) => {
+                        if (e.data === 'EXAM_ALREADY_ACTIVE' && !this.isExamWindow) {
+                            alert('Tes sudah aktif di jendela lain. Jendela ini akan ditutup.');
+                            window.close();
+                        }
+                    };
+                    this.bc.postMessage('EXAM_ALREADY_ACTIVE');
+
+                    // ==== Tandai sesi aktif hanya pada jendela ujian ====
+                    if (this.isExamWindow) {
+                        localStorage.setItem(this.sessionKey, String(Date.now()));
+                        // housekeeping: tidak memicu dialog karena tanpa e.returnValue
+                        window.addEventListener('beforeunload', () => {
+                            localStorage.removeItem(this.sessionKey);
+                            try {
+                                this.bc.close();
+                            } catch (_) {}
+                        });
+                    } else {
+                        if (localStorage.getItem(this.sessionKey)) {
+                            alert('Tes sedang berlangsung di jendela lain. Jendela ini akan ditutup.');
+                            window.close();
+                            return;
+                        }
+                    }
+
+                    // ==== Proteksi beforeunload: pasang SEKALI (capture: true) ====
+                    if (!window.__examUnloadAttached) {
+                        this.beforeUnloadHandler = (e) => {
+                            if (!this.preventUnload) return;
+                            e.preventDefault();
+                            e.returnValue = ''; // sumber dialog; akan kita lepas sebelum submit/end
+                        };
+                        window.addEventListener('beforeunload', this.beforeUnloadHandler, {
+                            capture: true
+                        });
+                        window.__examUnloadAttached = true;
+                    }
+
+                    // ==== Guards lain ====
+                    this.bindGuards();
+
+                    // ==== Re-bind setelah Livewire re-render (tanpa pasang beforeunload ulang) ====
+                    document.addEventListener('livewire:navigated', () => this.bindGuards());
+                    if (window.Livewire) {
+                        Livewire.hook?.('message.processed', () => this.bindGuards());
+                    }
+                },
+
+                /* ---------- guards ---------- */
+                bindGuards() {
+                    const opts = {
+                        capture: true
+                    };
+
+                    // Cegah back (tanpa alert blocking)
+                    history.pushState(null, '', location.href);
+                    window.onpopstate = () => {
+                        history.pushState(null, '', location.href);
+                    };
+
+                    // Context menu & clipboard
+                    document.addEventListener('contextmenu', this._ctxPrevent ||= (e) => {
+                        e.preventDefault();
+                        this._recordViolation('contextmenu', 'action');
+                    }, opts);
+
+                    ['copy', 'cut', 'paste'].forEach(type => {
+                        const key = `_${type}Prevent`;
+                        document.addEventListener(type, this[key] ||= (e) => {
+                            e.preventDefault();
+                            this._recordViolation(type, 'action');
+                        }, opts);
+                    });
+
+                    // (opsional) blokir right-click via mouse
+                    document.addEventListener('mousedown', this._mdPrevent ||= (e) => {
+                        if (e.button === 2) {
+                            e.preventDefault();
+                            this._recordViolation('right_click', 'action');
+                        }
+                    }, opts);
+
+                    // Keyboard shortcuts
+                    document.addEventListener('keydown', this._kd ||= (e) => this.blockKeys(e), opts);
+                    document.addEventListener('keypress', this._kp ||= (e) => this.blockKeys(e), opts);
+
+                    // Fokus/visibility → hitung pelanggaran
+                    document.addEventListener('visibilitychange', this._visCb ||= () => {
+                        if (document.hidden) this._recordViolation('focus_lost_visibilitychange', 'focus');
+                    }, opts);
+
+                    // Jika mau hitung blur window, aktifkan:
+                    // window.addEventListener('blur', this._blurCb ||= () => {
+                    //   this._recordViolation('focus_lost_blur', 'focus');
+                    // }, opts);
+
+                    // DevTools heuristik (opsional)
+                    clearInterval(this._devIntv);
+                    this._devIntv = setInterval(() => {
+                        const t = 160;
+                        const open = (window.outerWidth - window.innerWidth > t) ||
+                            (window.outerHeight - window.innerHeight > t);
+                        if (open) this._recordViolation('devtools_open', 'devtools');
+                    }, 1500);
+                },
+
+                blockKeys(e) {
+                    const key = (e.key || '').toLowerCase();
+                    const ctrl = e.ctrlKey || e.metaKey;
+                    const shift = e.shiftKey;
+                    const tag = (e.target?.tagName || '').toUpperCase();
+
+                    // refresh/back
+                    if (key === 'f5' || (ctrl && key === 'r')) {
+                        e.preventDefault();
+                    }
+
+                    // backspace di luar input/textarea
+                    if (key === 'backspace' && !['INPUT', 'TEXTAREA'].includes(tag)) {
+                        e.preventDefault();
+                    }
+
+                    // clipboard / save / print / view source / select all
+                    if (ctrl && ['c', 'x', 's', 'p', 'u', 'a'].includes(key)) {
+                        e.preventDefault();
+                    }
+
+                    // devtools (aktifkan F12 jika mau)
+                    // if (key === 'f12') { e.preventDefault(); }
+                    if (ctrl && shift && ['i', 'c', 'j'].includes(key)) {
+                        e.preventDefault();
+                    }
+                },
+
+                /* ---------- helpers ---------- */
+                _recordViolation(name, kind = 'focus') {
+                    // Kirim payload PRIMITIF ke Livewire (hindari objek event)
+                    if (window.Livewire) {
+                        if (typeof Livewire.emit === 'function') {
+                            Livewire.emit('exam-client-event', String(name), String(kind), new Date().toISOString());
+                        } else if (typeof Livewire.dispatch === 'function') {
+                            Livewire.dispatch('exam-client-event', {
+                                name: String(name),
+                                kind: String(kind),
+                                at: new Date().toISOString()
+                            });
+                        }
+                    }
+
+                    if (kind === 'devtools') this.devtoolsViolations++;
+                    if (kind === 'focus') this.focusViolations++;
+
+                    const total = Math.max(this.focusViolations, this.devtoolsViolations);
+                    if (total >= this.maxViolations) this.endByViolation('too_many_violations');
+                },
+
+                endByViolation(reason = 'too_many_violations') {
+                    // Lepas guard dulu supaya tidak ada dialog
+                    this.disableUnloadGuard();
+
+                    if (window.Livewire) {
+                        if (typeof Livewire.emit === 'function') {
+                            Livewire.emit('force-submit-exam', String(reason));
+                        } else if (typeof Livewire.dispatch === 'function') {
+                            Livewire.dispatch('force-submit-exam', {
+                                reason: String(reason)
+                            });
+                        }
+                    }
+                },
+
+                disableUnloadGuard() {
+                    this.preventUnload = false;
+
+                    // Lepas listener yang kita pasang (pakai opsi yang sama)
+                    if (this.beforeUnloadHandler) {
+                        try {
+                            window.removeEventListener('beforeunload', this.beforeUnloadHandler, {
+                                capture: true
+                            });
+                        } catch (_) {}
+                        try {
+                            window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+                        } catch (_) {}
+                        this.beforeUnloadHandler = null;
+                    }
+
+                    // Antisipasi handler lain yang mungkin dipasang via assignment
+                    window.onbeforeunload = null;
+
+                    // Izinkan attach ulang jika diperlukan kemudian
+                    window.__examUnloadAttached = false;
+                }
+            };
+        }
+    </script>
+
+
+
+    <script>
         // Util: format 00:00:00
         const fmt2 = n => n.toString().padStart(2, '0');
 

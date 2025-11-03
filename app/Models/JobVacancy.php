@@ -58,7 +58,7 @@ class JobVacancy extends Model implements HasMedia
             get: fn($value) =>
             $value
                 ? Storage::disk('public')->url($value) . '?v=' . md5($value . filemtime(Storage::disk('public')->path($value)))
-                : null
+                : asset('images/include/illust2.jpg') . '?v=' . md5(filemtime(public_path('images/include/illust2.jpg')))
         );
     }
 

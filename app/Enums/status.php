@@ -17,6 +17,7 @@ enum status: string implements HasLabel, HasIcon
     case expired = 'expired';
     case submitted = 'submitted';
     case graded = 'graded';
+    case timeout = 'timeout';
     public function getLabel(): ?string
     {
         return match ($this) {
@@ -30,6 +31,7 @@ enum status: string implements HasLabel, HasIcon
             self::expired => 'Kadaluarsa',
             self::submitted => 'Dikirim',
             self::graded => 'Dinilai',
+            self::timeout => 'Waktu Habis',
         };
     }
 
@@ -46,6 +48,7 @@ enum status: string implements HasLabel, HasIcon
             self::expired => 'danger',
             self::submitted => 'secondary',
             self::graded => 'secondary',
+            self::timeout => 'danger',
         };
     }
 
@@ -62,6 +65,7 @@ enum status: string implements HasLabel, HasIcon
             self::expired => 'heroicon-s-x-circle',
             self::submitted => 'heroicon-s-check-circle',
             self::graded => 'heroicon-s-check-circle',
+            self::timeout => 'heroicon-s-x-circle',
         };
     }
 }

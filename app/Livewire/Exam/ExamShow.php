@@ -328,7 +328,7 @@ class ExamShow extends Component
     #[On('exam-client-event')]
     public function logClientEvent($name, $at = null)
     {
-        ds($name);
+        $this->dispatch('notification', type: 'error', title: 'Hati-hati!', message: 'Anda terdeteksi melakukan pelanggaran!', timeout: 3000);
         ExamClientEvent::create([
             'id' => (string) Str::uuid(),
             'applicant_test_id' => $this->attempt->applicant_test_id,
@@ -344,9 +344,9 @@ class ExamShow extends Component
             // ->whereIn('event', ['focus_lost_blur', 'focus_lost_visibilitychange', 'devtools_open', 'multi_window_detected'])
             ->count();
         // ds($violationsCount);
-        if ($violationsCount >= 5) {
-            $this->submitAll();
-        }
+        // if ($violationsCount >= 5) {
+        //     $this->submitAll();
+        // }
     }
 
     public function render()

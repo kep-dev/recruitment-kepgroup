@@ -28,10 +28,11 @@ class Applicant extends Model
     public function photo(): Attribute
     {
         return Attribute::make(
-            get: fn($value) =>
-            $value
-                ? Storage::disk('public')->url($value) . '?v=' . md5($value . filemtime(Storage::disk('public')->path($value)))
-                : null
+            get: fn($value) => $value
+                ? Storage::disk('public')->url($value)
+                . '?v=' . md5($value . filemtime(Storage::disk('public')->path($value)))
+                : asset('images/include/default-user.jpg')
+                . '?v=' . md5(filemtime(public_path('images/include/default-user.jpg')))
         );
     }
 

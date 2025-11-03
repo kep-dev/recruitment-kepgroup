@@ -17,6 +17,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Illuminate\Database\Eloquent\Model;
 
 class JobVacancyTestItemsRelationManager extends RelationManager
 {
@@ -35,14 +36,25 @@ class JobVacancyTestItemsRelationManager extends RelationManager
         return [
             Select::make('test_id')
                 ->label('Soal')
-                ->options(
-                    Test::all()
-                        ->whereNotIn('id', $this->getOwnerRecord()->jobVacancyTestItems()->pluck('test_id'))
-                        ->pluck('title', 'id')
-                )
-                // ->hidden(EditAction::class)
                 ->searchable()
-                ->required(),
+                ->required()
+                ->options(function ($livewire, ?Model $record) {
+                    $owner = $livewire->getOwnerRecord(); // parent (mis. JobVacancy)
+                    $excluded = $owner->jobVacancyTestItems()->pluck('test_id')->all();
+
+                    // Jika edit, pastikan nilai sekarang TIDAK di-exclude
+                    if ($record && $record->test_id) {
+                        $excluded = array_diff($excluded, [$record->test_id]);
+                    }
+
+                    return Test::query()
+                        ->whereNotIn('id', $excluded)
+                        ->orderBy('title')
+                        ->pluck('title', 'id')
+                        ->all();
+                })
+                // Guard tambahan: pastikan label tampil meski opsi belum ter‐load penuh
+                ->getOptionLabelUsing(fn($value) => Test::find($value)?->title),
             TextInput::make('number_of_question')
                 ->label('Jumlah Soal')
                 ->required()

@@ -65,7 +65,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                'role:super_admin',
+                // 'role:super_admin|staff_hrd',
             ])
             ->navigationGroups([
                 'Lowongan',

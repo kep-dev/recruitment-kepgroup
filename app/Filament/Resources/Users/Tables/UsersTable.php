@@ -3,12 +3,16 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use App\Models\Role;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Illuminate\Support\Facades\Hash;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\SelectFilter;
 
 class UsersTable
@@ -54,6 +58,24 @@ class UsersTable
             ])
             ->recordActions([
                 ViewAction::make(),
+                Action::make('resetPassword')
+                    ->label('Reset Password')
+                    ->icon(LucideIcon::TimerReset)
+                    ->schema([
+                        TextInput::make('password')
+                            ->password()
+                            ->label('Password Baru')
+                            ->required(),
+                        TextInput::make('password_confirmation')
+                            ->password()
+                            ->label('Konfirmasi Password Baru')
+                            ->required(),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->update([
+                            'password' => Hash::make($data['password']),
+                        ]);
+                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

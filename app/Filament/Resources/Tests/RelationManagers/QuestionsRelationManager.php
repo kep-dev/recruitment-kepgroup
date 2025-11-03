@@ -42,7 +42,6 @@ class QuestionsRelationManager extends RelationManager
                 RichEditor::make('question_text')
                     ->label('Pertanyaan')
                     ->required()
-                    ->maxLength(255)
                     ->columnSpanFull(),
                 Select::make('type')
                     ->label('Tipe')

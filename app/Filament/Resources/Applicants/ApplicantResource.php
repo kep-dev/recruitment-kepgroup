@@ -8,6 +8,7 @@ use App\Models\Applicant;
 use Filament\Tables\Table;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use App\Filament\Resources\Applicants\Pages\EditApplicant;
 use App\Filament\Resources\Applicants\Pages\ViewApplicant;
@@ -49,6 +50,12 @@ class ApplicantResource extends Resource
     {
         return ApplicantsTable::configure($table);
     }
+
+    public static function getEloquentQuery(): Builder
+{
+    return parent::getEloquentQuery()
+    ->whereRelation('user.roles', 'name', 'applicant');
+}
 
     public static function getRelations(): array
     {

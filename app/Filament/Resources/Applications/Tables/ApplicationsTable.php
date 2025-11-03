@@ -51,12 +51,24 @@ class ApplicationsTable
                 TextColumn::make('jobVacancy.title')
                     ->label('Lowongan')
                     ->searchable(),
-                TextColumn::make('latestStageProgress.jobVacancyStage.stageType.name')
-                    ->badge()
-                    ->label('Tahap'),
-                TextColumn::make('latestStageProgress.status')
-                    ->badge()
-                    ->label('Status'),
+                TextColumn::make('user.latestEducation.education_level')
+                    ->label('Pendidikan Terakhir')
+                    ->searchable(),
+                TextColumn::make('user.latestEducation.major')
+                    ->label('Jurusan')
+                    ->searchable(),
+                TextColumn::make('user.latestEducation.university')
+                    ->label('Universitas')
+                    ->searchable(),
+                TextColumn::make('user.latestEducation.gpa')
+                    ->label('IPK')
+                    ->searchable(),
+                // TextColumn::make('latestStageProgress.jobVacancyStage.stageType.name')
+                //     ->badge()
+                //     ->label('Tahap'),
+                // TextColumn::make('latestStageProgress.status')
+                //     ->badge()
+                //     ->label('Status'),
                 SelectColumn::make('final_status')
                     ->label('Status Akhir')
                     ->options([

@@ -15,7 +15,7 @@
     @endif
 
     <div x-data="{ dismissed: false }" x-show="!dismissed" x-cloak
-        class="bg-yellow-50 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-900/10 dark:border-yellow-800 dark:text-yellow-300 mb-4"
+        class="bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 text-sm text-yellow-800 rounded-lg p-4 dark:text-yellow-300 mb-4"
         role="alert" tabindex="-1" aria-labelledby="exam-rules-label">
         <div class="flex gap-3">
             <div class="shrink-0">

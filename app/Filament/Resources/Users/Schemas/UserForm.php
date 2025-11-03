@@ -23,6 +23,7 @@ class UserForm
                     ->email()
                     ->columnSpanFull(),
                 TextInput::make('password')
+                    ->hiddenOn('edit')
                     ->password()
                     ->columnSpanFull(),
                 Select::make('roles')
@@ -33,9 +34,9 @@ class UserForm
                     ->searchable()
                     ->options(
                         Role::query()
-                        ->whereNotIn('name', ['applicant']) // kecuali role applicant
-                        ->pluck('name', 'id')
-                        ->toArray()
+                            ->whereNotIn('name', ['applicant']) // kecuali role applicant
+                            ->pluck('name', 'id')
+                            ->toArray()
                     )
                     ->columnSpanFull(),
 

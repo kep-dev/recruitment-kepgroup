@@ -536,29 +536,34 @@ init()"
 
                     // refresh/back
                     if (key === 'f5' || (ctrl && key === 'r')) {
+                        this._recordViolation('refresh', 'focus')
                         e.preventDefault();
                     }
 
                     // backspace di luar input/textarea
                     if (key === 'backspace' && !['INPUT', 'TEXTAREA'].includes(tag)) {
+                        this._recordViolation('backspace', 'focus')
                         e.preventDefault();
                     }
 
                     // clipboard / save / print / view source / select all
                     if (ctrl && ['c', 'x', 's', 'p', 'u', 'a'].includes(key)) {
+                        this._recordViolation('clipboard', 'focus')
                         e.preventDefault();
                     }
 
                     // devtools (aktifkan F12 jika mau)
-                    // if (key === 'f12') { e.preventDefault(); }
+                    if (key === 'f12') {
+                        e.preventDefault();
+                    }
                     if (ctrl && shift && ['i', 'c', 'j'].includes(key)) {
+                        this._recordViolation('devtools', 'focus')
                         e.preventDefault();
                     }
                 },
 
                 /* ---------- helpers ---------- */
                 _recordViolation(name, kind = 'focus') {
-                    // Kirim payload PRIMITIF ke Livewire (hindari objek event)
                     if (window.Livewire) {
                         if (typeof Livewire.emit === 'function') {
                             Livewire.emit('exam-client-event', String(name), String(kind), new Date().toISOString());
@@ -575,7 +580,7 @@ init()"
                     if (kind === 'focus') this.focusViolations++;
 
                     const total = Math.max(this.focusViolations, this.devtoolsViolations);
-                    if (total >= this.maxViolations) this.endByViolation('too_many_violations');
+                    // if (total >= this.maxViolations) this.endByViolation('too_many_violations');
                 },
 
                 endByViolation(reason = 'too_many_violations') {

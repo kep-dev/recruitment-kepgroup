@@ -29,7 +29,7 @@ class MyApplication extends Component
     {
         $application = $this->user->applications()->find($this->applicationId);
         $application->delete();
-        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil membatalkan lamaran.', timeout: 1500);
+        $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil membatalkan lamaran.', timeout: 3000);
     }
 
     #[Computed]

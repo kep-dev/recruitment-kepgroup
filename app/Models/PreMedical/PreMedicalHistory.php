@@ -12,6 +12,8 @@ class PreMedicalHistory extends Model
 
     protected $fillable = [
         'pre_medical_result_id',
+        'complaint',
+        'anamesis',
         'personal_history',
         'family_history',
         'allergies',

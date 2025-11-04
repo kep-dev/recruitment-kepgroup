@@ -23,7 +23,9 @@ class ApplicantTest extends Model
     protected function casts(): array
     {
         return [
-            'status' => status::class
+            'status' => status::class,
+            'started_at'  => 'datetime:Asia/Jakarta',
+            'completed_at' => 'datetime:Asia/Jakarta',
         ];
     }
 

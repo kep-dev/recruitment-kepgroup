@@ -65,10 +65,12 @@ class PreMedicalSessionApplicationInfolist
                         ]),
 
                         // RIWAYAT KESEHATAN
-                        Tab::make('Riwayat')->schema([
-                            Section::make('Riwayat Kesehatan')->columns(12)->schema([
-                                TextEntry::make('preMedicalResult.preMedicalHistory.personal_history')->label('Riwayat Penyakit')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalHistory.family_history')->label('Riwayat Keluarga')->html()->placeholder('-')->columnSpan(12),
+                        Tab::make('Anamesis')->schema([
+                            Section::make('Anamesis')->columns(12)->schema([
+                                TextEntry::make('preMedicalResult.preMedicalHistory.complaint')->label('Keluhan')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalHistory.anamesis')->label('Anamesis')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalHistory.personal_history')->label('Riwayat Penyakit Terdahulu')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalHistory.family_history')->label('Riwayat Penyakit Keluarga')->html()->placeholder('-')->columnSpan(12),
                                 TextEntry::make('preMedicalResult.preMedicalHistory.allergies')->label('Alergi')->html()->placeholder('-')->columnSpan(12),
                                 TextEntry::make('preMedicalResult.preMedicalHistory.current_medications')->label('Obat Sedang Digunakan')->html()->placeholder('-')->columnSpan(12),
                                 TextEntry::make('preMedicalResult.preMedicalHistory.past_surgeries')->label('Riwayat Operasi')->html()->placeholder('-')->columnSpan(12),
@@ -261,7 +263,7 @@ class PreMedicalSessionApplicationInfolist
                                     TextEntry::make('preMedicalResult.preMedicalObgyn.para')->label('P')->placeholder('-')->columnSpan(2),
                                     TextEntry::make('preMedicalResult.preMedicalObgyn.abortus')->label('A')->placeholder('-')->columnSpan(2),
                                 ])
-                                ->columnSpanFull(),
+                                    ->columnSpanFull(),
                                 TextEntry::make('preMedicalResult.preMedicalObgyn.uterus_exam')->label('Uterus')->html()->placeholder('-')->columnSpan(12),
                                 TextEntry::make('preMedicalResult.preMedicalObgyn.adnexa_exam')->label('Adnexa')->html()->placeholder('-')->columnSpan(12),
                                 TextEntry::make('preMedicalResult.preMedicalObgyn.cervix_exam')->label('Cervix')->html()->placeholder('-')->columnSpan(12),

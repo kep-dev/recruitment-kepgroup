@@ -41,7 +41,7 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->withoutRole('applicant');
+        return parent::getEloquentQuery();
     }
 
     public static function getRelations(): array

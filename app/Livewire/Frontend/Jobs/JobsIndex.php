@@ -53,7 +53,7 @@ class JobsIndex extends Component
                 'jobLevel:id,name',
             ])
             ->where('end_date', '>', \Carbon\Carbon::now())
-            // ->where('status', true)
+            ->where('status', true)
             ->latest()
             ->paginate(10);
     }

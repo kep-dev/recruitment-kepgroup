@@ -174,10 +174,17 @@ class PreMedicalSessionApplicationsTable
             ])
             ->recordActions([
                 Action::make('medicalCheckUp')
+                    ->closeModalByClickingAway(false)
                     ->databaseTransaction()
                     ->steps([
-                        Step::make('Riwayat Kesehatan')
+                        Step::make('Anamesis')
                             ->schema([
+                                RichEditor::make('preMedicalHistory.complaint')
+                                    ->label('Keluhan Saat Ini')
+                                    ->required(),
+                                RichEditor::make('preMedicalHistory.anamesis')
+                                    ->label('Anamesis')
+                                    ->required(),
                                 RichEditor::make('preMedicalHistory.personal_history')
                                     ->label('Riwayat Penyakit Terdahulu')
                                     ->required(),
@@ -223,259 +230,457 @@ class PreMedicalSessionApplicationsTable
                                         'md' => 12,
                                         'lg' => 12,
                                     ])->schema([
-                                        TextInput::make('preMedicalPhysical.height_cm')
-                                            ->label('Tinggi (cm)')
-                                            ->required()
-                                            ->columnSpan(4),
-                                        TextInput::make('preMedicalPhysical.weight_kg')
-                                            ->label('Berat (kg)')
-                                            ->required()
-                                            ->columnSpan(4),
-                                        TextInput::make('preMedicalPhysical.temperature_c')
-                                            ->label('Suhu (°C)')
-                                            ->required()
-                                            ->columnSpan(4),
-                                        TextInput::make('preMedicalPhysical.bp_systolic')
-                                            ->label('Tekanan Darah Sistolik (mmHg)')
-                                            ->required()
-                                            ->columnSpan(3),
-                                        TextInput::make('preMedicalPhysical.bp_diastolic')
-                                            ->label('Tekanan Darah Diastolik (mmHg)')
-                                            ->required()
-                                            ->columnSpan(3),
-                                        TextInput::make('preMedicalPhysical.heart_rate_bpm')
-                                            ->label('Nadi (bpm)')
-                                            ->required()
-                                            ->columnSpan(3),
-                                        TextInput::make('preMedicalPhysical.resp_rate_per_min')
-                                            ->label('Respirasi (per menit)')
-                                            ->required()
-                                            ->columnSpan(3),
-                                        RichEditor::make('preMedicalPhysical.head_neck')
-                                            ->label('Pemeriksaan kepala dan leher')
-                                            ->required()
+
+                                        Section::make('Pemeriksaan Fisik')
+                                            ->columns(12)
+                                            ->schema([
+                                                TextInput::make('preMedicalPhysical.height_cm')
+                                                    ->label('Tinggi (cm)')
+                                                    ->required()
+                                                    ->columnSpan(4),
+                                                TextInput::make('preMedicalPhysical.weight_kg')
+                                                    ->label('Berat (kg)')
+                                                    ->required()
+                                                    ->columnSpan(4),
+                                                TextInput::make('preMedicalPhysical.temperature_c')
+                                                    ->label('Suhu (°C)')
+                                                    ->required()
+                                                    ->columnSpan(4),
+                                                TextInput::make('preMedicalPhysical.bp_systolic')
+                                                    ->label('Tekanan Darah Sistolik (mmHg)')
+                                                    ->required()
+                                                    ->columnSpan(3),
+                                                TextInput::make('preMedicalPhysical.bp_diastolic')
+                                                    ->label('Tekanan Darah Diastolik (mmHg)')
+                                                    ->required()
+                                                    ->columnSpan(3),
+                                                TextInput::make('preMedicalPhysical.heart_rate_bpm')
+                                                    ->label('Nadi (bpm)')
+                                                    ->required()
+                                                    ->columnSpan(3),
+                                                TextInput::make('preMedicalPhysical.resp_rate_per_min')
+                                                    ->label('Respirasi (per menit)')
+                                                    ->required()
+                                                    ->columnSpan(3),
+                                                RichEditor::make('preMedicalPhysical.head_neck')
+                                                    ->label('Pemeriksaan kepala dan leher')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalPhysical.chest_heart')
+                                                    ->label('Pemeriksaan dada dan jantung')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalPhysical.chest_lung')
+                                                    ->label('Pemeriksaan dada dan paru-paru')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalPhysical.abdomen_liver')
+                                                    ->label('Pemeriksaan abdomen dan ginjal')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalPhysical.abdomen_spleen')
+                                                    ->label('Pemeriksaan abdomen dan perut')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalPhysical.extremities')
+                                                    ->label('Pemeriksaan ekstremitas')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalPhysical.others')
+                                                    ->label('Pemeriksaan lainnya')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                TextInput::make('preMedicalPhysical.bmi')
+                                                    ->label('BMI')
+                                                    ->required()
+                                                    ->columnSpan(6),
+                                                TextInput::make('preMedicalPhysical.blood_type')
+                                                    ->label('Golongan Darah')
+                                                    ->required()
+                                                    ->columnSpan(6),
+                                            ])
                                             ->columnSpanFull(),
-                                        RichEditor::make('preMedicalPhysical.chest_heart')
-                                            ->label('Pemeriksaan dada dan jantung')
-                                            ->required()
+
+                                        Section::make('Pemeriksaan THT')
+                                            ->schema([
+                                                RichEditor::make('preMedicalEnt.ear')
+                                                    ->label('Pemeriksaan Telinga')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalEnt.nose')
+                                                    ->label('Pemeriksaan Hidung')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalEnt.throat')
+                                                    ->label('Pemeriksaan Tenggorokan')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalEnt.others')
+                                                    ->label('Pemeriksaan lainnya')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                            ])
                                             ->columnSpanFull(),
-                                        RichEditor::make('preMedicalPhysical.chest_lung')
-                                            ->label('Pemeriksaan dada dan paru-paru')
-                                            ->required()
+
+                                        Section::make('Pemeriksaan Mata')
+                                            ->schema([
+                                                Section::make('Tanpa Kacamata')
+                                                    ->columns(12)
+                                                    ->schema([
+                                                        TextInput::make('preMedicalEyes.va_unaided_right')
+                                                            ->label('Tanpa Kacamata Kanan')
+                                                            ->required()
+                                                            ->columnSpan(6),
+                                                        TextInput::make('preMedicalEyes.va_unaided_left')
+                                                            ->label('Tanpa Kacamata Kiri')
+                                                            ->required()
+                                                            ->columnSpan(6),
+                                                    ])
+                                                    ->columnSpanFull(),
+                                                Section::make('Dengan Kacamata')
+                                                    ->columns(12)
+                                                    ->schema([
+                                                        TextInput::make('preMedicalEyes.va_aided_right')
+                                                            ->label('Dengan Kacamata Kanan')
+                                                            ->required()
+                                                            ->columnSpan(6),
+                                                        TextInput::make('preMedicalEyes.va_aided_left')
+                                                            ->label('Dengan Kacamata Kiri')
+                                                            ->required()
+                                                            ->columnSpan(6),
+                                                    ])
+                                                    ->columnSpanFull(),
+                                                ToggleButtons::make('preMedicalEyes.color_vision')
+                                                    ->label('Buta Warna')
+                                                    ->options([
+                                                        'normal' => 'Normal',
+                                                        'partial' => 'Sebagian',
+                                                        'total' => 'Total'
+                                                    ])
+                                                    ->columnSpanFull()
+                                                    ->inline(),
+                                                RichEditor::make('preMedicalEyes.conjunctiva')
+                                                    ->label('Ketajaman Penglihatan')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalEyes.sclera')
+                                                    ->label('Sclera')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalEyes.others')
+                                                    ->label('Pemeriksaan lainnya')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                            ])
                                             ->columnSpanFull(),
-                                        RichEditor::make('preMedicalPhysical.abdomen_liver')
-                                            ->label('Pemeriksaan abdomen dan ginjal')
-                                            ->required()
+
+                                        Section::make('Pemeriksaan Gigi')
+                                            ->schema([
+                                                Repeater::make('preMedicalDentalFindings')
+                                                    ->table([
+                                                        TableColumn::make('Gigi'),
+                                                        TableColumn::make('Status'),
+                                                        TableColumn::make('Lapisan'),
+                                                        TableColumn::make('Kerusakan'),
+                                                        TableColumn::make('Catatan'),
+                                                    ])
+                                                    ->compact()
+                                                    ->addActionLabel('Tambah Gigi')
+                                                    ->reorderable(false)
+                                                    ->schema([
+                                                        Select::make('dental_teeth_id')
+                                                            ->label('Gigi')
+                                                            ->options(
+                                                                DentalTeeth::query()
+                                                                    ->select('id', 'name', 'tooth_type', 'tooth_number', 'quadrant', 'fdi_code', 'dentition')
+                                                                    ->get()
+                                                                    ->mapWithKeys(function ($tooth) {
+                                                                        return [
+                                                                            $tooth->id => "{$tooth->fdi_code} - {$tooth->name} ({$tooth->tooth_type}, {$tooth->dentition}) - No: {$tooth->tooth_number} Q{$tooth->quadrant}"
+                                                                        ];
+                                                                    })
+                                                                    ->toArray()
+                                                            )
+                                                            ->searchable()
+                                                            ->placeholder('Pilih gigi'),
+                                                        Select::make('dental_status_id')
+                                                            ->options(
+                                                                DentalStatus::query()
+                                                                    ->pluck('description', 'id')
+                                                            )
+                                                            ->required(),
+                                                        Select::make('surfaces')
+                                                            ->label('Lapisan')
+                                                            ->options([
+                                                                'O' => 'Occlusal (permukaan kunyah)',
+                                                                'M' => 'Mesial (depan)',
+                                                                'D' => 'Distal (belakang)',
+                                                                'B' => 'Buccal (pipih luar pipi)',
+                                                                'L' => 'Lingual (dalam lidah)',
+                                                                'P' => 'Palatal (dalam langit-langit)',
+                                                                'I' => 'Incisal (tepi potong gigi depan)',
+                                                                'F' => 'Facial (permukaan depan)',
+                                                                'W' => 'Whole tooth (seluruh gigi)',
+                                                            ]),
+                                                        Select::make('severity')
+                                                            ->label('Kerusakan')
+                                                            ->options([
+                                                                'mild' => 'Ringan',
+                                                                'moderate' => 'Sedang',
+                                                                'severe' => 'Parah',
+                                                            ]),
+                                                        TextInput::make('notes')
+                                                    ]),
+                                                RichEditor::make('preMedicalDentals.general_condition')
+                                                    ->label('Pemeriksaan Umum')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalDentals.occlusion')
+                                                    ->label('Pemeriksaan Oklusif')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalDentals.others')
+                                                    ->label('Pemeriksaan lainnya')
+                                                    ->required()
+                                                    ->columnSpanFull(),
+                                            ])
                                             ->columnSpanFull(),
-                                        RichEditor::make('preMedicalPhysical.abdomen_spleen')
-                                            ->label('Pemeriksaan abdomen dan perut')
-                                            ->required()
+
+                                        Section::make('Pemeriksaan Kandungan')
+                                            ->schema([
+                                                ToggleButtons::make('preMedicalObgyns.is_pregnant')
+                                                    ->label('Apakah sedang hamil?')
+                                                    ->boolean()
+                                                    ->nullable()
+                                                    ->inline(),
+                                                DatePicker::make('preMedicalObgyns.lmp_date')
+                                                    ->label('Tanggal Terakhir Menstruasi')
+                                                    ->nullable(),
+                                                TextInput::make('preMedicalObgyns.gravida')
+                                                    ->label('G')
+                                                    ->nullable()
+                                                    ->numeric(),
+                                                TextInput::make('preMedicalObgyns.para')
+                                                    ->label('P')
+                                                    ->nullable()
+                                                    ->numeric(),
+                                                TextInput::make('preMedicalObgyns.abortus')
+                                                    ->label('A')
+                                                    ->nullable()
+                                                    ->numeric(),
+                                                RichEditor::make('preMedicalObgyns.uterus_exam')
+                                                    ->label('Pemeriksaan Uterus')
+                                                    ->nullable()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalObgyns.adnexa_exam')
+                                                    ->label('Pemeriksaan Adnexa')
+                                                    ->nullable()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalObgyns.cervix_exam')
+                                                    ->label('Pemeriksaan Cervix')
+                                                    ->nullable()
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('preMedicalObgyns.others')
+                                                    ->label('Pemeriksaan lainnya')
+                                                    ->nullable()
+                                                    ->columnSpanFull(),
+                                            ])
                                             ->columnSpanFull(),
-                                        RichEditor::make('preMedicalPhysical.extremities')
-                                            ->label('Pemeriksaan ekstremitas')
-                                            ->required()
-                                            ->columnSpanFull(),
-                                        RichEditor::make('preMedicalPhysical.others')
-                                            ->label('Pemeriksaan lainnya')
-                                            ->required()
-                                            ->columnSpanFull(),
-                                        TextInput::make('preMedicalPhysical.bmi')
-                                            ->label('BMI')
-                                            ->required()
-                                            ->columnSpan(6),
-                                        TextInput::make('preMedicalPhysical.blood_type')
-                                            ->label('Golongan Darah')
-                                            ->required()
-                                            ->columnSpan(6),
-                                    ])
+
+                                    ]),
 
                             ]),
-                        Step::make('Pemeriksaan THT')
-                            ->schema([
-                                RichEditor::make('preMedicalEnt.ear')
-                                    ->label('Pemeriksaan Telinga')
-                                    ->required()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalEnt.nose')
-                                    ->label('Pemeriksaan Hidung')
-                                    ->required()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalEnt.throat')
-                                    ->label('Pemeriksaan Tenggorokan')
-                                    ->required()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalEnt.others')
-                                    ->label('Pemeriksaan lainnya')
-                                    ->required()
-                                    ->columnSpanFull(),
-                            ]),
-                        Step::make('Pemeriksaan Mata')
-                            ->schema([
-                                Grid::make()
-                                    ->columns(12)
-                                    ->columnSpan([
-                                        'sm' => 12,
-                                        'md' => 12,
-                                        'lg' => 12,
-                                    ])->schema([
-                                        Section::make('Tanpa Kacamata')
-                                            ->columns(12)
-                                            ->schema([
-                                                TextInput::make('preMedicalEyes.va_unaided_right')
-                                                    ->label('Tanpa Kacamata Kanan')
-                                                    ->required()
-                                                    ->columnSpan(6),
-                                                TextInput::make('preMedicalEyes.va_unaided_left')
-                                                    ->label('Tanpa Kacamata Kiri')
-                                                    ->required()
-                                                    ->columnSpan(6),
-                                            ])
-                                            ->columnSpanFull(),
-                                        Section::make('Dengan Kacamata')
-                                            ->columns(12)
-                                            ->schema([
-                                                TextInput::make('preMedicalEyes.va_aided_right')
-                                                    ->label('Dengan Kacamata Kanan')
-                                                    ->required()
-                                                    ->columnSpan(6),
-                                                TextInput::make('preMedicalEyes.va_aided_left')
-                                                    ->label('Dengan Kacamata Kiri')
-                                                    ->required()
-                                                    ->columnSpan(6),
-                                            ])
-                                            ->columnSpanFull(),
-                                        ToggleButtons::make('preMedicalEyes.color_vision')
-                                            ->label('Buta Warna')
-                                            ->options([
-                                                'normal' => 'Normal',
-                                                'partial' => 'Sebagian',
-                                                'total' => 'Total'
-                                            ])
-                                            ->columnSpanFull()
-                                            ->inline(),
-                                        RichEditor::make('preMedicalEyes.conjunctiva')
-                                            ->label('Ketajaman Penglihatan')
-                                            ->required()
-                                            ->columnSpanFull(),
-                                        RichEditor::make('preMedicalEyes.sclera')
-                                            ->label('Sclera')
-                                            ->required()
-                                            ->columnSpanFull(),
-                                        RichEditor::make('preMedicalEyes.others')
-                                            ->label('Pemeriksaan lainnya')
-                                            ->required()
-                                            ->columnSpanFull(),
-                                    ])
-                            ]),
-                        Step::make('Pemeriksaan Gigi')
-                            ->schema([
-                                Repeater::make('preMedicalDentalFindings')
-                                    ->table([
-                                        TableColumn::make('Gigi'),
-                                        TableColumn::make('Status'),
-                                        TableColumn::make('Lapisan'),
-                                        TableColumn::make('Kerusakan'),
-                                        TableColumn::make('Catatan'),
-                                    ])
-                                    ->compact()
-                                    ->addActionLabel('Tambah Gigi')
-                                    ->reorderable(false)
-                                    ->schema([
-                                        Select::make('dental_teeth_id')
-                                            ->label('Gigi')
-                                            ->options(
-                                                DentalTeeth::query()
-                                                    ->select('id', 'name', 'tooth_type', 'tooth_number', 'quadrant', 'fdi_code', 'dentition')
-                                                    ->get()
-                                                    ->mapWithKeys(function ($tooth) {
-                                                        return [
-                                                            $tooth->id => "{$tooth->fdi_code} - {$tooth->name} ({$tooth->tooth_type}, {$tooth->dentition}) - No: {$tooth->tooth_number} Q{$tooth->quadrant}"
-                                                        ];
-                                                    })
-                                                    ->toArray()
-                                            )
-                                            ->searchable()
-                                            ->placeholder('Pilih gigi'),
-                                        Select::make('dental_status_id')
-                                            ->options(
-                                                DentalStatus::query()
-                                                    ->pluck('description', 'id')
-                                            )
-                                            ->required(),
-                                        Select::make('surfaces')
-                                            ->label('Lapisan')
-                                            ->options([
-                                                'O' => 'Occlusal (permukaan kunyah)',
-                                                'M' => 'Mesial (depan)',
-                                                'D' => 'Distal (belakang)',
-                                                'B' => 'Buccal (pipih luar pipi)',
-                                                'L' => 'Lingual (dalam lidah)',
-                                                'P' => 'Palatal (dalam langit-langit)',
-                                                'I' => 'Incisal (tepi potong gigi depan)',
-                                                'F' => 'Facial (permukaan depan)',
-                                                'W' => 'Whole tooth (seluruh gigi)',
-                                            ]),
-                                        Select::make('severity')
-                                            ->label('Kerusakan')
-                                            ->options([
-                                                'mild' => 'Ringan',
-                                                'moderate' => 'Sedang',
-                                                'severe' => 'Parah',
-                                            ]),
-                                        TextInput::make('notes')
-                                    ]),
-                                RichEditor::make('preMedicalDentals.general_condition')
-                                    ->label('Pemeriksaan Umum')
-                                    ->required()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalDentals.occlusion')
-                                    ->label('Pemeriksaan Oklusif')
-                                    ->required()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalDentals.others')
-                                    ->label('Pemeriksaan lainnya')
-                                    ->required()
-                                    ->columnSpanFull(),
-                            ]),
-                        Step::make('Pemeriksaan Kandungan')
-                            ->schema([
-                                ToggleButtons::make('preMedicalObgyns.is_pregnant')
-                                    ->label('Apakah sedang hamil?')
-                                    ->boolean()
-                                    ->nullable()
-                                    ->inline(),
-                                DatePicker::make('preMedicalObgyns.lmp_date')
-                                    ->label('Tanggal Terakhir Menstruasi')
-                                    ->nullable(),
-                                TextInput::make('preMedicalObgyns.gravida')
-                                    ->label('G')
-                                    ->nullable()
-                                    ->numeric(),
-                                TextInput::make('preMedicalObgyns.para')
-                                    ->label('P')
-                                    ->nullable()
-                                    ->numeric(),
-                                TextInput::make('preMedicalObgyns.abortus')
-                                    ->label('A')
-                                    ->nullable()
-                                    ->numeric(),
-                                RichEditor::make('preMedicalObgyns.uterus_exam')
-                                    ->label('Pemeriksaan Uterus')
-                                    ->nullable()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalObgyns.adnexa_exam')
-                                    ->label('Pemeriksaan Adnexa')
-                                    ->nullable()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalObgyns.cervix_exam')
-                                    ->label('Pemeriksaan Cervix')
-                                    ->nullable()
-                                    ->columnSpanFull(),
-                                RichEditor::make('preMedicalObgyns.others')
-                                    ->label('Pemeriksaan lainnya')
-                                    ->nullable()
-                                    ->columnSpanFull(),
-                            ]),
+
+                        // Step::make('Pemeriksaan THT')
+                        //     ->schema([
+                        //         RichEditor::make('preMedicalEnt.ear')
+                        //             ->label('Pemeriksaan Telinga')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalEnt.nose')
+                        //             ->label('Pemeriksaan Hidung')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalEnt.throat')
+                        //             ->label('Pemeriksaan Tenggorokan')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalEnt.others')
+                        //             ->label('Pemeriksaan lainnya')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //     ]),
+
+                        // Step::make('Pemeriksaan Mata')
+                        //     ->schema([
+                        //         Grid::make()
+                        //             ->columns(12)
+                        //             ->columnSpan([
+                        //                 'sm' => 12,
+                        //                 'md' => 12,
+                        //                 'lg' => 12,
+                        //             ])->schema([
+                        //                 Section::make('Tanpa Kacamata')
+                        //                     ->columns(12)
+                        //                     ->schema([
+                        //                         TextInput::make('preMedicalEyes.va_unaided_right')
+                        //                             ->label('Tanpa Kacamata Kanan')
+                        //                             ->required()
+                        //                             ->columnSpan(6),
+                        //                         TextInput::make('preMedicalEyes.va_unaided_left')
+                        //                             ->label('Tanpa Kacamata Kiri')
+                        //                             ->required()
+                        //                             ->columnSpan(6),
+                        //                     ])
+                        //                     ->columnSpanFull(),
+                        //                 Section::make('Dengan Kacamata')
+                        //                     ->columns(12)
+                        //                     ->schema([
+                        //                         TextInput::make('preMedicalEyes.va_aided_right')
+                        //                             ->label('Dengan Kacamata Kanan')
+                        //                             ->required()
+                        //                             ->columnSpan(6),
+                        //                         TextInput::make('preMedicalEyes.va_aided_left')
+                        //                             ->label('Dengan Kacamata Kiri')
+                        //                             ->required()
+                        //                             ->columnSpan(6),
+                        //                     ])
+                        //                     ->columnSpanFull(),
+                        //                 ToggleButtons::make('preMedicalEyes.color_vision')
+                        //                     ->label('Buta Warna')
+                        //                     ->options([
+                        //                         'normal' => 'Normal',
+                        //                         'partial' => 'Sebagian',
+                        //                         'total' => 'Total'
+                        //                     ])
+                        //                     ->columnSpanFull()
+                        //                     ->inline(),
+                        //                 RichEditor::make('preMedicalEyes.conjunctiva')
+                        //                     ->label('Ketajaman Penglihatan')
+                        //                     ->required()
+                        //                     ->columnSpanFull(),
+                        //                 RichEditor::make('preMedicalEyes.sclera')
+                        //                     ->label('Sclera')
+                        //                     ->required()
+                        //                     ->columnSpanFull(),
+                        //                 RichEditor::make('preMedicalEyes.others')
+                        //                     ->label('Pemeriksaan lainnya')
+                        //                     ->required()
+                        //                     ->columnSpanFull(),
+                        //             ])
+                        //     ]),
+
+                        // Step::make('Pemeriksaan Gigi')
+                        //     ->schema([
+                        //         Repeater::make('preMedicalDentalFindings')
+                        //             ->table([
+                        //                 TableColumn::make('Gigi'),
+                        //                 TableColumn::make('Status'),
+                        //                 TableColumn::make('Lapisan'),
+                        //                 TableColumn::make('Kerusakan'),
+                        //                 TableColumn::make('Catatan'),
+                        //             ])
+                        //             ->compact()
+                        //             ->addActionLabel('Tambah Gigi')
+                        //             ->reorderable(false)
+                        //             ->schema([
+                        //                 Select::make('dental_teeth_id')
+                        //                     ->label('Gigi')
+                        //                     ->options(
+                        //                         DentalTeeth::query()
+                        //                             ->select('id', 'name', 'tooth_type', 'tooth_number', 'quadrant', 'fdi_code', 'dentition')
+                        //                             ->get()
+                        //                             ->mapWithKeys(function ($tooth) {
+                        //                                 return [
+                        //                                     $tooth->id => "{$tooth->fdi_code} - {$tooth->name} ({$tooth->tooth_type}, {$tooth->dentition}) - No: {$tooth->tooth_number} Q{$tooth->quadrant}"
+                        //                                 ];
+                        //                             })
+                        //                             ->toArray()
+                        //                     )
+                        //                     ->searchable()
+                        //                     ->placeholder('Pilih gigi'),
+                        //                 Select::make('dental_status_id')
+                        //                     ->options(
+                        //                         DentalStatus::query()
+                        //                             ->pluck('description', 'id')
+                        //                     )
+                        //                     ->required(),
+                        //                 Select::make('surfaces')
+                        //                     ->label('Lapisan')
+                        //                     ->options([
+                        //                         'O' => 'Occlusal (permukaan kunyah)',
+                        //                         'M' => 'Mesial (depan)',
+                        //                         'D' => 'Distal (belakang)',
+                        //                         'B' => 'Buccal (pipih luar pipi)',
+                        //                         'L' => 'Lingual (dalam lidah)',
+                        //                         'P' => 'Palatal (dalam langit-langit)',
+                        //                         'I' => 'Incisal (tepi potong gigi depan)',
+                        //                         'F' => 'Facial (permukaan depan)',
+                        //                         'W' => 'Whole tooth (seluruh gigi)',
+                        //                     ]),
+                        //                 Select::make('severity')
+                        //                     ->label('Kerusakan')
+                        //                     ->options([
+                        //                         'mild' => 'Ringan',
+                        //                         'moderate' => 'Sedang',
+                        //                         'severe' => 'Parah',
+                        //                     ]),
+                        //                 TextInput::make('notes')
+                        //             ]),
+                        //         RichEditor::make('preMedicalDentals.general_condition')
+                        //             ->label('Pemeriksaan Umum')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalDentals.occlusion')
+                        //             ->label('Pemeriksaan Oklusif')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalDentals.others')
+                        //             ->label('Pemeriksaan lainnya')
+                        //             ->required()
+                        //             ->columnSpanFull(),
+                        //     ]),
+
+                        // Step::make('Pemeriksaan Kandungan')
+                        //     ->schema([
+                        //         ToggleButtons::make('preMedicalObgyns.is_pregnant')
+                        //             ->label('Apakah sedang hamil?')
+                        //             ->boolean()
+                        //             ->nullable()
+                        //             ->inline(),
+                        //         DatePicker::make('preMedicalObgyns.lmp_date')
+                        //             ->label('Tanggal Terakhir Menstruasi')
+                        //             ->nullable(),
+                        //         TextInput::make('preMedicalObgyns.gravida')
+                        //             ->label('G')
+                        //             ->nullable()
+                        //             ->numeric(),
+                        //         TextInput::make('preMedicalObgyns.para')
+                        //             ->label('P')
+                        //             ->nullable()
+                        //             ->numeric(),
+                        //         TextInput::make('preMedicalObgyns.abortus')
+                        //             ->label('A')
+                        //             ->nullable()
+                        //             ->numeric(),
+                        //         RichEditor::make('preMedicalObgyns.uterus_exam')
+                        //             ->label('Pemeriksaan Uterus')
+                        //             ->nullable()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalObgyns.adnexa_exam')
+                        //             ->label('Pemeriksaan Adnexa')
+                        //             ->nullable()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalObgyns.cervix_exam')
+                        //             ->label('Pemeriksaan Cervix')
+                        //             ->nullable()
+                        //             ->columnSpanFull(),
+                        //         RichEditor::make('preMedicalObgyns.others')
+                        //             ->label('Pemeriksaan lainnya')
+                        //             ->nullable()
+                        //             ->columnSpanFull(),
+                        //     ]),
+
                         Step::make('Kesimpulan')
                             ->schema([
                                 ToggleButtons::make('preMedicalResults.overall_status')
@@ -523,6 +728,8 @@ class PreMedicalSessionApplicationsTable
                             ]),
 
                             'preMedicalHistory' => $only($pre->preMedicalHistory, [
+                                'complaint',
+                                'anamesis',
                                 'personal_history',
                                 'family_history',
                                 'allergies',

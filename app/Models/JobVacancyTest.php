@@ -17,6 +17,15 @@ class JobVacancyTest extends Model
         'is_active',
     ];
 
+    protected function casts()
+    {
+        return [
+            'active_from'  => 'datetime:Asia/Jakarta',
+            'active_until' => 'datetime:Asia/Jakarta',
+            'is_active'    => 'boolean',
+        ];
+    }
+
     public function jobVacancy()
     {
         return $this->belongsTo(JobVacancy::class);

@@ -262,11 +262,18 @@
                             class="inline-flex items-center py-0.5 px-1.5 rounded-full text-xs font-medium bg-blue-500 text-white">{{ $jobVacancyTestItem->number_of_question }}</span>
                         Soal
                     </button>
-                    <button type="button" @disabled(in_array($jobVacancyTestItem->id, $applicantTestAttempts))
-                        class="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-hidden focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20"
+                    <button type="button" @disabled(in_array($jobVacancyTestItem->id, $applicantTestAttempts)) @class([
+                        'py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent',
+                        'bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-hidden focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20' => !in_array(
+                            $jobVacancyTestItem->id,
+                            $applicantTestAttempts),
+                        'bg-gray-200 text-gray-400 dark:bg-neutral-800 dark:text-neutral-400' => in_array(
+                            $jobVacancyTestItem->id,
+                            $applicantTestAttempts),
+                    ]) class=" "
                         @click="$wire.startAttemptByToken('{{ $jobVacancyTestItem->id }}')">
                         <span wire:loading.remove>
-                            Mulai Kerjakan
+                            {{ in_array($jobVacancyTestItem->id, $applicantTestAttempts) ? 'Selesai' : 'Mulai' }}
                         </span>
                         <span wire:loading>
                             Memuat soal anda....
@@ -353,7 +360,7 @@
                             Ya, Akhiri
                         </button>
                         <button type="button"
-                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-hidden focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none"
                             data-hs-overlay="#end-test-alert">
                             Tidak
                         </button>

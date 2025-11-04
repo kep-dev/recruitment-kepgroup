@@ -313,6 +313,11 @@ class ExamShow extends Component
 
             DB::commit();
 
+            if (session()->exists('users')) {
+                $this->reset('answers'); // reset nilai property Livewire
+    session()->forget('answers'); // hapus dari session Laravel
+            }
+
             // redirect ke halaman daftar paket / ringkasan
             $jobVacancyTestId = (string) session('jobVacancyTestId'); // jika memang diset waktu awal
             // return redirect()->route('exam.index', $jobVacancyTestId);
@@ -351,6 +356,7 @@ class ExamShow extends Component
 
     public function render()
     {
+        ds(count($this->attemptQuestions->toArray()) == count($this->answers));
         return view('livewire.exam.exam-show');
     }
 }

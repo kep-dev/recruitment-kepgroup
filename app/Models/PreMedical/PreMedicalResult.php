@@ -55,4 +55,9 @@ class PreMedicalResult extends Model
     {
         return $this->hasOne(PreMedicalPhysical::class);
     }
+
+    public function preMedicalSupportingExamination()
+    {
+        return $this->hasOne(PreMedicalSupportingExamination::class);
+    }
 }

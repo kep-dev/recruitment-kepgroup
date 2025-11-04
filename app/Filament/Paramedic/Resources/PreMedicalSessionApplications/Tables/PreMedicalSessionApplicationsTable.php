@@ -189,7 +189,7 @@ class PreMedicalSessionApplicationsTable
                                     ->label('Riwayat Penyakit Terdahulu')
                                     ->required(),
                                 RichEditor::make('preMedicalHistory.family_history')
-                                    ->label('Riwayat Keluarga')
+                                    ->label('Riwayat Penyakit Keluarga')
                                     ->required(),
                                 RichEditor::make('preMedicalHistory.allergies')
                                     ->label('Alergi')
@@ -681,6 +681,28 @@ class PreMedicalSessionApplicationsTable
                         //             ->columnSpanFull(),
                         //     ]),
 
+                        Step::make('Pemeriksaan Penunjang')
+                            ->schema([
+                                RichEditor::make('preMedicalSupportExaminations.complete_blood')
+                                    ->label('Darah Lengkap')
+                                    ->required(),
+                                RichEditor::make('preMedicalSupportExaminations.colesterol')
+                                    ->label('Kolesterol')
+                                    ->required(),
+                                RichEditor::make('preMedicalSupportExaminations.blood_sugar')
+                                    ->label('Gula Darah')
+                                    ->required(),
+                                RichEditor::make('preMedicalSupportExaminations.gout')
+                                    ->label('Asam Urat')
+                                    ->required(),
+                                RichEditor::make('preMedicalSupportExaminations.ro')
+                                    ->label('Rongen Thorax')
+                                    ->required(),
+                                RichEditor::make('preMedicalSupportExaminations.others')
+                                    ->label('Pemeriksaan lainnya')
+                                    ->required(),
+                            ]),
+
                         Step::make('Kesimpulan')
                             ->schema([
                                 ToggleButtons::make('preMedicalResults.overall_status')
@@ -777,6 +799,15 @@ class PreMedicalSessionApplicationsTable
                                 'others',
                             ]),
 
+                            'preMedicalSupportExaminations' => $only($pre->preMedicalSupportExaminations, [
+                                'complete_blood',
+                                'colesterol',
+                                'blood_sugar',
+                                'gout',
+                                'ro',
+                                'others',
+                            ]),
+
                             'preMedicalDentals' => $only($pre->preMedicalDental, [
                                 'general_condition',
                                 'occlusion',
@@ -828,6 +859,7 @@ class PreMedicalSessionApplicationsTable
                         $pre->preMedicalEnt()->updateOrCreate([], $data['preMedicalEnt'] ?? []);
                         $pre->preMedicalEye()->updateOrCreate([], $data['preMedicalEyes'] ?? []);
                         $pre->preMedicalObgyn()->updateOrCreate([], $data['preMedicalObgyns'] ?? []);
+                        $pre->preMedicalSupportingExamination()->updateOrCreate([], $data['preMedicalSupportExaminations'] ?? []);
 
                         // dental header + findings (hasMany): replace sederhana
                         $dental = $pre->preMedicalDental()->updateOrCreate([], $data['preMedicalDentals'] ?? []);
@@ -837,7 +869,7 @@ class PreMedicalSessionApplicationsTable
                         }
                     }),
                 ViewAction::make(),
-                EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

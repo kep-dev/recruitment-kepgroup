@@ -270,6 +270,18 @@ class PreMedicalSessionApplicationInfolist
                                 TextEntry::make('preMedicalResult.preMedicalObgyn.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
                             ]),
                         ]),
+
+                        Tab::make('Pemeriksaan Penunjang')->schema([
+                            Section::make('Pemeriksaan Penunjang')->columns(12)->schema([
+                                TextEntry::make('preMedicalResult.preMedicalSupportingExamination.complete_blood')->label('Darah Lengkap')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalSupportingExamination.colesterol')->label('Kolesterol')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalSupportingExamination.blood_sugar')->label('Gula Darah')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalSupportingExamination.gout')->label('Asam Urat')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalSupportingExamination.ro')->label('Rongen Thorax')->html()->placeholder('-')->columnSpan(12),
+                                TextEntry::make('preMedicalResult.preMedicalSupportingExamination.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
+                            ]),
+                        ]),
+
                     ])
                     ->columnSpanFull(),
             ]);

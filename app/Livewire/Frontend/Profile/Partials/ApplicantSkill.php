@@ -35,7 +35,7 @@ class ApplicantSkill extends Component
                 ],
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             Auth::user()->skills()->create([
                 'skill' => $validated['skill'],
@@ -57,7 +57,7 @@ class ApplicantSkill extends Component
         DB::beginTransaction();
 
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             Skill::find($id)->delete();
 
             DB::commit();

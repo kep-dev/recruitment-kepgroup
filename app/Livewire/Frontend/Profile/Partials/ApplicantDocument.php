@@ -49,7 +49,7 @@ class ApplicantDocument extends Component
                 'applicantDocument' => 'required|mimes:pdf|max:2048',
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             $vacancyDocument = VacancyDocument::find($validated['vacancy_document_id'])->name;
             // dd($vacancyDocument);
@@ -81,7 +81,7 @@ class ApplicantDocument extends Component
 
         try {
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
             $document = Document::find($id);
             $document->clearMediaCollection();
             $document->delete();

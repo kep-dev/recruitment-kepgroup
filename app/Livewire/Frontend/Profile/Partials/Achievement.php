@@ -47,7 +47,7 @@ class Achievement extends Component
                 'year' => 'required|numeric|min:1900|max:' . date('Y'),
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             if ($this->achievement) {
                 $this->achievement->updateOrCreate(
@@ -88,7 +88,7 @@ class Achievement extends Component
     {
         DB::beginTransaction();
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             Achievment::find($this->achievementId)->delete();
 
             DB::commit();

@@ -35,6 +35,6 @@ class JobVacancyTestItem extends Model
 
     public function finishedAttempts()
     {
-        return $this->attempts()->whereIn('status', ['submitted', 'graded']);
+        return $this->attempts()->whereIn('status', ['submitted', 'graded', 'expired']);
     }
 }

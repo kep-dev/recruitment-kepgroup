@@ -42,7 +42,7 @@ class ApplicantSocialMedia extends Component
                 ],
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             Auth::user()->socialMedias()->create([
                 'name' => $validated['name'],
@@ -68,7 +68,7 @@ class ApplicantSocialMedia extends Component
     {
         DB::beginTransaction();
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             SocialMedia::find($id)->delete();
             DB::commit();

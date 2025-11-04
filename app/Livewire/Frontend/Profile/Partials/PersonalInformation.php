@@ -121,7 +121,7 @@ class PersonalInformation extends Component
                 'village_code' => 'required|exists:villages,code'
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             $this->user->applicant()->updateOrCreate(
                 [

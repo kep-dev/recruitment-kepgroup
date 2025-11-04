@@ -62,7 +62,7 @@ class OrganizationExperience extends Component
                 'end_date' => 'nullable|date',
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             if ($this->organizationalExperience) {
                 $this->organizationalExperience->updateOrCreate(
@@ -108,7 +108,7 @@ class OrganizationExperience extends Component
         DB::beginTransaction();
 
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             OrganizationalExperience::find($this->organizationalExperienceId)->delete();
 
             DB::commit();

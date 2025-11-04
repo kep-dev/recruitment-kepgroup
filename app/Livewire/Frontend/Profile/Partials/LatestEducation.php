@@ -65,7 +65,7 @@ class LatestEducation extends Component
                 'main_number' => 'required|unique:educations,main_number',
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             if ($this->education) {
                 $this->education->updateOrCreate(
@@ -116,7 +116,7 @@ class LatestEducation extends Component
     {
         DB::beginTransaction();
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             Education::find($this->educationId)->delete();
 
             DB::commit();

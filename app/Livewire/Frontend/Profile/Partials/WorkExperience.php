@@ -35,7 +35,7 @@ class WorkExperience extends Component
         DB::beginTransaction();
 
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             Work::find($this->workExperienceId)->delete();
 
             DB::commit();
@@ -82,7 +82,7 @@ class WorkExperience extends Component
                 'description' => 'required',
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             if ($this->workExperience) {
                 $this->workExperience->updateOrCreate(

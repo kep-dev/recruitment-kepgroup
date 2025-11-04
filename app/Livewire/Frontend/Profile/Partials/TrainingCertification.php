@@ -59,7 +59,7 @@ class TrainingCertification extends Component
                 'description' => 'required',
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
 
             if ($this->trainingCertification) {
                 $this->trainingCertification->updateOrCreate(
@@ -109,7 +109,7 @@ class TrainingCertification extends Component
         DB::beginTransaction();
 
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             ModelsTrainingCertification::find($this->trainingCertificationId)->delete();
 
             DB::commit();

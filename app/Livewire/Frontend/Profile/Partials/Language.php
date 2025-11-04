@@ -33,7 +33,7 @@ class Language extends Component
                 'level' => 'required',
             ]);
 
-            $this->blockIfActive();
+            // $this->blockIfActive();
             $user = $this->user;
 
             $user->languages()->create([
@@ -61,7 +61,7 @@ class Language extends Component
     {
         DB::beginTransaction();
         try {
-            $this->blockIfActive();
+            // $this->blockIfActive();
             ModelsLanguage::find($id)->delete();
 
             DB::commit();

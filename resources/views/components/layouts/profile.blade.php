@@ -59,7 +59,7 @@
                             </li>
                             <li>
                                 <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-100 rounded-lg hover:bg-neutral-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 @if (Route::currentRouteName() == 'frontend.profile.test') bg-neutral-100 dark:bg-neutral-700 @endif"
-                                    href="{{ route('frontend.profile.test') }}" wire:navigate>
+                                    href="{{ route('frontend.profile.test') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                         stroke-linecap="round" stroke-linejoin="round"

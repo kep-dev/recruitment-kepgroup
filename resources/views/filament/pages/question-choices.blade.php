@@ -8,6 +8,5 @@
         {!! $this->question_id->question_text !!}
     </x-filament::section>
 
-
     {{ $this->table }}
 </x-filament-panels::page>

@@ -36,7 +36,8 @@ class ApplicantsTable
                     ->label('Nomor Telepon')
                     ->searchable(),
                 TextColumn::make('gender')
-                    ->label('Jenis Kelamin'),
+                    ->label('Jenis Kelamin')
+                    ->formatStateUsing(fn ($state) => $state == 'male' ? 'Laki-laki' : 'Perempuan'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

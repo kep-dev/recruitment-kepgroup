@@ -124,9 +124,24 @@ class ApplicantInfolist
 
                                         TextEntry::make('province')
                                             ->label('Provinsi')
+                                            ->formatStateUsing(function ($state, $record) {
+                                                if (!$record) {
+                                                    return '-';
+                                                }
+
+                                                return collect([
+                                                    $record->province?->name,
+                                                    $record->district?->name,
+                                                    $record->regency?->name,
+                                                    $record->village?->name,
+                                                    $record->address_line,
+                                                ])
+                                                    ->filter() // hilangkan null
+                                                    ->join(', ');
+                                            })
                                             ->placeholder('-')
                                             ->icon('heroicon-o-map')
-                                            ->columnSpan(6),
+                                            ->columnSpan(6)
                                     ]),
                             ]),
 

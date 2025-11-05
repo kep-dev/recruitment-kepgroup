@@ -55,7 +55,7 @@
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-slate-300">Jenis Kelamin</p>
                     <p class="mt-1 text-gray-700 dark:text-slate-200">
-                        {{ $user->applicant->gender = 'male' ? 'Laki-laki' : 'Perempuan' }}</p>
+                        {{ $user->applicant->gender == 'male' ? 'Laki-laki' : 'Perempuan' }}</p>
                 </div>
 
                 <!-- Date of Birth -->
@@ -207,6 +207,12 @@
 
                     <!-- FORM FIELD -->
                     <div class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium mb-2 dark:text-white">Nama
+                                Lengkap</label>
+                            <input wire:model='name' type="text" id="name"
+                                class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                        </div>
                         <div>
                             <label for="nik" class="block text-sm font-medium mb-2 dark:text-white">Nomer Induk
                                 Kependudukan</label>

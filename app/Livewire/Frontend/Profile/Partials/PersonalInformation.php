@@ -50,7 +50,7 @@ class PersonalInformation extends Component
             ->where('user_id', $user_id)
             ->first();
 
-        $this->name = $this->applicant->name ?? null;
+        $this->name = $this->applicant->user->name ?? null;
         $this->nik = $this->applicant->nik ?? null;
         $this->date_of_birth = $this->applicant->date_of_birth ?? null;
         $this->place_of_birth = $this->applicant->place_of_birth ?? null;
@@ -105,6 +105,7 @@ class PersonalInformation extends Component
 
         try {
             $validated = $this->validate([
+                'name' => 'nullable|string',
                 'nik' => [
                     'required',
                     Rule::unique('applicants', 'nik')->ignore($this->applicant?->id)
@@ -140,6 +141,18 @@ class PersonalInformation extends Component
                 ]
             );
 
+            if ($validated['name']) {
+                $this->user->updateOrCreate(
+                    [
+                        'id' => $this->user->id,
+                    ],
+                    [
+                        'name' => $validated['name'],
+                    ]
+                );
+            }
+
+
             if ($this->photo) {
                 if ($this->user->applicant->photo) {
                     Storage::disk('public')->delete($this->user->applicant->photo);
@@ -152,7 +165,6 @@ class PersonalInformation extends Component
 
             DB::commit();
             $this->dispatch('notification', type: 'success', title: 'Berhasil!', message: 'Berhasil memperbarui data diri.', timeout: 4500);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());

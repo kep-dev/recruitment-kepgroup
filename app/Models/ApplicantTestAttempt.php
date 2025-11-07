@@ -39,7 +39,7 @@ class ApplicantTestAttempt extends Model
 
     public function test()
     {
-        return $this->belongsTo(Test::class);
+        return $this->belongsTo(Test::class, 'test_id');
     }
 
     public function applicantTest()

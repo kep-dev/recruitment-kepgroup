@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
+use Filament\Actions\ReplicateAction;
 use Filament\Tables\Columns\SelectColumn;
 
 class ApplicationsTable

@@ -121,6 +121,8 @@ class ExamShow extends Component
         // Guard: kalau bukan in_progress, langsung keluar
         if ($attempt->status !== status::in_progress) {
             throw new \RuntimeException('Attempt tidak aktif.');
+            $jobVacancyTestId = (string) session('jobVacancyTestId');
+            return redirect()->route('exam.index', $jobVacancyTestId);
         }
 
         $now = now();

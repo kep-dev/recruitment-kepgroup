@@ -193,7 +193,7 @@ class ExamIndex extends Component
                 ->where('access_token', $accessToken)
                 ->where('job_vacancy_test_id', $jobVacancyTestId)
                 ->first();
-
+            ds($at);
             if (! $at) {
                 throw new \Exception('Tidak dapat mengakhiri test.');
             }

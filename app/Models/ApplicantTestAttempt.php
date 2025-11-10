@@ -44,7 +44,7 @@ class ApplicantTestAttempt extends Model
 
     public function applicantTest()
     {
-        return $this->belongsTo(ApplicantTest::class);
+        return $this->belongsTo(ApplicantTest::class, 'applicant_test_id');
     }
 
     public function attemptQuestions()

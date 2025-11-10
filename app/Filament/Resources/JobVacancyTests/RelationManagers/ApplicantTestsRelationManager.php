@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\JobVacancyTests\RelationManagers;
 
+use App\Traits\SendToken;
 use Filament\Tables\Table;
 use App\Models\Application;
 use Illuminate\Support\Str;
 use Filament\Actions\Action;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\BulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
@@ -13,8 +15,10 @@ use Filament\Actions\DeleteAction;
 use Illuminate\Support\Collection;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Blade;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DateTimePicker;
@@ -22,7 +26,6 @@ use App\Filament\Pages\ApplicantTestAttemptPage;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
-use App\Traits\SendToken;
 
 class ApplicantTestsRelationManager extends RelationManager
 {
@@ -154,6 +157,19 @@ class ApplicantTestsRelationManager extends RelationManager
                             ->success()
                             ->title('Berhasil')
                             ->send();
+                    }),
+                Action::make('exportPdf')
+                    ->label('Cetak Resume')
+                    ->color('danger')
+                    ->icon(LucideIcon::FileText)
+                    ->action(function ($record) {
+                        // dd($this->getOwnerRecord()->applicantTests);
+                        $record  = $this->getOwnerRecord();
+                        return response()->streamDownload(function () use ($record) {
+                            echo Pdf::loadHtml(
+                                Blade::render('print.jobVacancyTest.applicant-test-result-pdf', ['record' => $record])
+                            )->stream();
+                        }, $record->name . '.pdf');
                     }),
             ]);
     }

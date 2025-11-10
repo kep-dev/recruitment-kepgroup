@@ -64,13 +64,18 @@ class Application extends Model
         return $this->hasOne(ApplicantTest::class, 'application_id');
     }
 
-    public function preMedicalSessionApplication()
-    {
-        return $this->hasOne(PreMedicalSessionApplication::class, 'application_id');
-    }
-
     public function profileSnapshot()
     {
         return $this->hasOne(ApplicationProfileSnapshot::class);
+    }
+
+    public function interviewSessionApplications()
+    {
+        return $this->hasMany(InterviewSessionApplication::class, 'application_id');
+    }
+
+    public function preMedicalSessionApplications()
+    {
+        return $this->hasMany(PreMedicalSessionApplication::class, 'application_id', 'id');
     }
 }

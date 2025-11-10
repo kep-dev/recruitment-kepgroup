@@ -32,7 +32,7 @@ class InterviewEvaluatorsRelationManager extends RelationManager
                 ->options(
                     // Get users who are not already assigned as evaluators in this interview session
                     User::query()
-                        ->whereRelation('roles', 'name', 'interviewer')
+                        ->whereRelation('roles', 'name', '!=', 'applicant')
                         ->whereNotIn('id', $this->getOwnerRecord()->interviewEvaluators()->pluck('user_id'))
                         ->pluck('name', 'id')
                 )

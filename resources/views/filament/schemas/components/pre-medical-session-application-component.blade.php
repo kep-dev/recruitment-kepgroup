@@ -1,3 +1,0 @@
-<div>
-    {{ $getChildSchema() }}
-</div>

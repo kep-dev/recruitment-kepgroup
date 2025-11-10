@@ -138,7 +138,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function documents()
     {
-        return $this->hasMany(Document::class);
+        return $this->hasMany(Document::class, 'user_id', 'id');
     }
 
     public function jobVacancyBookmarks()

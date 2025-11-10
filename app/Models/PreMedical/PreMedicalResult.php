@@ -2,6 +2,7 @@
 
 namespace App\Models\PreMedical;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Observers\PreMedicalResultObserver;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -21,6 +22,11 @@ class PreMedicalResult extends Model
         'examined_at',
     ];
 
+    public function examinedBy()
+    {
+        return $this->belongsTo(User::class, 'examined_by');
+    }
+
     public function preMedicalSessionApplication(): BelongsTo
     {
         return $this->belongsTo(PreMedicalSessionApplication::class);
@@ -28,36 +34,36 @@ class PreMedicalResult extends Model
 
     public function preMedicalDental()
     {
-        return $this->hasOne(PreMedicalDental::class);
+        return $this->hasOne(PreMedicalDental::class, 'pre_medical_result_id', 'id');
     }
 
     public function preMedicalEye()
     {
-        return $this->hasOne(PreMedicalEye::class);
+        return $this->hasOne(PreMedicalEye::class, 'pre_medical_result_id', 'id');
     }
 
     public function preMedicalEnt()
     {
-        return $this->hasOne(PreMedicalEnt::class);
+        return $this->hasOne(PreMedicalEnt::class, 'pre_medical_result_id', 'id');
     }
 
     public function preMedicalObgyn()
     {
-        return $this->hasOne(PreMedicalObgyn::class);
+        return $this->hasOne(PreMedicalObgyn::class, 'pre_medical_result_id', 'id');
     }
 
     public function preMedicalHistory()
     {
-        return $this->hasOne(PreMedicalHistory::class);
+        return $this->hasOne(PreMedicalHistory::class, 'pre_medical_result_id', 'id');
     }
 
     public function preMedicalPhysical()
     {
-        return $this->hasOne(PreMedicalPhysical::class);
+        return $this->hasOne(PreMedicalPhysical::class, 'pre_medical_result_id', 'id');
     }
 
     public function preMedicalSupportingExamination()
     {
-        return $this->hasOne(PreMedicalSupportingExamination::class);
+        return $this->hasOne(PreMedicalSupportingExamination::class, 'pre_medical_result_id', 'id');
     }
 }

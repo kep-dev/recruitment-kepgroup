@@ -49,6 +49,7 @@ class InterviewSessionForm
                                             ->required()
                                             ->columnSpanFull(),
                                         DateTimePicker::make('scheduled_end_at')
+                                            ->label('Jadwal Selesai')
                                             ->columnSpanFull(),
                                         Select::make('default_mode')
                                             ->label('Mode')

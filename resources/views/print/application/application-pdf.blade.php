@@ -320,7 +320,7 @@
             </tbody>
         </table>
 
-        <div class="section-title section-border mt-2">TES POTENS AKADEMIK</div>
+        <div class="section-title section-border mt-2">TES POTENSI AKADEMIK</div>
         <table id="example" class="table table-bordered" style="font-size:12px;">
             <thead>
                 <tr class="text-center" style="color: rgb(255, 255, 255); background-color: rgb(6, 105, 94)">

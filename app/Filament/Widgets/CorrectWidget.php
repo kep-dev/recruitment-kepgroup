@@ -13,14 +13,13 @@ class CorrectWidget extends Widget
 {
     protected string $view = 'filament.widgets.correct-widget';
 
-    public $applicantTestAttemptId;
+    public $applicantTestAttemptId = null;
 
     #[Computed]
     public function correctAnswers()
     {
         return ApplicantAnswer::query()
-            ->where('applicant_test_attempt_id', $this->applicantTestAttemptId)
-            ->where('is_correct', true)
+            ->when($this->applicantTestAttemptId, fn ($query) => $query->where('applicant_test_attempt_id', $this->applicantTestAttemptId)->where('is_correct', true))
             ->count();
     }
 
@@ -28,8 +27,7 @@ class CorrectWidget extends Widget
     public function falseAnswers()
     {
         return ApplicantAnswer::query()
-            ->where('applicant_test_attempt_id', $this->applicantTestAttemptId)
-            ->where('is_correct', false)
+            ->when($this->applicantTestAttemptId, fn ($query) => $query->where('applicant_test_attempt_id', $this->applicantTestAttemptId)->where('is_correct', false))
             ->count();
     }
 
@@ -37,8 +35,7 @@ class CorrectWidget extends Widget
     public function noAnswers()
     {
         return ApplicantAnswer::query()
-            ->where('applicant_test_attempt_id', $this->applicantTestAttemptId)
-            ->whereNull('selected_choice_id')
+            ->when($this->applicantTestAttemptId, fn ($query) => $query->where('applicant_test_attempt_id', $this->applicantTestAttemptId)->whereNull('selected_choice_id'))
             ->count();
     }
 
@@ -46,7 +43,7 @@ class CorrectWidget extends Widget
     public function totalQuestions()
     {
         $jobVacancyTestItemId = ApplicantTestAttempt::find($this->applicantTestAttemptId)->job_vacancy_test_item_id;
-        ds($jobVacancyTestItemId);
+
         return JobVacancyTestItem::query()
             ->where('id', $jobVacancyTestItemId)
             ->first()

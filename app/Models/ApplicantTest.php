@@ -41,6 +41,6 @@ class ApplicantTest extends Model
 
     public function attempts()
     {
-        return $this->hasMany(ApplicantTestAttempt::class, 'applicant_test_id');
+        return $this->hasMany(ApplicantTestAttempt::class);
     }
 }

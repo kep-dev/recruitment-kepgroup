@@ -121,7 +121,8 @@
                         @foreach ($record->applicantTests as $applicantTest)
                             <tr>
                                 <td>{{ Str::upper($applicantTest->application->user->name) }}</td>
-                                <td>{{ $applicantTest->application->user->applicant->latestEducation->university }}</td>
+                                <td>{{ $applicantTest->application?->user?->applicant?->latestEducation?->university }}
+                                </td>
                                 <td>{{ $applicantTest->application->user->applicant->phone_number }}</td>
 
                                 @foreach ($chunk as $jobVacancyTestItem)

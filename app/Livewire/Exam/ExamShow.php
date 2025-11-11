@@ -120,9 +120,13 @@ class ExamShow extends Component
 
         // Guard: kalau bukan in_progress, langsung keluar
         if ($attempt->status !== status::in_progress) {
-            throw new \RuntimeException('Attempt tidak aktif.');
+            // throw new \RuntimeException('Attempt tidak aktif.');
             $jobVacancyTestId = (string) session('jobVacancyTestId');
-            return redirect()->route('exam.index', $jobVacancyTestId);
+            // return redirect()->route('exam.index', $jobVacancyTestId);
+
+            return redirect()
+                ->route('exam.index', $jobVacancyTestId)
+                ->withErrors(['test_alert' => 'Attempt tidak aktif atau waktu sudah habis.']);
         }
 
         $now = now();
@@ -317,7 +321,7 @@ class ExamShow extends Component
 
             if (session()->exists('users')) {
                 $this->reset('answers'); // reset nilai property Livewire
-    session()->forget('answers'); // hapus dari session Laravel
+                session()->forget('answers'); // hapus dari session Laravel
             }
 
             // redirect ke halaman daftar paket / ringkasan

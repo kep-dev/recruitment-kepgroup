@@ -34,7 +34,18 @@ class TrainingCertificationsRelationManager extends RelationManager
                     ->date()
                     ->label('Selesai'),
                 TextColumn::make('description')
-                    ->label('Deskripsi'),
+                    ->label('Deskripsi')
+                    ->limit(50)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        // Only render the tooltip if the column contents exceeds the length limit.
+                        return $state;
+                    }),
             ])
             ->headerActions([
                 //

@@ -5,9 +5,11 @@ namespace App\Filament\Resources\Applicants\Schemas;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 
 class ApplicantInfolist
 {
@@ -38,15 +40,14 @@ class ApplicantInfolist
                                     ->columnSpanFull()
                                     ->schema([
                                         // Avatar (opsional)
-                                        ImageEntry::make('user.profile_photo_url')
+                                        ImageEntry::make('photo')
                                             ->label(' ')
                                             ->columnSpan(3)
-                                            ->circular()
-                                            ->hidden(fn($record) => blank(data_get($record, 'user.profile_photo_url'))),
+                                            ->circular(),
 
                                         Grid::make()
                                             ->columns(12)
-                                            ->columnSpan(fn($record) => data_get($record, 'user.profile_photo_url') ? 9 : 12)
+                                            ->columnSpan(fn($record) => data_get($record, 'photo') ? 9 : 12)
                                             ->schema([
                                                 TextEntry::make('user.name')
                                                     ->label('Nama')
@@ -162,15 +163,9 @@ class ApplicantInfolist
                                     ->icon('heroicon-o-sparkles')
                                     ->description('Kemampuan utama kandidat.')
                                     ->schema([
-                                        RepeatableEntry::make('skills')
-                                            ->label('Skill')
-                                            ->columnSpanFull()
-                                            ->schema([
-                                                TextEntry::make('skill')
-                                                    ->label(' ')
-                                                    ->badge()
-                                                    ->placeholder('-'),
-                                            ]),
+                                        TextEntry::make('skills.skill')
+                                            ->badge()
+                                            ->listWithLineBreaks(),
                                     ]),
 
                                 // Fungsi Minat
@@ -194,26 +189,16 @@ class ApplicantInfolist
                                     ->icon('heroicon-o-language')
                                     ->schema([
                                         RepeatableEntry::make('languages')
-                                            ->label('Bahasa')
-                                            ->columns(12)
+                                            ->hiddenLabel(true)
+                                            ->table([
+                                                TableColumn::make('Bahasa'),
+                                                TableColumn::make('Level'),
+                                            ])
                                             ->schema([
-                                                TextEntry::make('language')
-                                                    ->label('Bahasa')
-                                                    ->icon('heroicon-o-chat-bubble-left-right')
-                                                    ->columnSpan(7),
+                                                TextEntry::make('language'),
+                                                TextEntry::make('level'),
+                                            ])
 
-                                                TextEntry::make('level')
-                                                    ->label('Level')
-                                                    ->badge()
-                                                    ->color(fn($state) => match (strtolower((string) $state)) {
-                                                        'native', 'mother tongue' => 'success',
-                                                        'fluent', 'advanced'      => 'info',
-                                                        'intermediate'          => 'warning',
-                                                        'basic', 'beginner'      => 'gray',
-                                                        default                 => 'gray',
-                                                    })
-                                                    ->columnSpan(5),
-                                            ]),
                                     ]),
 
                                 // Sosial Media
@@ -222,22 +207,20 @@ class ApplicantInfolist
                                     ->icon('heroicon-o-share')
                                     ->schema([
                                         RepeatableEntry::make('socialMedias')
-                                            ->label('Akun')
-                                            ->columns(12)
+                                            ->hiddenLabel(true)
+                                            ->table([
+                                                TableColumn::make('Platform'),
+                                                TableColumn::make('URL'),
+                                            ])
                                             ->schema([
                                                 TextEntry::make('name')
-                                                    ->label('Platform')
-                                                    ->badge()
-                                                    ->icon('heroicon-o-hashtag')
-                                                    ->columnSpan(5),
-
+                                                    ->label('Platform'),
                                                 TextEntry::make('url')
                                                     ->label('URL')
                                                     ->url(fn($state) => filled($state) ? $state : null, true)
-                                                    ->openUrlInNewTab()
-                                                    ->placeholder('-')
-                                                    ->columnSpan(7),
-                                            ]),
+                                                    ->openUrlInNewTab(),
+                                            ])
+
                                     ]),
 
                                 // Gaji

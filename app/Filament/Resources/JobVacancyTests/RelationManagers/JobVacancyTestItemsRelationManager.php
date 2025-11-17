@@ -67,6 +67,10 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                 ->label('Durasi (menit)')
                 ->required()
                 ->numeric(),
+            TextInput::make('multiplier')
+                ->label('Perkalian Nilai')
+                ->required()
+                ->numeric(),
             TextInput::make('order')
                 ->label('Urutan')
                 ->required()
@@ -91,6 +95,9 @@ class JobVacancyTestItemsRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('duration_in_minutes')
                     ->label('Durasi (menit)')
+                    ->sortable(),
+                TextColumn::make('multiplier')
+                    ->label('Perkalian Nilai')
                     ->sortable(),
                 TextColumn::make('order')
                     ->label('Urutan')

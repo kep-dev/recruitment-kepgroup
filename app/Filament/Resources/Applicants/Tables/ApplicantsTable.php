@@ -37,7 +37,19 @@ class ApplicantsTable
                     ->searchable(),
                 TextColumn::make('gender')
                     ->label('Jenis Kelamin')
-                    ->formatStateUsing(fn ($state) => $state == 'male' ? 'Laki-laki' : 'Perempuan'),
+                    ->formatStateUsing(fn($state) => $state == 'male' ? 'Laki-laki' : 'Perempuan'),
+                TextColumn::make('user.latestEducation.education_level')
+                    ->label('Pendidikan Terakhir')
+                    ->searchable(),
+                TextColumn::make('user.latestEducation.major')
+                    ->label('Jurusan')
+                    ->searchable(),
+                TextColumn::make('user.latestEducation.university')
+                    ->label('Universitas')
+                    ->searchable(),
+                TextColumn::make('user.latestEducation.gpa')
+                    ->label('IPK')
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

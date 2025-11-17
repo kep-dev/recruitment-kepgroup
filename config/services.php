@@ -41,4 +41,19 @@ return [
         'redirect' => env('GOOGLE_CLIENT_REDIRECT'),
     ],
 
+    'erp' => [
+        'companies' => [
+            'CFK' => [
+                'name' => env('ERP_CFK_NAME'),
+                'base_url' => env('ERP_CFK_BASE_URL'),
+                'token'    => env('ERP_CFK_TOKEN'),
+            ],
+            'IED' => [
+                'name' => env('ERP_IED_NAME'),
+                'base_url' => env('ERP_IED_BASE_URL'),
+                'token'    => env('ERP_IED_TOKEN'),
+            ],
+        ],
+    ],
+
 ];

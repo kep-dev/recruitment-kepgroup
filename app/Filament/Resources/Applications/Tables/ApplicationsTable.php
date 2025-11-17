@@ -4,16 +4,21 @@ namespace App\Filament\Resources\Applications\Tables;
 
 use App\Models\User;
 use App\Enums\status;
+use App\Models\Applicant;
 use App\Models\JobVacancy;
 use Filament\Tables\Table;
 use App\Models\Application;
 use Filament\Actions\Action;
+use App\Models\ErpIntegration;
 use App\Models\JobVacancyStage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\InterviewSession;
 use Filament\Actions\BulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Grouping\Group;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Blade;
@@ -22,14 +27,18 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+
+use Filament\Notifications\Notification;
+use App\Http\Resources\ApplicantResource;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use App\Http\Resources\ApplicantApiResource;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Resources\TestResultApiResource;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
-use Filament\Actions\ReplicateAction;
-use Filament\Tables\Columns\SelectColumn;
 
 class ApplicationsTable
 {
@@ -138,15 +147,153 @@ class ApplicationsTable
                     ->label('Cetak Resume')
                     ->icon(LucideIcon::Printer)
                     ->action(function (Model $record) {
-                        // ds($record->preMedicalSessionApplication);
-                        return response()->streamDownload(function () use ($record) {
+                        // ds($record->interviewSessionApplications->interviewSession);
+
+                        $interviewSession =  InterviewSession::query()
+                            ->with([
+                                'interviewForm.criterias.scales',
+                                'interviewApplications' => function ($query) use ($record) {
+                                    $query->where('application_id', $record->id);
+                                },
+                                'interviewEvaluators.user',
+                            ])
+                            ->first();
+
+                        // ds($interviewSession->interviewEvaluators->where('interview_session_id', $interviewSession->id));
+
+                        return response()->streamDownload(function () use ($record, $interviewSession) {
                             echo Pdf::loadHtml(
-                                Blade::render('print.application.application-pdf', ['record' => $record])
+                                Blade::render('print.application.application-pdf', ['record' => $record, 'interviewSession' => $interviewSession])
                             )->stream();
                         }, $record->user->name . '-' . $record->jobVacancy->title . '.pdf');
                     }),
                 // ->url(fn(Model $reco,rd) => route('applications.print', $record))
                 // ->openUrlInNewTab(),
+                Action::make('submitApplication')
+                    ->label('Ajukan Kandidat')
+                    ->icon(LucideIcon::UserRoundPlus)
+                    ->schema([
+                        Select::make('company')
+                            ->label('Perusahaan')
+                            ->options(
+                                ErpIntegration::query()->pluck('company_name', 'id')
+                            )
+                    ])
+                    ->action(function ($record, array $data) {
+                        try {
+
+                            // Ambil konfigurasi ERP
+                            $erp = ErpIntegration::findOrFail($data['company']);
+
+                            // Convert kandidat → JSON
+                            $payload = [
+                                'applicant' => ApplicantApiResource::make($record->user->applicant),
+
+                                'test_results' => TestResultApiResource::collection(
+                                    $record->applicantTests->attempts->map(function ($attempt) {
+                                        return [
+                                            'id' => $attempt->id,
+                                            'score' => $attempt->score,
+                                            'test_name' => $attempt->jobVacancyTestItem->test->title,
+                                            'number_of_questions' => $attempt->jobVacancyTestItem->number_of_question,
+                                            'multiplier' => $attempt->jobVacancyTestItem->multiplier,
+                                            'minimum_score' => $attempt->jobVacancyTestItem->minimum_score,
+
+                                            'correct_answers' => $attempt->answers->where('is_correct', true)->count(),
+                                            'wrong_answers' => $attempt->answers->where('is_correct', false)->count(),
+                                            'skipped_questions' => $attempt->answers->whereNull('selected_choice_id')->count(),
+                                        ];
+                                    })
+                                )->resolve(),
+                            ];
+
+
+                            // Kirim request ke ERP
+                            $response = Http::withToken($erp->bearer_token_encrypted)
+                                ->acceptJson()
+                                ->asJson()
+                                // ->dd()
+                                ->timeout(30)
+                                ->post(
+                                    $erp->base_url . '/api/v1/candidates',
+                                    $payload // payload berupa array/json
+                                );
+
+                            // Jika response status 4xx/5xx, lempar exception otomatis
+                            $response->throw();
+
+                            // ===============================
+                            //  SUCCESS
+                            // ===============================
+                            Notification::make()
+                                ->title('Kandidat berhasil diajukan')
+                                ->body('Data sudah berhasil dikirim ke ERP ' . $erp->company_name)
+                                ->success()
+                                ->send();
+                        } catch (\Illuminate\Http\Client\RequestException $e) {
+
+                            // HTTP exception → ambil response error
+                            $response = $e->response;
+
+                            // Dapatkan detail error JSON jika ada
+                            $errorBody = $response?->json() ?: $response?->body();
+
+                            // Simpan log lengkap
+                            Log::error('Gagal Ajukan Kandidat ke ERP', [
+                                'company' => $erp->company_name,
+                                'status' => $response?->status(),
+                                'error'  => $errorBody,
+                                'payload' => $payload,
+                            ]);
+
+                            // Tangani error validasi (422)
+                            if ($response?->status() === 422) {
+                                return Notification::make()
+                                    ->title('Gagal: Validasi ERP')
+                                    ->body(json_encode($errorBody['errors'] ?? $errorBody, JSON_PRETTY_PRINT))
+                                    ->danger()
+                                    ->send();
+                            }
+
+                            // Kalau 401/403 → token salah
+                            if (in_array($response?->status(), [401, 403])) {
+                                return Notification::make()
+                                    ->title('Autentikasi gagal')
+                                    ->body('Token ERP tidak valid atau tidak punya akses.')
+                                    ->danger()
+                                    ->send();
+                            }
+
+                            // 500 atau server error lainnya
+                            if ($response?->serverError()) {
+                                return Notification::make()
+                                    ->title('Server ERP Bermasalah')
+                                    ->body('ERP mengembalikan error ' . $response->status())
+                                    ->danger()
+                                    ->send();
+                            }
+
+                            // Default fallback
+                            return Notification::make()
+                                ->title('Gagal mengirim data')
+                                ->body(json_encode($errorBody, JSON_PRETTY_PRINT))
+                                ->danger()
+                                ->send();
+                        } catch (\Throwable $e) {
+
+                            // Kesalahan lain (runtime, network timeout, dsb)
+                            Log::error('Kesalahan umum saat mengirim kandidat', [
+                                'exception' => $e->getMessage(),
+                                'payload' => $payload,
+                            ]);
+
+                            return Notification::make()
+                                ->title('Terjadi kesalahan')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
                 ViewAction::make(),
                 EditAction::make(),
             ])

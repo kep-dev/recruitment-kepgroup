@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->profile()
             ->spa()
-            // ->maxContentWidth(Width::Full)
+            ->maxContentWidth(Width::Full)
             ->colors([
                 'primary' => Color::Blue,
             ])

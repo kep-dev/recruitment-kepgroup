@@ -71,7 +71,7 @@ class Application extends Model
 
     public function interviewSessionApplications()
     {
-        return $this->hasMany(InterviewSessionApplication::class, 'application_id');
+        return $this->hasMany(InterviewSessionApplication::class, 'application_id', 'id');
     }
 
     public function preMedicalSessionApplications()

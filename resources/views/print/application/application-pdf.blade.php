@@ -335,8 +335,9 @@
                     <tr>
                         <td>{{ $attempt->jobVacancyTestItem->test->title }}</td>
                         <td class="text-center"><mark>{{ $attempt->jobVacancyTestItem->minimum_score }}</mark></td>
-                        <td class="text-center" style="font-weight: bold">{{ $attempt->score }}</td>
-                        <td>{{ $attempt->score > $attempt->jobVacancyTestItem->minimum_score ? 'diatas nilai minimum' : '' }}
+                        <td class="text-center" style="font-weight: bold">
+                            {{ $attempt->score * $attempt->jobVacancyTestItem->multiplier }}</td>
+                        <td>{{ $attempt->score * $attempt->jobVacancyTestItem->multiplier > $attempt->jobVacancyTestItem->minimum_score ? 'diatas nilai minimum' : '' }}
                         </td>
                     </tr>
                 @endforeach
@@ -352,20 +353,21 @@
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Tangal MCU</td>
-                    <td>: {{ $record->preMedicalSessionApplication->reviewed_at }} </td>
+                    <td>: {{ $record->preMedicalSessionApplication?->reviewed_at }} </td>
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Golongan Darah</td>
-                    <td>: {{ $record->preMedicalSessionApplication->preMedicalResult->preMedicalPhysical->blood_type }}
+                    <td>:
+                        {{ $record->preMedicalSessionApplication?->preMedicalResult?->preMedicalPhysical?->blood_type }}
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Hasil</td>
-                    <td>: {{ $record->preMedicalSessionApplication->preMedicalResult->overall_status }} </td>
+                    <td>: {{ $record->preMedicalSessionApplication?->preMedicalResult?->overall_status }} </td>
                 </tr>
                 <tr>
                     <td style="width: 30%; background-color: #d3d3d3">Keterangan</td>
-                    <td>: {!! $record->preMedicalSessionApplication->preMedicalResult->overall_note !!} </td>
+                    <td>: {!! $record->preMedicalSessionApplication?->preMedicalResult?->overall_note !!} </td>
                 </tr>
             </tbody>
         </table>
@@ -378,34 +380,18 @@
             <thead>
                 <tr class="text-center" style="color: rgb(255, 255, 255); background-color: rgb(6, 105, 94)">
                     <th>URAIAN</th>
-                    <th>PENGUJI 1</th>
-                    <th>PENGUJI 2</th>
-                    <th>PENGUJI 3</th>
+                    @foreach ($interviewSession->interviewEvaluators as $interviewEvaluator)
+                        <th>{{ $interviewEvaluator->user->name }}</th>
+                    @endforeach
                 </tr>
             </thead>
             <tbody id="data">
-                <tr>
-                    <td class="text-center" style="vertical-align: middle; font-weight: bold" rowspan="4">Pengetahuan
-                        Teknis/akademik</td>
-                    <td><input type="checkbox" /> Kurang</td>
-                    <td><input type="checkbox" /> Kurang</td>
-                    <td><input type="checkbox" /> Kurang</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" /> Cukup</td>
-                    <td><input type="checkbox" /> Cukup</td>
-                    <td><input type="checkbox" /> Cukup</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" /> Baik</td>
-                    <td><input type="checkbox" /> Baik</td>
-                    <td><input type="checkbox" /> Baik</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" /> Sangat Baik</td>
-                    <td><input type="checkbox" /> Sangat Baik</td>
-                    <td><input type="checkbox" /> Sangat Baik</td>
-                </tr>
+                @foreach ($interviewSession->interviewForm->criterias as $criteria)
+                    <tr>
+                        <td class="text-center" style="vertical-align: middle; font-weight: bold">
+                            {{ $criteria->label }} </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('job_vacancy_test_items', function (Blueprint $table) {
-            //
+            $table->float('multiplier')->default(5)->after('duration_in_minutes');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('job_vacancy_test_items', function (Blueprint $table) {
-            //
+            $table->dropColumn('multiplier');
         });
     }
 };

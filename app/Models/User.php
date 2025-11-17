@@ -5,11 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Panel;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Redirect;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,6 +64,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
         Redirect::to(url()->previous() ?: '/');
         return false;
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => Str::upper($value),
+            set: fn($value) => Str::upper($value),
+        );
     }
 
     public function socialAccounts()

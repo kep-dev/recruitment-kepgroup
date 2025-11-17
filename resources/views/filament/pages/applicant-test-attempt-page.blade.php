@@ -24,6 +24,9 @@
                                         class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-200">
                                         Selesai</th>
                                     <th scope="col"
+                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-200">
+                                        Nilai</th>
+                                    <th scope="col"
                                         class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-200">
                                         Action</th>
                                 </tr>
@@ -47,6 +50,10 @@
                                         <td
                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                             {{ $applicantTestAttempt->submitted_at }}</td>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                            {{ $applicantTestAttempt->score * $applicantTestAttempt->jobVacancyTestItem->multiplier }}
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                             @if ($applicantTestAttemptId == $applicantTestAttempt->id)
                                                 <button type="button"

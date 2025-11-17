@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Models\Education;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Filament\Resources\Applicants\ApplicantResource;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 
+#[UseResource(ApplicantResource::class)]
 class Applicant extends Model
 {
     use HasUuids;
@@ -33,6 +37,14 @@ class Applicant extends Model
                 . '?v=' . md5($value . filemtime(Storage::disk('public')->path($value)))
                 : asset('images/include/default-user.jpg')
                 . '?v=' . md5(filemtime(public_path('images/include/default-user.jpg')))
+        );
+    }
+
+    public function addressLine(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => Str::upper($value),
+            set: fn($value) => Str::upper($value),
         );
     }
 

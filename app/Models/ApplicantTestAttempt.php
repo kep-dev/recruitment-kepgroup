@@ -52,4 +52,8 @@ class ApplicantTestAttempt extends Model
         return $this->hasMany(ApplicantAttemptQuestion::class, 'applicant_test_attempt_id', 'id');
     }
 
+    public function answers()
+    {
+        return $this->hasMany(ApplicantAnswer::class, 'applicant_test_attempt_id', 'id');
+    }
 }

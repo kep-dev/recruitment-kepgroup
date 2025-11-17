@@ -15,6 +15,7 @@ class JobVacancyTestItem extends Model
         'minimum_score',
         'number_of_question',
         'duration_in_minutes',
+        'multiplier',
         'order',
     ];
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Applicants\Schemas;
 
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -109,7 +110,12 @@ class ApplicantInfolist
                                         TextEntry::make('gender')
                                             ->label('Jenis Kelamin')
                                             ->placeholder('-')
+                                            ->formatStateUsing(fn($state) => $state === 'male' ? 'Laki-laki' : 'Perempuan')
                                             ->badge()
+                                            ->icon(fn($state) => match (strtolower((string) $state)) {
+                                                'male' => LucideIcon::Venus,
+                                                'female' => LucideIcon::Mars,
+                                            })
                                             ->color(fn($state) => match (strtolower((string) $state)) {
                                                 'l', 'laki-laki', 'male', 'm' => 'info',
                                                 'p', 'perempuan', 'female', 'f' => 'pink',

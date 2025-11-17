@@ -25,4 +25,8 @@ class InterviewSessionEvaluator extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function evaluations()
+    {
+        return $this->hasMany(InterviewEvaluation::class, 'interview_session_evaluator_id');
+    }
 }

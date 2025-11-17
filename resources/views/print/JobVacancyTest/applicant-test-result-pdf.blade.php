@@ -81,7 +81,6 @@
 
         {{-- <img class="logo-icon mx-auto my-auto d-block img-fluid" style="height: 75px" src={{ asset($logoCompanyUrl) }} alt="logo icon"> --}}
         <div class="title mt-3">DAFTAR TES</div>
-
         <div class="section-title section-border mt-2">{{ Str::upper($record->name) }}</div>
 
         @php

@@ -162,15 +162,16 @@ class ApplicantTestsRelationManager extends RelationManager
                     ->label('Cetak Resume')
                     ->color('danger')
                     ->icon(LucideIcon::FileText)
-                    ->action(function ($record) {
-                        // dd($this->getOwnerRecord()->applicantTests);
-                        $record  = $this->getOwnerRecord();
+                    ->action(function () {
+                        $record = $this->getOwnerRecord();
+
                         return response()->streamDownload(function () use ($record) {
-                            echo Pdf::loadHtml(
-                                Blade::render('print.jobVacancyTest.applicant-test-result-pdf', ['record' => $record])
-                            )->stream();
-                        }, $record->name . '.pdf');
-                    }),
+                            echo \Barryvdh\DomPDF\Facade\Pdf::loadView(
+                                'print.jobVacancyTest.applicant-test-result-pdf',
+                                ['record' => $record]
+                            )->output(); // <-- penting: output(), bukan stream()
+                        }, \Illuminate\Support\Str::slug($record->name) . '.pdf');
+                    })
             ]);
     }
 }

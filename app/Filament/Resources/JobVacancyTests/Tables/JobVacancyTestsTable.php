@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\JobVacancyTests\Tables;
 
 use Livewire\Component;
+use App\Models\JobVacancy;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -13,6 +14,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 
 class JobVacancyTestsTable
@@ -49,6 +51,11 @@ class JobVacancyTestsTable
                     ->label('Nama kandidat')
                     ->visible(fn(Component $livewire) => $livewire->activeTab === 'active'),
 
+                TextColumn::make('application.jobVacancy.title')
+                    ->label('Lowongan')
+                    ->searchable()
+                    ->visible(fn(Component $livewire) => $livewire->activeTab === 'active'),
+
                 TextColumn::make('application.user.applicant.latestEducation.major')
                     ->label('Jurusan')
                     ->visible(fn(Component $livewire) => $livewire->activeTab === 'active'),
@@ -63,16 +70,29 @@ class JobVacancyTestsTable
                     ->visible(fn(Component $livewire) => $livewire->activeTab === 'active'),
 
             ])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('title')
+                    ->relationship('application.jobVacancy', 'title')
+                    ->options(
+                        JobVacancy::query()
+                            ->pluck('title', 'id')
+                            ->toArray()
+                    )
+                    ->preload()
+                    ->visible(fn(Component $livewire) => $livewire->activeTab === 'active'),
+            ])
             ->filtersTriggerAction(
                 fn(Action $action) => $action
                     ->button()
                     ->label('Filter'),
             )
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                ViewAction::make()
+                    ->visible(fn(Component $livewire) => $livewire->activeTab === 'all'),
+                EditAction::make()
+                    ->visible(fn(Component $livewire) => $livewire->activeTab === 'all'),
+                DeleteAction::make()
+                    ->visible(fn(Component $livewire) => $livewire->activeTab === 'all'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

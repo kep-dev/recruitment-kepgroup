@@ -1760,6 +1760,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/filamentphp/panels/zipball/49ad212a944f50f692d2719793ec6da4b4cb9769",
                 "reference": "49ad212a944f50f692d2719793ec6da4b4cb9769",
+
                 "shasum": ""
             },
             "require": {

@@ -41,7 +41,7 @@ class JobVacancyTestsTable
                     ->dateTime()
                     ->sortable()
                     ->visible(fn(Component $livewire) => $livewire->activeTab === 'all'),
-                ToggleColumn::make('applicantTests.access_token')
+                ToggleColumn::make('is_active')
                     ->label('Aktif')
                     ->visible(fn(Component $livewire) => $livewire->activeTab === 'all'),
 
@@ -63,9 +63,7 @@ class JobVacancyTestsTable
                     ->visible(fn(Component $livewire) => $livewire->activeTab === 'active'),
 
             ])
-            ->filters([
-
-            ])
+            ->filters([])
             ->filtersTriggerAction(
                 fn(Action $action) => $action
                     ->button()

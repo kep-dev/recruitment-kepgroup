@@ -134,9 +134,7 @@ class ApplicationsTable
                             ->columnSpanFull()
                             ->label('Catatan'),
                         TextInput::make('score')
-                            ->label('Skor')
-                            ->numeric()
-                            ->minValue(1),
+                            ->label('Skor'),
                     ])
                     ->databaseTransaction()
                     ->action(function ($record, array $data) {

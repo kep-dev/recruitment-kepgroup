@@ -107,35 +107,38 @@ class ApplicationsTable
                 Action::make('createStageProgress')
                     ->label('Tambah Tahap Lamaran')
                     ->icon(LucideIcon::ArrowDown01)
-                    ->schema([
-                        Select::make('job_vacancy_stage_id')
-                            ->label('Tahap Lamaran')
-                            ->options(
-                                JobVacancyStage::with('stageType')
-                                    ->get()
-                                    ->mapWithKeys(fn($stage) => [$stage->id => $stage->stageType->name])
-                            )
-                            ->searchable(),
-                        Select::make('status')
-                            ->label('Status')
-                            ->options(status::class),
-                        DatePicker::make('started_at')
-                            ->label('Mulai'),
-                        DatePicker::make('decided_at')
-                            ->label('Selesai'),
-                        Select::make('decided_by')
-                            ->label('Diterima Oleh')
-                            ->options(
-                                User::query()
-                                    ->whereRelation('roles', 'name', '!=', 'applicant')
-                                    ->pluck('name', 'id')
-                            ),
-                        Textarea::make('note')
-                            ->columnSpanFull()
-                            ->label('Catatan'),
-                        TextInput::make('score')
-                            ->label('Skor'),
-                    ])
+                    ->schema(function ($record) {
+                        return [
+                            Select::make('job_vacancy_stage_id')
+                                ->label('Tahap Lamaran')
+                                ->options(
+                                    JobVacancyStage::with('stageType')
+                                        ->where('job_vacancy_id', $record->job_vacancy_id)
+                                        ->get()
+                                        ->mapWithKeys(fn($stage) => [$stage->id => $stage->stageType->name])
+                                )
+                                ->searchable(),
+                            Select::make('status')
+                                ->label('Status')
+                                ->options(status::class),
+                            DatePicker::make('started_at')
+                                ->label('Mulai'),
+                            DatePicker::make('decided_at')
+                                ->label('Selesai'),
+                            Select::make('decided_by')
+                                ->label('Diterima Oleh')
+                                ->options(
+                                    User::query()
+                                        ->whereRelation('roles', 'name', '!=', 'applicant')
+                                        ->pluck('name', 'id')
+                                ),
+                            Textarea::make('note')
+                                ->columnSpanFull()
+                                ->label('Catatan'),
+                            TextInput::make('score')
+                                ->label('Skor'),
+                        ];
+                    })
                     ->databaseTransaction()
                     ->action(function ($record, array $data) {
                         $record->update([
@@ -399,28 +402,45 @@ class ApplicationsTable
                     BulkAction::make('createStageProgress')
                         ->label('Tambah Tahap Lamaran')
                         ->icon('heroicon-o-plus')
-                        ->schema([
-                            Select::make('job_vacancy_stage_id')
-                                ->label('Tahap Lamaran')
-                                ->options(
-                                    JobVacancyStage::with('stageType')
-                                        ->get()
-                                        ->mapWithKeys(fn($stage) => [$stage->id => $stage->stageType->name])
-                                )
-                                ->searchable(),
-                            Select::make('status')
-                                ->label('Status')
-                                ->options(Status::class),
-                            DatePicker::make('started_at')->label('Mulai'),
-                            DatePicker::make('decided_at')->label('Selesai'),
-                            Select::make('decided_by')
-                                ->label('Diterima Oleh')
-                                ->options(User::pluck('name', 'id')),
-                            Textarea::make('note')->columnSpanFull()->label('Catatan'),
-                            TextInput::make('score')->label('Skor')->numeric()->minValue(1),
-                        ])
-                        ->action(function (Collection $records, array $data) {
-                            // dd($records);
+                        ->schema(function (Collection $records) {
+                            return [
+                                Select::make('job_vacancy_stage_id')
+                                    ->label('Tahap Lamaran')
+                                    ->options(
+                                        JobVacancyStage::with('stageType')
+                                            ->get()
+                                            ->mapWithKeys(fn($stage) => [$stage->id => $stage->stageType->name])
+                                    )
+                                    ->searchable(),
+                                Select::make('status')
+                                    ->label('Status')
+                                    ->options(Status::class),
+                                DatePicker::make('started_at')->label('Mulai'),
+                                DatePicker::make('decided_at')->label('Selesai'),
+                                Select::make('decided_by')
+                                    ->label('Diterima Oleh')
+                                    ->options(User::pluck('name', 'id')),
+                                Textarea::make('note')->columnSpanFull()->label('Catatan'),
+                                TextInput::make('score')->label('Skor')->numeric()->minValue(1),
+                            ];
+                        })
+                        ->visible()
+                        ->action(function (Collection $records, array $data): void {
+                            // Ambil semua job_vacancy_id yang unik dari record terpilih
+                            $jobVacancyIds = $records->pluck('job_vacancy_id')->unique();
+
+                            // Kalau lebih dari 1, berarti beda-beda lowongan → batalin aksi
+                            if ($jobVacancyIds->count() !== 1) {
+                                Notification::make()
+                                    ->title('Aksi dibatalkan')
+                                    ->body('Silakan pilih lamaran dari lowongan yang sama sebelum menambah tahap lamaran.')
+                                    ->danger()
+                                    ->send();
+
+                                return; // stop, jangan lanjut create
+                            }
+
+                            // Lolos validasi → silakan lanjut proses seperti biasa
                             foreach ($records as $record) {
                                 // update stage saat ini di parent
                                 $record->update([
@@ -430,6 +450,11 @@ class ApplicationsTable
                                 // tambahkan progress baru
                                 $record->stageProgresses()->create($data);
                             }
+
+                            Notification::make()
+                                ->title('Tahap lamaran berhasil ditambahkan')
+                                ->success()
+                                ->send();
                         })
 
                 ]),

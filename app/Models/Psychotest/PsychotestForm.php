@@ -5,19 +5,17 @@ namespace App\Models\Psychotest;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
-class PsychotestCharacteristicScore extends Model
+class PsychotestForm extends Model
 {
     use HasUuids;
 
     protected $fillable = [
-        'characteristic_id',
-        'score',
+        'name',
         'description',
     ];
 
-    public function characteristic()
+    public function questions()
     {
-        return $this->belongsTo(PsychotestCharacteristic::class, 'characteristic_id');
+        return $this->hasMany(PsychotestQuestion::class, 'psychotest_form_id');
     }
-
 }

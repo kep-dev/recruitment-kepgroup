@@ -14,16 +14,19 @@ return new class extends Migration
         Schema::create('psychotest_characteristic_scores', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignUuid('psychotest_characteristic_id')
-                ->constrained('psychotest_characteristics')
+            $table->uuid('characteristic_id');
+
+            $table->foreign('characteristic_id', 'pt_char_score_fk')
+                ->references('id')
+                ->on('psychotest_characteristics')
                 ->cascadeOnDelete();
 
             $table->unsignedTinyInteger('score'); // 0..9
-            $table->text('description');         // keterangan untuk score ini
+            $table->text('description');
 
             $table->timestamps();
 
-            $table->unique(['psychotest_characteristic_id', 'score']);
+            $table->unique(['characteristic_id', 'score']);
         });
     }
 

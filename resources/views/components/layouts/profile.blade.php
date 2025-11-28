@@ -57,25 +57,80 @@
                                     Lowongan tersimpan
                                 </a>
                             </li>
-                            <li>
-                                <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-100 rounded-lg hover:bg-neutral-100 focus:outline-hidden focus:bg-gray-100 gray:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 @if (Route::currentRouteName() == 'frontend.profile.test') bg-neutral-100 dark:bg-neutral-700 @endif"
-                                    href="{{ route('frontend.profile.test') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="lucide lucide-notebook-text-icon lucide-notebook-text">
-                                        <path d="M2 6h4" />
-                                        <path d="M2 10h4" />
-                                        <path d="M2 14h4" />
-                                        <path d="M2 18h4" />
-                                        <rect width="16" height="20" x="4" y="2" rx="2" />
-                                        <path d="M9.5 8h5" />
-                                        <path d="M9.5 12H16" />
-                                        <path d="M9.5 16H14" />
-                                    </svg>
-                                    Test Saya
-                                </a>
-                            </li>
+
+                            @php
+                                $isTestRoute = Route::currentRouteName() === 'frontend.profile.test';
+                                $activeType = request('type', 'general'); // default ke 'general' kalau kosong
+                            @endphp
+
+                            <ul class="space-y-1 hs-accordion-group">
+                                <li class="hs-accordion {{ $isTestRoute ? 'hs-accordion-active' : '' }}"
+                                    id="sidebar-test-accordion">
+                                    {{-- TOMBOL DROPDOWN --}}
+                                    <button type="button"
+                                        class="hs-accordion-toggle w-full flex items-center justify-between gap-x-3.5 py-2 px-2.5 text-sm rounded-lg
+                text-gray-800 dark:text-slate-100
+                hover:bg-neutral-100 focus:outline-hidden focus:bg-gray-100
+                dark:hover:bg-neutral-700 dark:focus:bg-neutral-700
+                {{ $isTestRoute ? 'bg-neutral-100 dark:bg-neutral-700' : '' }}">
+                                        <span class="flex items-center gap-x-3.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-notebook-text-icon lucide-notebook-text">
+                                                <path d="M2 6h4" />
+                                                <path d="M2 10h4" />
+                                                <path d="M2 14h4" />
+                                                <path d="M2 18h4" />
+                                                <rect width="16" height="20" x="4" y="2" rx="2" />
+                                                <path d="M9.5 8h5" />
+                                                <path d="M9.5 12H16" />
+                                                <path d="M9.5 16H14" />
+                                            </svg>
+                                            Test Saya
+                                        </span>
+
+                                        {{-- Icon chevron --}}
+                                        <svg class="hs-accordion-active:block hidden flex-shrink-0"
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="18 15 12 9 6 15" />
+                                        </svg>
+                                        <svg class="hs-accordion-active:hidden block flex-shrink-0"
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </button>
+
+                                    {{-- ISI DROPDOWN --}}
+                                    <div
+                                        class="hs-accordion-content overflow-hidden transition-[height] duration-300 {{ $isTestRoute ? '' : 'hidden' }}">
+                                        <ul class="mt-1 ps-8 space-y-1">
+                                            <li>
+                                                <a class="block py-1.5 text-sm rounded-md px-2.5
+                        {{ $isTestRoute && $activeType === 'general'
+                            ? 'bg-neutral-100 dark:bg-neutral-700 text-gray-900 dark:text-slate-100'
+                            : 'text-gray-700 dark:text-slate-200 hover:bg-neutral-100 dark:hover:bg-neutral-700' }}"
+                                                    href="{{ route('frontend.profile.test', ['type' => 'general']) }}">
+                                                    Tes Umum
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="block py-1.5 text-sm rounded-md px-2.5
+                        {{ $isTestRoute && $activeType === 'psychotest'
+                            ? 'bg-neutral-100 dark:bg-neutral-700 text-gray-900 dark:text-slate-100'
+                            : 'text-gray-700 dark:text-slate-200 hover:bg-neutral-100 dark:hover:bg-neutral-700' }}"
+                                                    href="{{ route('frontend.profile.test', ['type' => 'psychotest']) }}">
+                                                    Tes Psikotes
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
                         </ul>
                     </div>
                 </nav>

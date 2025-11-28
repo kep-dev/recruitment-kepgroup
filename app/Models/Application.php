@@ -61,7 +61,7 @@ class Application extends Model
 
     public function applicantTests()
     {
-        return $this->hasOne(ApplicantTest::class, 'application_id');
+        return $this->hasOne(ApplicantTest::class, 'application_id', 'id');
     }
 
     public function profileSnapshot()

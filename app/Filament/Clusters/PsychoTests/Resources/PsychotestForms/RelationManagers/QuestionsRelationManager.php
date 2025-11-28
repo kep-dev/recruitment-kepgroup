@@ -15,7 +15,7 @@ use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Clusters\PsychoTests\Resources\PsychotestForms\PsychotestFormResource;
 use App\Filament\Clusters\PsychoTests\Resources\PsychotestForms\Pages\PsychotestCharacteristicMapping;
-
+use Filament\Actions\DeleteAction;
 
 class QuestionsRelationManager extends RelationManager
 {
@@ -32,12 +32,13 @@ class QuestionsRelationManager extends RelationManager
     {
         return [
             TextInput::make('number')
-                ->label('Nomor Soal'),
+                ->label('Nomor Soal')
+                ->numeric(),
             Toggle::make('is_active')
                 ->label('Aktif'),
 
             Repeater::make('options')
-                ->relationship('options')
+                // ->relationship('options')
                 ->table([
                     TableColumn::make('label'),
                     TableColumn::make('statement'),
@@ -74,6 +75,7 @@ class QuestionsRelationManager extends RelationManager
                     ->schema($this->getFormSchema())
                     ->action(function ($record, array $data) {
                         // dd($this->getOwnerRecord()->id);
+
                         $form = $this->getOwnerRecord();
                         // $formId = $record->id;
                         $question = $form->questions()->create([
@@ -92,26 +94,42 @@ class QuestionsRelationManager extends RelationManager
             ])
             ->recordActions([
                 Action::make('view')
+                ->label('Mapping Pertanyaan')
                     ->url(fn($record) => PsychotestCharacteristicMapping::getUrl(['record' => $record])),
                 ViewAction::make(),
                 EditAction::make()
                     ->schema($this->getFormSchema())
+                    ->mutateRecordDataUsing(function ($record, array $data): array {
+                        // dd($record);
+                        $data['options'] = $record->options->map(function ($option) {
+                            return [
+                                'label' => $option['label'],
+                                'statement' => $option['statement'],
+                                'order' => $option['order'],
+                            ];
+                        })->toArray();
+
+                        return $data;
+                    })
                     ->action(function ($record, array $data) {
                         $form = $record;
 
-                        $question = $form->questions()->create([
+                        // dd($record->options->toArray());
+                        $record->update([
                             'number' => $data['number'],
                             'is_active' => $data['is_active'],
                         ]);
 
-                        foreach ($data['options'] as $option) {
-                            $question->options()->create([
-                                'label' => $option['label'],
-                                'statement' => $option['statement'],
-                                'order' => $option['order'],
+                        foreach ($record->options as $key => $value) {
+
+                            $value->update([
+                                'label' => $data['options'][$key]['label'],
+                                'statement' => $data['options'][$key]['statement'],
+                                'order' => $data['options'][$key]['order'],
                             ]);
                         }
                     }),
+                DeleteAction::make(),
             ])
         ;
     }

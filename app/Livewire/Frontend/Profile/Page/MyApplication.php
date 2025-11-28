@@ -37,12 +37,14 @@ class MyApplication extends Component
     {
         return $this->user
             ->applications()
+            ->with('applicantTests')
             ->latest()
             ->paginate(5);
     }
 
     public function render()
     {
+        // dd($this->applications());
         return view('livewire.frontend.profile.page.my-application');
     }
 }

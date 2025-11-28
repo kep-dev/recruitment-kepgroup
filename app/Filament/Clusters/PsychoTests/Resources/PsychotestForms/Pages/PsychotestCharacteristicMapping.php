@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\PsychoTests\Resources\PsychotestForms\Pages;
 
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\Page;
 use Filament\Forms\Components\Select;
@@ -15,15 +16,15 @@ use Filament\Schemas\Contracts\HasSchemas;
 use App\Models\Psychotest\PsychotestAspect;
 use App\Models\Psychotest\PsychotestQuestion;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables\Concerns\InteractsWithTable;
 use App\Models\Psychotest\PsychotestCharacteristic;
 use App\Models\Psychotest\PsychotestQuestionOption;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
-use App\Filament\Clusters\PsychoTests\Resources\PsychotestForms\PsychotestFormResource;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
-use Filament\Actions\Action;
+use App\Filament\Clusters\PsychoTests\Resources\PsychotestForms\PsychotestFormResource;
 
 class PsychotestCharacteristicMapping extends Page implements HasActions, HasSchemas, HasTable
 {
@@ -37,8 +38,18 @@ class PsychotestCharacteristicMapping extends Page implements HasActions, HasSch
     protected string $view = 'filament.clusters.psycho-tests.resources.psychotest-forms.pages.psychotest-characteristic-mapping';
     protected static ?string $slug = '/{record?}/psychotest-characteristic-mapping';
     protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $title = 'Mapping Karakteristik';
 
     public ?PsychotestQuestion $record = null;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('back')
+                ->label('Kembali')
+                ->url(route('filament.admin.psycho-tests.resources.psychotest-forms.view', ['record' => $this->record->psychotest_form_id])),
+        ];
+    }
 
     public function mount(): void
     {
@@ -58,30 +69,37 @@ class PsychotestCharacteristicMapping extends Page implements HasActions, HasSch
                 ])
                 ->compact()
                 ->schema([
+
+                    Select::make('characteristic_id')
+                        ->label('Karakteristik')
+                        ->options(
+                            PsychotestCharacteristic::query()
+                                ->get(['id', 'name', 'code'])
+                                ->mapWithKeys(
+                                    fn($char) => [
+                                        $char['id'] => '(' . $char['code'] . ')' . ' ' . $char['name']
+                                    ]
+                                )
+                                ->toArray()
+                        )
+                        ->searchable()
+                        ->live()
+                        ->afterStateUpdated(function ($state, Set $set) {
+                            if ($state) {
+                                $char = PsychotestCharacteristic::with('psychotestAspect')->find($state);
+                                $set('aspect_id', $char?->psychotest_aspect_id);
+                            } else {
+                                $set('aspect_id', null);
+                            }
+                        }),
+
                     Select::make('aspect_id')
                         ->label('Aspek')
                         ->options(
                             PsychotestAspect::query()
                                 ->pluck('name', 'id')
                                 ->toArray()
-                        )
-                        ->live(),
-
-                    Select::make('characteristic_id')
-                        ->label('Karakteristik')
-                        ->options(function (Get $get) {
-                            $aspectId = $get('aspect_id');
-
-                            if (! $aspectId) {
-                                return [];
-                            }
-
-                            return PsychotestCharacteristic::query()
-                                ->where('psychotest_aspect_id', $aspectId)
-                                ->pluck('name', 'id')
-                                ->toArray();
-                        })
-                        ->live(),
+                        ), // hanya sebagai informasi, tidak bisa diubah manual
 
                     TextInput::make('weight')
                         ->label('Bobot')

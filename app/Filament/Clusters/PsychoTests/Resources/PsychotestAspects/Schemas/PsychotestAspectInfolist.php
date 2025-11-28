@@ -41,6 +41,10 @@ class PsychotestAspectInfolist
                                     ->label('Nilai Karakteristik')
                                     ->hiddenLabel(true)
                                     ->columns(2)
+                                    ->table([
+                                        TableColumn::make('Nilai'),
+                                        TableColumn::make('Deskripsi'),
+                                    ])
                                     ->schema([
                                         TextEntry::make('score'),
                                         TextEntry::make('description'),

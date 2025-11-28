@@ -11,6 +11,7 @@ class JobVacancyTest extends Model
 
     protected $fillable = [
         'job_vacancy_id',
+        'type',
         'name',
         'active_from',
         'active_until',
@@ -20,9 +21,9 @@ class JobVacancyTest extends Model
     protected function casts()
     {
         return [
-            'active_from'  => 'datetime:Asia/Jakarta',
+            'active_from' => 'datetime:Asia/Jakarta',
             'active_until' => 'datetime:Asia/Jakarta',
-            'is_active'    => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -39,5 +40,10 @@ class JobVacancyTest extends Model
     public function applicantTests()
     {
         return $this->hasMany(ApplicantTest::class, 'job_vacancy_test_id');
+    }
+
+    public function psychotestForms()
+    {
+        return $this->hasMany(JobVacancyPsychotestForm::class, 'job_vacancy_test_id');
     }
 }

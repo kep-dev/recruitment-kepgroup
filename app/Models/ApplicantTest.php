@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\status;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Psychotest\PsychotestAttempt;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class ApplicantTest extends Model
@@ -42,5 +43,10 @@ class ApplicantTest extends Model
     public function attempts()
     {
         return $this->hasMany(ApplicantTestAttempt::class);
+    }
+
+    public function psychotestAttempts()
+    {
+        return $this->hasMany(PsychotestAttempt::class, 'applicant_test_id', 'id');
     }
 }

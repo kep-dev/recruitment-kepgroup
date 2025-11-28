@@ -3,11 +3,12 @@
 namespace App\Filament\Resources\JobVacancyTests\Schemas;
 
 use App\Models\JobVacancy;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Schema;
 
 class JobVacancyTestForm
 {
@@ -35,6 +36,16 @@ class JobVacancyTestForm
                 DateTimePicker::make('active_until')
                     ->label('Selesai')
                     ->required(),
+
+                ToggleButtons::make('type')
+                    ->label('Jenis Test')
+                    ->inline()
+                    ->options([
+                        'general' => 'Umum',
+                        'psychotest' => 'Psychotest',
+                    ])
+                    ->required(),
+
                 Toggle::make('is_active')
                     ->label('Aktif')
                     ->required(),

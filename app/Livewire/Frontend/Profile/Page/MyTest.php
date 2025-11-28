@@ -3,23 +3,31 @@
 namespace App\Livewire\Frontend\Profile\Page;
 
 use App\Enums\status;
-use Exception;
-use Livewire\Component;
 use App\Models\ApplicantTest;
-use Illuminate\Support\Facades\DB;
+use Exception;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\{Computed, Layout, Title};
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
+use Livewire\Component;
 
 #[Layout('components.layouts.profile')]
 class MyTest extends Component
 {
     public $token;
 
+    #[Url]
+    public $type = null;
+
     #[Computed()]
     public function myTests()
     {
         return ApplicantTest::query()
-            ->whereRelation('jobVacancyTest', 'is_active', true)
+            ->whereRelation('jobVacancyTest', [
+                ['is_active', true],
+                ['type', $this->type],
+            ])
             ->whereRelation('application', 'user_id', auth()->user()->id)
             ->latest()
             ->get();
@@ -36,8 +44,8 @@ class MyTest extends Component
                 ->whereNotIn('status', ['expired', 'completed'])
                 ->whereHas('jobVacancyTest', function ($q) use ($nowDb) {
                     $q->where('is_active', 1)
-                        ->where(fn($q) => $q->whereNull('active_from')->orWhere('active_from', '<=', $nowDb))
-                        ->where(fn($q) => $q->whereNull('active_until')->orWhere('active_until', '>=', $nowDb));
+                        ->where(fn ($q) => $q->whereNull('active_from')->orWhere('active_from', '<=', $nowDb))
+                        ->where(fn ($q) => $q->whereNull('active_until')->orWhere('active_until', '>=', $nowDb));
                 })
                 ->first();
 
@@ -49,11 +57,11 @@ class MyTest extends Component
             $sessionId = session()->getId();
             $applicantTest->forceFill([
                 'started_at' => $applicantTest->started_at ?? now(),
-                'status'     => Status::in_progress,
+                'status' => Status::in_progress,
                 'current_session_id' => $sessionId, // kolom baru (lihat migrasi #3)
             ])->save();
 
-            session()->put('user_' . Auth::id() . '_token', $this->token);
+            session()->put('user_'.Auth::id().'_token', $this->token);
             session()->put('jobVacancyTestId', $applicantTest->job_vacancy_test_id);
 
             DB::commit();

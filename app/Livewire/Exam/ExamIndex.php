@@ -97,7 +97,7 @@ class ExamIndex extends Component
             $deadline = now()->addMinutes($duration);
 
             $activeUntil = DB::table('job_vacancy_tests')
-                ->where('id', $at->vacancy_test_id)
+                ->where('id', $at->job_vacancy_test_id)
                 ->value('active_until');
 
             if ($activeUntil) {
@@ -193,7 +193,7 @@ class ExamIndex extends Component
                 ->where('access_token', $accessToken)
                 ->where('job_vacancy_test_id', $jobVacancyTestId)
                 ->first();
-            ds($at);
+            // ds($at);
             if (! $at) {
                 throw new \Exception('Tidak dapat mengakhiri test.');
             }

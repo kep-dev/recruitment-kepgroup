@@ -3,17 +3,16 @@
 namespace App\Livewire\Exam;
 
 use App\Enums\status;
-use Livewire\Component;
-use App\Models\Question;
-use Illuminate\Support\Str;
-use Livewire\Attributes\On;
-use App\Models\QuestionChoice;
-use App\Models\ApplicantAnswer;
+use App\Models\ApplicantTestAttempt;
 use App\Models\ExamClientEvent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Models\ApplicantTestAttempt;
-use Livewire\Attributes\{Computed, Layout, Session, Title};
+use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Session;
+use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Layout('components.layouts.exam')]
 #[Title('Ujian')]
@@ -160,7 +159,7 @@ class ExamShow extends Component
         foreach ($questionIds as $qid) {
             /** @var \App\Models\Question|null $q */
             $q = $questions->get($qid);
-            if (!$q) {
+            if (! $q) {
                 // Skip atau lempar error—pilih kebijakanmu
                 continue;
             }
@@ -175,54 +174,52 @@ class ExamShow extends Component
 
             switch ($q->type->value) {
                 case 'multiple_choice':
-                case 'true_false': {
-                        // value diharapkan label: 'A','B',dst. Cari choice berdasarkan label
-                        $selected = optional($q->choices->firstWhere('choice_label', $value));
-                        $correct  = optional($q->choices->firstWhere('is_correct', true));
+                case 'true_false':
+                    // value diharapkan label: 'A','B',dst. Cari choice berdasarkan label
+                    $selected = optional($q->choices->firstWhere('choice_label', $value));
+                    $correct = optional($q->choices->firstWhere('is_correct', true));
 
-                        $selectedChoiceId = $selected?->id;
+                    $selectedChoiceId = $selected?->id;
 
-                        if ($selectedChoiceId && $correct->id) {
-                            $isCorrect = $selectedChoiceId === $correct->id;
-                            $score     = $isCorrect ? ($q->points ?? 0) : 0; // kebijakan: salah = 0
-                        } else {
-                            // tidak menjawab → 0 atau null sesuai kebijakan
-                            $isCorrect = null;
-                            $score     = 0;
-                        }
-                        break;
+                    if ($selectedChoiceId && $correct->id) {
+                        $isCorrect = $selectedChoiceId === $correct->id;
+                        $score = $isCorrect ? ($q->points ?? 0) : 0; // kebijakan: salah = 0
+                    } else {
+                        // tidak menjawab → 0 atau null sesuai kebijakan
+                        $isCorrect = null;
+                        $score = 0;
                     }
+                    break;
 
-                case 'essay': {
-                        // nilai manual (null), simpan teks apa adanya
-                        $answerText = is_scalar($value) ? (string) $value : null;
-                        $score      = null;
-                        $isCorrect  = null;
-                        break;
-                    }
+                case 'essay':
+                    // nilai manual (null), simpan teks apa adanya
+                    $answerText = is_scalar($value) ? (string) $value : null;
+                    $score = null;
+                    $isCorrect = null;
+                    break;
 
                 case 'fill_in_blank':
-                case 'matching': {
-                        // Simpan dalam JSON
-                        $answerJson = $value ? json_encode($value, JSON_UNESCAPED_UNICODE) : null;
-                        $score      = null;   // biasanya dinilai belakangan / auto-grade kustom
-                        $isCorrect  = null;
-                        break;
-                    }
+                case 'matching':
+                    // Simpan dalam JSON
+                    $answerJson = $value ? json_encode($value, JSON_UNESCAPED_UNICODE) : null;
+                    $score = null;   // biasanya dinilai belakangan / auto-grade kustom
+                    $isCorrect = null;
+                    break;
+
             }
 
             $rows[] = [
-                'id'                         => (string) \Illuminate\Support\Str::uuid(),
-                'applicant_test_attempt_id'  => $attempt->id,
-                'question_id'                => $qid,
-                'selected_choice_id'         => $selectedChoiceId,
-                'answer_text'                => $answerText,
-                'answer_json'                => $answerJson,
-                'is_correct'                 => $isCorrect,
-                'score'                      => $score,
-                'answered_at'                => $now,
-                'created_at'                 => $now,
-                'updated_at'                 => $now,
+                'id' => (string) \Illuminate\Support\Str::uuid(),
+                'applicant_test_attempt_id' => $attempt->id,
+                'question_id' => $qid,
+                'selected_choice_id' => $selectedChoiceId,
+                'answer_text' => $answerText,
+                'answer_json' => $answerJson,
+                'is_correct' => $isCorrect,
+                'score' => $score,
+                'answered_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
             ];
 
             if (is_numeric($score)) {
@@ -248,14 +245,14 @@ class ExamShow extends Component
     {
         // 4) Tutup attempt: expired (timeout)
         $attempt = $this->attempt;
-        $now     = now();
+        $now = now();
 
         $attempt->update([
-            'status'       => $status,
+            'status' => $status,
             'ended_reason' => $endedReason,
             'submitted_at' => $now,
-            'score'        => $totalScore,
-            'updated_at'   => $now,
+            'score' => $totalScore,
+            'updated_at' => $now,
         ]);
 
         // 5) Agregasi ke level paket (optional tapi disarankan)
@@ -289,6 +286,7 @@ class ExamShow extends Component
 
             // redirect ke halaman daftar paket / ringkasan
             $jobVacancyTestId = (string) session('jobVacancyTestId'); // jika memang diset waktu awal
+
             return redirect()->route('exam.index', $jobVacancyTestId);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -339,13 +337,13 @@ class ExamShow extends Component
     #[On('exam-client-event')]
     public function logClientEvent($name, $at = null)
     {
-        $this->dispatch('notification', type: 'error', title: 'Hati-hati!', message: 'Anda terdeteksi melakukan pelanggaran!', timeout: 3000);
+        // $this->dispatch('notification', type: 'error', title: 'Hati-hati!', message: 'Anda terdeteksi melakukan pelanggaran!', timeout: 3000);
         ExamClientEvent::create([
             'id' => (string) Str::uuid(),
             'applicant_test_id' => $this->attempt->applicant_test_id,
             'job_vacancy_test_item_id' => $this->attempt->job_vacancy_test_item_id,
             'event' => $name ?? 'unknown',
-            'meta'  => json_encode(['at' => $event['at'] ?? now()->toIso8601String(), 'ua' => request()->userAgent(), 'ip' => request()->ip()]),
+            'meta' => json_encode(['at' => $event['at'] ?? now()->toIso8601String(), 'ua' => request()->userAgent(), 'ip' => request()->ip()]),
         ]);
 
         // Ambang auto-terminate dari server (tambahan)
@@ -362,7 +360,7 @@ class ExamShow extends Component
 
     public function render()
     {
-        ds(count($this->attemptQuestions->toArray()) == count($this->answers));
+        // ds(count($this->attemptQuestions->toArray()) == count($this->answers));
         return view('livewire.exam.exam-show');
     }
 }

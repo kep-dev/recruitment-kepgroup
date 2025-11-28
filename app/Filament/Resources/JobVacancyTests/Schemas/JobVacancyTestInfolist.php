@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\JobVacancyTests\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Grid;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Schema;
 
 class JobVacancyTestInfolist
 {
@@ -23,15 +23,20 @@ class JobVacancyTestInfolist
                             ->columnSpanFull()
                             ->label('Ujian Untuk'),
                         TextEntry::make('active_from')
-                            ->columnSpan(4)
+                            ->columnSpan(3)
                             ->label('Mulai')
                             ->dateTime(),
                         TextEntry::make('active_until')
-                            ->columnSpan(4)
+                            ->columnSpan(3)
                             ->label('Selesai')
                             ->dateTime(),
+                        TextEntry::make('type')
+                            ->columnSpan(3)
+                            ->label('Jenis Test')
+                            ->formatStateUsing(fn ($state) => $state === 'general' ? 'Umum' : 'Psikotest')
+                            ->badge(),
                         IconEntry::make('is_active')
-                            ->columnSpan(4)
+                            ->columnSpan(3)
                             ->label('Status')
                             ->boolean(),
                     ]),

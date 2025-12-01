@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\JobVacancyTests\Schemas;
+namespace App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -33,7 +33,7 @@ class JobVacancyTestInfolist
                         TextEntry::make('type')
                             ->columnSpan(3)
                             ->label('Jenis Test')
-                            ->formatStateUsing(fn ($state) => $state === 'general' ? 'Umum' : 'Psikotest')
+                            ->formatStateUsing(fn($state) => $state === 'general' ? 'Umum' : 'Psikotest')
                             ->badge(),
                         IconEntry::make('is_active')
                             ->columnSpan(3)

@@ -81,11 +81,11 @@ class PsychotestScoringService
         // 3. Hitung skor maksimal per karakteristik
         //    Berdasarkan seluruh mapping di form ini (bukan hanya jawaban yang dipilih)
         $characteristicIds = array_keys($rawByCharacteristic);
-
+        // dd($attempt);
         $maxRows = DB::table('psychotest_option_characteristic_mappings as m')
             ->join('psychotest_question_options as o', 'm.option_id', '=', 'o.id')
-            ->join('psychotest_questions as q', 'o.question_id', '=', 'q.id')
-            ->where('q.form_id', $attempt->form_id)
+            ->join('psychotest_questions as q', 'o.psychotest_question_id', '=', 'q.id')
+            ->where('q.psychotest_form_id', $attempt->form_id)
             ->whereIn('m.characteristic_id', $characteristicIds)
             ->select(
                 'm.characteristic_id',
@@ -95,13 +95,15 @@ class PsychotestScoringService
             ->get();
 
         $maxByCharacteristic = [];
+
         foreach ($maxRows as $row) {
             $maxByCharacteristic[$row->characteristic_id] = (int) $row->max_raw_score;
         }
 
+
         // 4. Ambil data karakteristik + aspek untuk agregasi aspek nanti
         $characteristics = PsychotestCharacteristic::query()
-            ->with('aspect')
+            ->with('psychotestAspect')   // relasi ke model PsychotestAspect
             ->whereIn('id', $characteristicIds)
             ->get()
             ->keyBy('id');
@@ -115,26 +117,29 @@ class PsychotestScoringService
         $aspectMax = [];     // [aspect_id => total_max]
 
         foreach ($rawByCharacteristic as $charId => $rawScore) {
-            /** @var \App\Models\PsychotestCharacteristic|null $char */
             $char = $characteristics->get($charId);
 
             if (! $char) {
                 continue;
             }
 
-            $maxRaw   = $maxByCharacteristic[$charId] ?? 0;
-            $scaled   = $this->scaleScore($rawScore, $maxRaw);
+            $maxRaw = $maxByCharacteristic[$charId] ?? 0;
+            $scaled = $this->scaleScore($rawScore, $maxRaw);
 
-            // Simpan result per karakteristik
             PsychotestResultCharacteristic::create([
-                'attempt_id'       => $attempt->id,
-                'characteristic_id'=> $charId,
-                'raw_score'        => $rawScore,
-                'scaled_score'     => $scaled,
+                'attempt_id'        => $attempt->id,
+                'characteristic_id' => $charId,
+                'raw_score'         => $rawScore,
+                'scaled_score'      => $scaled,
             ]);
 
-            // Kumpulkan untuk agregasi aspek
-            $aspectId = $char->aspect_id;
+            // 🔴 DI SINI: pakai kolom yang benar
+            $aspectId = $char->psychotest_aspect_id ?? $char->aspect_id ?? null;
+
+            // kalau tetap null, skip saja untuk keamanan
+            if (! $aspectId) {
+                continue;
+            }
 
             if (! isset($aspectRaw[$aspectId])) {
                 $aspectRaw[$aspectId] = 0;
@@ -144,11 +149,14 @@ class PsychotestScoringService
             $aspectRaw[$aspectId] += $rawScore;
             $aspectMax[$aspectId] += $maxRaw;
         }
-
         // 7. Simpan hasil per aspek
         foreach ($aspectRaw as $aspectId => $rawScore) {
-            $maxRaw  = $aspectMax[$aspectId] ?? 0;
-            $scaled  = $this->scaleScore($rawScore, $maxRaw);
+            if (! $aspectId) {
+                continue; // safety extra
+            }
+
+            $maxRaw = $aspectMax[$aspectId] ?? 0;
+            $scaled = $this->scaleScore($rawScore, $maxRaw);
 
             PsychotestResultAspect::create([
                 'attempt_id'   => $attempt->id,

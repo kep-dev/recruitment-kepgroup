@@ -49,11 +49,11 @@ class PsychotestAttempt extends Model
 
     public function characteristics()
     {
-        return $this->hasMany(PsychotestResultCharacteristic::class);
+        return $this->hasMany(PsychotestResultCharacteristic::class, 'attempt_id', 'id');
     }
 
     public function aspects()
     {
-        return $this->hasMany(PsychotestResultAspect::class);
+        return $this->hasMany(PsychotestResultAspect::class, 'attempt_id', 'id');
     }
 }

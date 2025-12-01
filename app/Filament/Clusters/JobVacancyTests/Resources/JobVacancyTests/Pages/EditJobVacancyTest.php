@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\JobVacancyTests\Pages;
+namespace App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\Pages;
 
-use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
-use Filament\Actions\DeleteAction;
+
 use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\JobVacancyTestResource;
 
 class EditJobVacancyTest extends EditRecord
 {

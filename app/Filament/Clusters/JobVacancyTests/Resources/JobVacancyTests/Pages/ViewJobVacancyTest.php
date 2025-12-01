@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\JobVacancyTests\Pages;
+namespace  App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\Pages;
 
-use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
+
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\JobVacancyTestResource;
 
 class ViewJobVacancyTest extends ViewRecord
 {

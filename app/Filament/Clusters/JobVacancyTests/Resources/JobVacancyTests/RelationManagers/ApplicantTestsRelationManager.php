@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\JobVacancyTests\RelationManagers;
+namespace App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\RelationManagers;
 
 use App\Traits\SendToken;
 use Filament\Tables\Table;

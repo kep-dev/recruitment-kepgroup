@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\JobVacancyTests\Pages;
+namespace App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\Pages;
 
-use App\Filament\Resources\JobVacancyTests\JobVacancyTestResource;
+
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\JobVacancyTestResource;
 
 class CreateJobVacancyTest extends CreateRecord
 {

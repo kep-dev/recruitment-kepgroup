@@ -37,6 +37,7 @@ class ParamedicPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->discoverWidgets(in: app_path('Filament/Paramedic/Widgets'), for: 'App\Filament\Paramedic\Widgets')
             ->widgets([
                 AccountWidget::class,

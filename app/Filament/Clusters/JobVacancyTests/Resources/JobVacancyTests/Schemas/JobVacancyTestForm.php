@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\JobVacancyTests\Schemas;
+namespace App\Filament\Clusters\JobVacancyTests\Resources\JobVacancyTests\Schemas;
 
 use App\Models\JobVacancy;
 use Filament\Forms\Components\DateTimePicker;

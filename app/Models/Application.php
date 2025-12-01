@@ -31,7 +31,7 @@ class Application extends Model
 
     public function jobVacancy()
     {
-        return $this->belongsTo(JobVacancy::class);
+        return $this->belongsTo(JobVacancy::class, 'job_vacancy_id', 'id');
     }
 
     public function user()
@@ -77,5 +77,13 @@ class Application extends Model
     public function preMedicalSessionApplications()
     {
         return $this->hasMany(PreMedicalSessionApplication::class, 'application_id', 'id');
+    }
+
+    public function applicantPsychotest()
+    {
+        return $this->hasOne(ApplicantTest::class, 'application_id')
+            ->whereHas('jobVacancyTest', function ($q) {
+                $q->where('type', 'psychotest');
+            });
     }
 }

@@ -32,6 +32,7 @@ class InterviewerPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Interviewer/Resources'), for: 'App\Filament\Interviewer\Resources')
             ->discoverPages(in: app_path('Filament/Interviewer/Pages'), for: 'App\Filament\Interviewer\Pages')

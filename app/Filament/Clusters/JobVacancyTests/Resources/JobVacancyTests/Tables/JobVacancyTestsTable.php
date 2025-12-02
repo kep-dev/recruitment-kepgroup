@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 
 class JobVacancyTestsTable
@@ -23,6 +24,7 @@ class JobVacancyTestsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn(Builder $query) => $query->latest())
             ->columns([
                 TextColumn::make('jobVacancy.title')
                     ->label('Lowongan')
@@ -42,8 +44,7 @@ class JobVacancyTestsTable
                     ->label('Aktif'),
 
             ])
-            ->filters([
-            ])
+            ->filters([])
             ->filtersTriggerAction(
                 fn(Action $action) => $action
                     ->button()

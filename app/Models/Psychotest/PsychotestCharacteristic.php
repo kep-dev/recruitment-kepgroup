@@ -26,5 +26,4 @@ class PsychotestCharacteristic extends Model
     {
         return $this->hasMany(PsychotestCharacteristicScore::class, 'characteristic_id');
     }
-
 }

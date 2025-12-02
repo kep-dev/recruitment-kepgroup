@@ -98,8 +98,8 @@ class InterviewSessionApplicationInfolist
                             })
                             ->schema([
                                 Grid::make(4)->schema([
-                                    TextEntry::make('evaluator_name')->label('Evaluator')->icon('heroicon-m-user-circle'),
-                                    TextEntry::make('evaluator_email')->label('Email')->copyable(),
+                                    TextEntry::make('evaluator_name')->label('Penilai')->icon('heroicon-m-user-circle'),
+                                    // TextEntry::make('evaluator_email')->label('Email')->copyable(),
                                     TextEntry::make('total_score')->label('Skor Total')->numeric(2)->badge(),
                                     TextEntry::make('recommendation')
                                         ->label('Rekomendasi')

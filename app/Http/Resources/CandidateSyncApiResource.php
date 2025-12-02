@@ -41,12 +41,25 @@ class CandidateSyncApiResource extends JsonResource
             ? $this->interviewSessionApplications
             : collect();
 
+        $psychotestAttempt = $this->applicantPsychotest?->psychotestAttempts()
+            ->with([
+                'form',
+                'aspects.aspect',
+                'characteristics.characteristic.psychotestAspect',
+            ])
+            ->latest('completed_at')
+            ->first();
+
         return [
             'applicant' => ApplicantApiResource::make($applicant),
 
             'test_results' => TestResultApiResource::collection($attempts),
 
             'interview_results' => InterviewSessionApplicationApiResource::collection($sessionApplications),
+
+            'psychotest_result' => $psychotestAttempt
+                ? PsychotestResultApiResource::make($psychotestAttempt)
+                : null,
         ];
     }
 }

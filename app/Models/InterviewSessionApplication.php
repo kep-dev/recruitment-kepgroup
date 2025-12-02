@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Enums\status;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class InterviewSessionApplication extends Model
 {
@@ -20,6 +21,13 @@ class InterviewSessionApplication extends Model
         'recommendation',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'status' => status::class
+        ];
+    }
+
     public function interviewSession()
     {
         return $this->belongsTo(InterviewSession::class);
@@ -34,5 +42,4 @@ class InterviewSessionApplication extends Model
     {
         return $this->hasMany(InterviewEvaluation::class, 'interview_session_application_id');
     }
-
 }

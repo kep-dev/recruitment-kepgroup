@@ -748,7 +748,7 @@ class ApplicationInfolist
                                         }
 
                                         $aspectResults = $attempt[0]->aspects()->with('aspect')->get();
-                                        $charResults   = $attempt[0]->characteristics()->with('characteristic')->get();
+                                        $charResults   = $attempt[0]->characteristics()->with(['characteristic', 'characteristic.psychotestCharacteristicScores'])->get();
 
                                         $components = [];
 
@@ -829,7 +829,7 @@ class ApplicationInfolist
                                         // ========== HASIL PER KARAKTERISTIK ==========
                                         //
                                         if ($charResults->isNotEmpty()) {
-                                            ds($aspectResults);
+                                            // ds($aspectResults);
                                             $charState = $charResults->map(function ($item) {
 
                                                 // Ambil interpretasi skor dari tabel psychotest_characteristic_scores

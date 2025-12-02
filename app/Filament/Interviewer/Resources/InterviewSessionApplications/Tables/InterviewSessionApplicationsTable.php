@@ -19,11 +19,14 @@ class InterviewSessionApplicationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('interviewSession.title')
-                    ->label('Sesi Interview')
+                TextColumn::make('application.user.name')
+                    ->label('Pelamar')
                     ->searchable(),
                 TextColumn::make('application.jobVacancy.title')
                     ->label('Lowongan')
+                    ->searchable(),
+                TextColumn::make('interviewSession.title')
+                    ->label('Sesi Interview')
                     ->searchable(),
                 TextColumn::make('mode'),
                 TextColumn::make('location')

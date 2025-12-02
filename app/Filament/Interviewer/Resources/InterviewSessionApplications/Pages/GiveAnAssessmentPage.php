@@ -16,6 +16,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Tabs;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use App\Models\InterviewEvaluationScore;
@@ -26,6 +27,7 @@ use App\Models\InterviewSessionEvaluator;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\Placeholder;
 use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
@@ -34,6 +36,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Validation\ValidationException;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
+use App\Models\Psychotest\PsychotestCharacteristicScore;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Infolists\Components\RepeatableEntry\TableColumn;
@@ -47,6 +50,8 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
     protected static string $resource = InterviewSessionApplicationResource::class;
 
     protected string $view = 'filament.interviewer.resources.interview-session-applications.pages.give-an-assessment-page';
+
+    protected static ?string $title = 'Penilaian Interview';
 
     public array $data = [
         'scores' => [],
@@ -566,6 +571,194 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                                     ]),
 
                             ]),
+                        Tab::make('Hasil Psikotest')
+                            ->columns(12)
+                            ->schema(function ($record): array {
+                                // Ambil attempt psikotest dari relasi
+                                $attempt = optional($this->record->application
+                                    ->applicantPsychotest
+                                    ->psychotestAttempts()
+                                    ->get());
+                                // ds(optional($attempt[0]));
+
+                                if (! $attempt) {
+                                    return [
+                                        Section::make()
+                                            ->schema([
+                                                TextEntry::make('no_psychotest')
+                                                    ->label('Hasil Psikotest')
+                                                    ->default('Pelamar ini belum memiliki hasil psikotest.'),
+                                            ])
+                                            ->columnSpanFull(),
+                                    ];
+                                }
+
+                                $aspectResults = $attempt[0]->aspects()->with('aspect')->get();
+                                $charResults   = $attempt[0]->characteristics()->with('characteristic')->get();
+
+                                $components = [];
+
+                                // ===== Ringkasan Umum =====
+                                $components[] = Section::make('Ringkasan Psikotest')
+                                    ->columns(3)
+                                    ->schema([
+                                        TextEntry::make('form_name')
+                                            ->label('Form Psikotest')
+                                            ->default($attempt->form->name ?? '-'),
+
+                                        // TextEntry::make('completed_at')
+                                        //     ->label('Tanggal Tes')
+                                        //     ->default(
+                                        //         $attempt->completed_at
+                                        //             ? $attempt->completed_at->format('d-m-Y H:i')
+                                        //             : '-'
+                                        //     ),
+
+                                        TextEntry::make('status')
+                                            ->label('Status')
+                                            ->default(ucfirst($attempt->status ?? '-')),
+                                    ])
+                                    ->columnSpanFull();
+
+                                //
+                                // ========== HASIL PER ASPEK ==========
+                                //
+                                if ($aspectResults->isNotEmpty()) {
+
+                                    // convert ke array state untuk RepeatableEntry
+                                    $aspectState = $aspectResults->map(function ($item) {
+                                        return [
+                                            'name'        => $item->aspect->name,
+                                            'raw'         => $item->raw_score,
+                                            'scaled'      => $item->scaled_score,
+                                            'description' => $item->aspect->description ?? '-',
+                                        ];
+                                    })->values()->toArray();
+
+                                    $components[] =
+
+                                        Section::make('Hasil Per Aspek')
+                                        ->columnSpanFull()
+                                        ->schema([
+                                            RepeatableEntry::make('aspect_results')
+                                                ->label('Hasil Per Aspek')
+                                                ->hiddenLabel()
+                                                ->state($aspectState)
+                                                ->table([
+                                                    TableColumn::make('Aspek'),
+                                                    TableColumn::make('Skor Mentah'),
+                                                    TableColumn::make('Skor Skala'),
+                                                ])
+                                                ->schema([
+                                                    TextEntry::make('name')
+                                                        ->label('Aspek')
+                                                        ->weight('bold'),
+
+                                                    TextEntry::make('raw')
+                                                        ->label('Skor Mentah'),
+
+                                                    TextEntry::make('scaled')
+                                                        ->label('Skor Skala (0–9)')
+                                                        ->badge()
+                                                        ->color(fn($state) => match (true) {
+                                                            $state >= 7 => 'success',
+                                                            $state >= 4 => 'warning',
+                                                            default     => 'danger',
+                                                        }),
+
+                                                ])
+                                                ->columnSpanFull(),
+                                        ]);
+                                }
+
+                                //
+                                // ========== HASIL PER KARAKTERISTIK ==========
+                                //
+                                if ($charResults->isNotEmpty()) {
+                                    // ds($aspectResults);
+                                    $charState = $charResults->map(function ($item) {
+
+                                        // Ambil interpretasi skor dari tabel psychotest_characteristic_scores
+                                        $scoreDesc = PsychotestCharacteristicScore::query()
+                                            ->with(['characteristic'])
+                                            ->where('characteristic_id', $item->characteristic_id)
+                                            ->where('score', $item->scaled_score)
+                                            ->value('description') ?? '-';
+
+                                        return [
+                                            'name'              => $item->characteristic->name,
+                                            'raw'               => $item->raw_score,
+                                            'scaled'            => $item->scaled_score,
+                                            'final_description' => $scoreDesc,  // interpretasi score
+                                            'detail'            => $item->characteristic->description ?? '-', // deskripsi dasar karakteristik
+                                        ];
+                                    })->values()->toArray();
+
+                                    $components[] =
+
+                                        Section::make('Hasil Karakteristik')
+                                        ->columnSpanFull()
+                                        ->schema([
+                                            RepeatableEntry::make('char_results')
+                                                ->label('Hasil Per Karakteristik')
+                                                ->hiddenLabel()
+                                                ->state($charState)
+                                                ->table([
+                                                    TableColumn::make('Karakteristik'),
+                                                    TableColumn::make('Skor Mentah'),
+                                                    TableColumn::make('Skor Skala'),
+                                                    TableColumn::make('Interpretasi Skor'),
+                                                    TableColumn::make('Deskripsi Karakteristik'),
+                                                ])
+                                                ->schema([
+
+                                                    TextEntry::make('name')
+                                                        ->label('Karakteristik')
+                                                        ->weight('bold'),
+
+                                                    TextEntry::make('raw')
+                                                        ->label('Skor Mentah'),
+
+                                                    TextEntry::make('scaled')
+                                                        ->label('Skor Skala (0–9)')
+                                                        ->badge()
+                                                        ->color(fn($state) => match (true) {
+                                                            $state >= 7 => 'success',
+                                                            $state >= 4 => 'warning',
+                                                            default     => 'danger',
+                                                        }),
+
+                                                    TextEntry::make('final_description')
+                                                        ->label('Interpretasi Skor')
+                                                        ->columnSpanFull(),
+                                                    // ->extraAttributes([
+                                                    //     'class' => 'whitespace-pre-line text-xs text-gray-700 dark:text-neutral-300',
+                                                    // ]),
+
+                                                    TextEntry::make('detail')
+                                                        ->label('Keterangan Karakteristik')
+                                                        ->columnSpanFull()
+                                                        ->limit(50)
+                                                        ->tooltip(function (TextEntry $column): ?string {
+                                                            $state = $column->getState();
+
+                                                            if (strlen($state) <= $column->getCharacterLimit()) {
+                                                                return null;
+                                                            }
+
+                                                            // Only render the tooltip if the column contents exceeds the length limit.
+                                                            return $state;
+                                                        })
+                                                    // ->extraAttributes([
+                                                    //     'class' => 'whitespace-pre-line text-xs text-gray-500 dark:text-neutral-400',
+                                                    // ]),
+                                                ])
+                                                ->columnSpanFull(),
+                                        ]);
+                                }
+
+                                return $components;
+                            }),
                         Tab::make('Form Penilaian')
                             ->schema([
                                 Section::make('Penilaian per Kriteria')
@@ -651,6 +844,11 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
 
                                 Section::make('Ringkasan')
                                     ->schema([
+
+                                        Checkbox::make('status')
+                                            ->label('Sudah selesai melakukan penilaian?'),
+
+
                                         Radio::make('recommendation')
                                             ->label('Rekomendasi')
                                             ->options([
@@ -707,7 +905,7 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
     public function save(): void
     {
         $state = $this->testSchema->getState();
-        // dd($state);
+        // dd($this->record);
         // Pastikan semua kriteria terisi
         foreach ($state['scores'] as $row) {
             if (empty($row['interview_criteria_id']) || empty($row['interview_scale_id'])) {
@@ -738,8 +936,19 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                 ]
             );
 
+            if ($state['status'] === true) {
+                $this->record->update([
+                    'status' => 'completed'
+                ]);
+            } else {
+                $this->record->update([
+                    'status' => 'in_progress'
+                ]);
+            }
+
             // Simpan nilai ringkasan
             $evaluation->update([
+                // 'status'          => $state['status'] === true ? 'completed' : 'in_progress',
                 'recommendation'  => $state['recommendation'] ?? null,
                 'overall_comment' => $state['overall_comment'] ?? null,
                 'submitted_at'    => now(),

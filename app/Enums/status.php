@@ -18,6 +18,9 @@ enum status: string implements HasLabel, HasIcon
     case submitted = 'submitted';
     case graded = 'graded';
     case timeout = 'timeout';
+    case scheduled = 'scheduled';
+    case cancelled = 'cancelled';
+    case no_show = 'no_show';
     public function getLabel(): ?string
     {
         return match ($this) {
@@ -32,6 +35,9 @@ enum status: string implements HasLabel, HasIcon
             self::submitted => 'Dikirim',
             self::graded => 'Dinilai',
             self::timeout => 'Waktu Habis',
+            self::scheduled => 'Dijadwalkan',
+            self::cancelled => 'Dibatalkan',
+            self::no_show => 'Tidak Hadir',
         };
     }
 
@@ -49,6 +55,9 @@ enum status: string implements HasLabel, HasIcon
             self::submitted => 'secondary',
             self::graded => 'secondary',
             self::timeout => 'danger',
+            self::scheduled => 'secondary',
+            self::cancelled => 'danger',
+            self::no_show => 'danger',
         };
     }
 
@@ -66,6 +75,9 @@ enum status: string implements HasLabel, HasIcon
             self::submitted => 'heroicon-s-check-circle',
             self::graded => 'heroicon-s-check-circle',
             self::timeout => 'heroicon-s-x-circle',
+            self::scheduled => 'heroicon-s-check-circle',
+            self::cancelled => 'heroicon-s-x-circle',
+            self::no_show => 'heroicon-s-x-circle',
         };
     }
 }

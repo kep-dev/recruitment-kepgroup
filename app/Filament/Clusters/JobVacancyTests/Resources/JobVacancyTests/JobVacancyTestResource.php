@@ -27,7 +27,7 @@ class JobVacancyTestResource extends Resource
 {
     protected static ?string $model = JobVacancyTest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
+    protected static string|BackedEnum|null $navigationIcon = LucideIcon::BookOpenCheck;
     protected static ?string $cluster = JobVacancyTestsCluster::class;
     protected static ?int $navigationSort = 1;
 

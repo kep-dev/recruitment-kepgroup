@@ -266,7 +266,8 @@ class ApplicationsTable
                                 ->findOrFail($record->id);
 
                             // payload final (array murni)
-                            $payload = CandidateSyncApiResource::make($application)->resolve();
+                            $payload = CandidateSyncApiResource::make($application)
+                                ->resolve();
 
                             // Convert kandidat → JSON
                             // $payload = [

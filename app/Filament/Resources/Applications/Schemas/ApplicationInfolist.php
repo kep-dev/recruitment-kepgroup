@@ -732,7 +732,7 @@ class ApplicationInfolist
                                     ->columns(12)
                                     ->schema(function ($record): array {
                                         // Ambil attempt psikotest dari relasi
-                                        $attempt = optional($record->applicantPsychotest->psychotestAttempts()->get());
+                                        $attempt = optional($record->applicantPsychotest?->psychotestAttempts()?->get());
                                         // ds(optional($attempt[0]));
 
                                         if (! $attempt) {
@@ -747,8 +747,8 @@ class ApplicationInfolist
                                             ];
                                         }
 
-                                        $aspectResults = $attempt[0]->aspects()->with('aspect')->get();
-                                        $charResults   = $attempt[0]->characteristics()->with(['characteristic', 'characteristic.psychotestCharacteristicScores'])->get();
+                                        $aspectResults = $attempt[0]?->aspects()?->with('aspect')->get();
+                                        $charResults   = $attempt[0]?->characteristics()?->with(['characteristic', 'characteristic.psychotestCharacteristicScores'])->get();
 
                                         $components = [];
 
@@ -777,7 +777,7 @@ class ApplicationInfolist
                                         //
                                         // ========== HASIL PER ASPEK ==========
                                         //
-                                        if ($aspectResults->isNotEmpty()) {
+                                        if ($aspectResults) {
 
                                             // convert ke array state untuk RepeatableEntry
                                             $aspectState = $aspectResults->map(function ($item) {
@@ -828,7 +828,7 @@ class ApplicationInfolist
                                         //
                                         // ========== HASIL PER KARAKTERISTIK ==========
                                         //
-                                        if ($charResults->isNotEmpty()) {
+                                        if ($charResults) {
                                             // ds($aspectResults);
                                             $charState = $charResults->map(function ($item) {
 

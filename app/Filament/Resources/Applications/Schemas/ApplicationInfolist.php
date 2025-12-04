@@ -731,9 +731,19 @@ class ApplicationInfolist
                                 Tab::make('Hasil Psikotest')
                                     ->columns(12)
                                     ->schema(function ($record): array {
-                                        // Ambil attempt psikotest dari relasi
-                                        $attempt = optional($record->applicantPsychotest?->psychotestAttempts()?->get());
-                                        // ds(optional($attempt[0]));
+                                        $components = [];
+
+                                        // 1. Ambil 1 attempt psikotest (misal terbaru) dari relasi
+                                        $applicantTest = $record->applicantPsychotest; // relasi ke ApplicantTest
+                                        $attempt = $applicantTest?->psychotestAttempts()
+                                            ->latest('completed_at')
+                                            ->with([
+                                                'form',
+                                                'aspects.aspect',
+                                                'characteristics.characteristic.psychotestAspect',
+                                                'characteristics.characteristic.psychotestCharacteristicScores',
+                                            ])
+                                            ->first();
 
                                         if (! $attempt) {
                                             return [
@@ -747,12 +757,12 @@ class ApplicationInfolist
                                             ];
                                         }
 
-                                        $aspectResults = $attempt[0]?->aspects()?->with('aspect')->get();
-                                        $charResults   = $attempt[0]?->characteristics()?->with(['characteristic', 'characteristic.psychotestCharacteristicScores'])->get();
+                                        $aspectResults = $attempt->aspects;          // collection PsychotestResultAspect
+                                        $charResults   = $attempt->characteristics;  // collection PsychotestResultCharacteristic
 
-                                        $components = [];
-
+                                        //
                                         // ===== Ringkasan Umum =====
+                                        //
                                         $components[] = Section::make('Ringkasan Psikotest')
                                             ->columns(3)
                                             ->schema([
@@ -760,26 +770,24 @@ class ApplicationInfolist
                                                     ->label('Form Psikotest')
                                                     ->default($attempt->form->name ?? '-'),
 
-                                                // TextEntry::make('completed_at')
-                                                //     ->label('Tanggal Tes')
-                                                //     ->default(
-                                                //         $attempt->completed_at
-                                                //             ? $attempt->completed_at->format('d-m-Y H:i')
-                                                //             : '-'
-                                                //     ),
+                                                TextEntry::make('completed_at')
+                                                    ->label('Tanggal Tes')
+                                                    ->default(
+                                                        $attempt->completed_at
+                                                            ? $attempt->completed_at->format('d-m-Y H:i')
+                                                            : '-'
+                                                    ),
 
-                                                TextEntry::make('status')
-                                                    ->label('Status')
-                                                    ->default(ucfirst($attempt->status ?? '-')),
+                                                // TextEntry::make('status')
+                                                //     ->label('Status')
+                                                //     ->default(ucfirst($attempt->status ?? '-')),
                                             ])
                                             ->columnSpanFull();
 
                                         //
                                         // ========== HASIL PER ASPEK ==========
                                         //
-                                        if ($aspectResults) {
-
-                                            // convert ke array state untuk RepeatableEntry
+                                        if ($aspectResults->isNotEmpty()) {
                                             $aspectState = $aspectResults->map(function ($item) {
                                                 return [
                                                     'name'        => $item->aspect->name,
@@ -789,9 +797,7 @@ class ApplicationInfolist
                                                 ];
                                             })->values()->toArray();
 
-                                            $components[] =
-
-                                                Section::make('Hasil Per Aspek')
+                                            $components[] = Section::make('Hasil Per Aspek')
                                                 ->columnSpanFull()
                                                 ->schema([
                                                     RepeatableEntry::make('aspect_results')
@@ -800,7 +806,7 @@ class ApplicationInfolist
                                                         ->state($aspectState)
                                                         ->table([
                                                             TableColumn::make('Aspek'),
-                                                            TableColumn::make('Skor Mentah'),
+                                                            // TableColumn::make('Skor Mentah'),
                                                             TableColumn::make('Skor Skala'),
                                                         ])
                                                         ->schema([
@@ -808,8 +814,8 @@ class ApplicationInfolist
                                                                 ->label('Aspek')
                                                                 ->weight('bold'),
 
-                                                            TextEntry::make('raw')
-                                                                ->label('Skor Mentah'),
+                                                            // TextEntry::make('raw')
+                                                            //     ->label('Skor Mentah'),
 
                                                             TextEntry::make('scaled')
                                                                 ->label('Skor Skala (0–9)')
@@ -819,95 +825,89 @@ class ApplicationInfolist
                                                                     $state >= 4 => 'warning',
                                                                     default     => 'danger',
                                                                 }),
-
                                                         ])
                                                         ->columnSpanFull(),
                                                 ]);
                                         }
 
                                         //
-                                        // ========== HASIL PER KARAKTERISTIK ==========
+                                        // ========== HASIL PER KARAKTERISTIK, DIKELOMPOKKAN PER ASPEK ==========
                                         //
-                                        if ($charResults) {
-                                            // ds($aspectResults);
-                                            $charState = $charResults->map(function ($item) {
+                                        if ($charResults->isNotEmpty()) {
+                                            // Group karakteristik berdasarkan aspek
+                                            $groupedByAspect = $charResults->groupBy(function ($item) {
+                                                return $item->characteristic->psychotestAspect->name ?? 'Tanpa Aspek';
+                                            });
 
-                                                // Ambil interpretasi skor dari tabel psychotest_characteristic_scores
-                                                $scoreDesc = PsychotestCharacteristicScore::query()
-                                                    ->where('characteristic_id', $item->characteristic_id)
-                                                    ->where('score', $item->scaled_score)
-                                                    ->value('description') ?? '-';
+                                            foreach ($groupedByAspect as $aspectName => $chars) {
+                                                $charState = $chars->map(function ($item) {
+                                                    // Interpretasi skor dari relasi psychotestCharacteristicScores yang sudah di-eager load
+                                                    $scoreDesc = optional(
+                                                        $item->characteristic->psychotestCharacteristicScores
+                                                            ->firstWhere('score', $item->scaled_score)
+                                                    )->description ?? '-';
 
-                                                return [
-                                                    'name'              => $item->characteristic->name,
-                                                    'raw'               => $item->raw_score,
-                                                    'scaled'            => $item->scaled_score,
-                                                    'final_description' => $scoreDesc,  // interpretasi score
-                                                    'detail'            => $item->characteristic->description ?? '-', // deskripsi dasar karakteristik
-                                                ];
-                                            })->values()->toArray();
+                                                    return [
+                                                        'name'              => $item->characteristic->name,
+                                                        'raw'               => $item->raw_score,
+                                                        'scaled'            => $item->scaled_score,
+                                                        'final_description' => $scoreDesc,
+                                                        'detail'            => $item->characteristic->description ?? '-',
+                                                    ];
+                                                })->values()->toArray();
 
-                                            $components[] =
+                                                $components[] = Section::make("{$aspectName}")
+                                                    ->columnSpanFull()
+                                                    ->schema([
+                                                        RepeatableEntry::make("char_results_{$aspectName}")
+                                                            ->label("Hasil Karakteristik ({$aspectName})")
+                                                            ->hiddenLabel()
+                                                            ->state($charState)
+                                                            ->table([
+                                                                TableColumn::make('Karakteristik'),
+                                                                // TableColumn::make('Skor Mentah'),
+                                                                TableColumn::make('Skor Skala'),
+                                                                TableColumn::make('Interpretasi Skor'),
+                                                                TableColumn::make('Deskripsi Karakteristik'),
+                                                            ])
+                                                            ->schema([
+                                                                TextEntry::make('name')
+                                                                    ->label('Karakteristik')
+                                                                    ->weight('bold'),
 
-                                                Section::make('Hasil Karakteristik')
-                                                ->columnSpanFull()
-                                                ->schema([
-                                                    RepeatableEntry::make('char_results')
-                                                        ->label('Hasil Per Karakteristik')
-                                                        ->hiddenLabel()
-                                                        ->state($charState)
-                                                        ->table([
-                                                            TableColumn::make('Karakteristik'),
-                                                            TableColumn::make('Skor Mentah'),
-                                                            TableColumn::make('Skor Skala'),
-                                                            TableColumn::make('Interpretasi Skor'),
-                                                            TableColumn::make('Deskripsi Karakteristik'),
-                                                        ])
-                                                        ->schema([
+                                                                // TextEntry::make('raw')
+                                                                //     ->label('Skor Mentah'),
 
-                                                            TextEntry::make('name')
-                                                                ->label('Karakteristik')
-                                                                ->weight('bold'),
+                                                                TextEntry::make('scaled')
+                                                                    ->label('Skor Skala (0–9)')
+                                                                    ->badge()
+                                                                    ->color(fn($state) => match (true) {
+                                                                        $state >= 7 => 'success',
+                                                                        $state >= 4 => 'warning',
+                                                                        default     => 'danger',
+                                                                    }),
 
-                                                            TextEntry::make('raw')
-                                                                ->label('Skor Mentah'),
+                                                                TextEntry::make('final_description')
+                                                                    ->label('Interpretasi Skor')
+                                                                    ->columnSpanFull(),
 
-                                                            TextEntry::make('scaled')
-                                                                ->label('Skor Skala (0–9)')
-                                                                ->badge()
-                                                                ->color(fn($state) => match (true) {
-                                                                    $state >= 7 => 'success',
-                                                                    $state >= 4 => 'warning',
-                                                                    default     => 'danger',
-                                                                }),
+                                                                TextEntry::make('detail')
+                                                                    ->label('Keterangan Karakteristik')
+                                                                    ->columnSpanFull()
+                                                                    ->limit(50)
+                                                                    ->tooltip(function (TextEntry $entry): ?string {
+                                                                        $state = $entry->getState();
 
-                                                            TextEntry::make('final_description')
-                                                                ->label('Interpretasi Skor')
-                                                                ->columnSpanFull(),
-                                                            // ->extraAttributes([
-                                                            //     'class' => 'whitespace-pre-line text-xs text-gray-700 dark:text-neutral-300',
-                                                            // ]),
+                                                                        if (strlen($state) <= $entry->getCharacterLimit()) {
+                                                                            return null;
+                                                                        }
 
-                                                            TextEntry::make('detail')
-                                                                ->label('Keterangan Karakteristik')
-                                                                ->columnSpanFull()
-                                                                ->limit(50)
-                                                                ->tooltip(function (TextEntry $column): ?string {
-                                                                    $state = $column->getState();
-
-                                                                    if (strlen($state) <= $column->getCharacterLimit()) {
-                                                                        return null;
-                                                                    }
-
-                                                                    // Only render the tooltip if the column contents exceeds the length limit.
-                                                                    return $state;
-                                                                })
-                                                            // ->extraAttributes([
-                                                            //     'class' => 'whitespace-pre-line text-xs text-gray-500 dark:text-neutral-400',
-                                                            // ]),
-                                                        ])
-                                                        ->columnSpanFull(),
-                                                ]);
+                                                                        return $state;
+                                                                    }),
+                                                            ])
+                                                            ->columnSpanFull(),
+                                                    ]);
+                                            }
                                         }
 
                                         return $components;

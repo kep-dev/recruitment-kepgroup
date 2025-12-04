@@ -29,12 +29,16 @@ class PsychotestAspectForm
                                     TextInput::make('code')
                                         ->label('Kode')
                                         ->required()
-                                        ->columnSpan(6),
+                                        ->columnSpan(4),
                                     TextInput::make('name')
                                         ->label('Nama Aspek')
                                         ->placeholder('Arah Kerja, Kepemimpinan, dll')
                                         ->required()
-                                        ->columnSpan(6),
+                                        ->columnSpan(4),
+                                    TextInput::make('order')
+                                        ->label('Nomor Urut')
+                                        ->required()
+                                        ->columnSpan(4),
                                     Textarea::make('description')
                                         ->label('Keterangan')
                                         ->required()

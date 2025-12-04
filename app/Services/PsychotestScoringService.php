@@ -103,20 +103,22 @@ class PsychotestScoringService
 
         // 4. Ambil data karakteristik + aspek untuk agregasi aspek nanti
         $characteristics = PsychotestCharacteristic::query()
-            ->with('psychotestAspect')   // relasi ke model PsychotestAspect
+            ->with('psychotestAspect')
             ->whereIn('id', $characteristicIds)
             ->get()
             ->keyBy('id');
+
 
         // 5. Bersihkan hasil lama
         PsychotestResultCharacteristic::where('attempt_id', $attempt->id)->delete();
         PsychotestResultAspect::where('attempt_id', $attempt->id)->delete();
 
         // 6. Simpan hasil per karakteristik
-        $aspectRaw = [];     // [aspect_id => total_raw]
-        $aspectMax = [];     // [aspect_id => total_max]
+        $aspectRaw       = []; // [aspect_id => total_raw]
+        $aspectCharCount = []; // [aspect_id => jumlah karakteristik yang punya hasil]
 
         foreach ($rawByCharacteristic as $charId => $rawScore) {
+            /** @var \App\Models\PsychotestCharacteristic|null $char */
             $char = $characteristics->get($charId);
 
             if (! $char) {
@@ -124,45 +126,62 @@ class PsychotestScoringService
             }
 
             $maxRaw = $maxByCharacteristic[$charId] ?? 0;
-            $scaled = $this->scaleScore($rawScore, $maxRaw);
+            $scaled = $this->scaleScore($rawScore, $maxRaw); // ini tetap 0–9 per karakteristik
 
+            // Simpan result per karakteristik
             PsychotestResultCharacteristic::create([
                 'attempt_id'        => $attempt->id,
                 'characteristic_id' => $charId,
                 'raw_score'         => $rawScore,
                 'scaled_score'      => $scaled,
             ]);
+            // dd($char);
+            // Kumpulkan untuk agregasi aspek
+            $aspectId = $char->psychotest_aspect_id;
 
-            // 🔴 DI SINI: pakai kolom yang benar
-            $aspectId = $char->psychotest_aspect_id ?? $char->aspect_id ?? null;
-
-            // kalau tetap null, skip saja untuk keamanan
             if (! $aspectId) {
                 continue;
             }
 
             if (! isset($aspectRaw[$aspectId])) {
-                $aspectRaw[$aspectId] = 0;
-                $aspectMax[$aspectId] = 0;
+                $aspectRaw[$aspectId]       = 0;
+                $aspectCharCount[$aspectId] = 0;
             }
 
-            $aspectRaw[$aspectId] += $rawScore;
-            $aspectMax[$aspectId] += $maxRaw;
+            $aspectRaw[$aspectId]       += $rawScore;
+            $aspectCharCount[$aspectId] += 1;
         }
+        // dd($aspectRaw);
         // 7. Simpan hasil per aspek
         foreach ($aspectRaw as $aspectId => $rawScore) {
             if (! $aspectId) {
                 continue; // safety extra
             }
 
-            $maxRaw = $aspectMax[$aspectId] ?? 0;
-            $scaled = $this->scaleScore($rawScore, $maxRaw);
+            $charCount = $aspectCharCount[$aspectId] ?? 0;
+
+            if ($charCount <= 0) {
+                // kalau entah kenapa tidak ada karakteristik yg tercatat, anggap 0
+                $avgRaw = 0;
+            } else {
+                // rata-rata raw per karakteristik
+                $avgRaw = $rawScore / $charCount;
+            }
+
+            // scaled_score aspek = rata-rata raw per karakteristik, dibulatkan & dibatasi 0–9
+            $scaled = $avgRaw;
+
+            if ($scaled < 0) {
+                $scaled = 0;
+            } elseif ($scaled > 9) {
+                $scaled = 9;
+            }
 
             PsychotestResultAspect::create([
                 'attempt_id'   => $attempt->id,
                 'aspect_id'    => $aspectId,
-                'raw_score'    => $rawScore,
-                'scaled_score' => $scaled,
+                'raw_score'    => $rawScore,  // total raw semua karakteristik di aspek tsb
+                'scaled_score' => $scaled,    // hasil rata-rata (0–9)
             ]);
         }
     }
@@ -170,13 +189,13 @@ class PsychotestScoringService
     /**
      * Konversi skor mentah ke skala 0–9.
      */
-    protected function scaleScore(int $rawScore, int $maxRawScore): int
+    protected function scaleScore($rawScore, $maxRawScore)
     {
         if ($rawScore <= 0 || $maxRawScore <= 0) {
             return 0;
         }
 
-        $scaled = (int) round(($rawScore / $maxRawScore) * 9);
+        $scaled = round(($rawScore / $maxRawScore) * 9);
 
         // Clamp antara 0 dan 9
         if ($scaled < 0) {

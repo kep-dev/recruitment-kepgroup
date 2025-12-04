@@ -96,7 +96,7 @@ class PsychotestExamIndex extends Component
                     throw new \Exception('Waktu tes telah habis.');
                 }
 
-                return redirect()->route('frontend.profile.psikotest.show', $attempt);
+                return redirect()->route('frontend.profile.psikotest.show', $attempt->id);
                 // return $attempt->id; // lanjutkan attempt lama
             }
 

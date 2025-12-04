@@ -9,6 +9,7 @@
         "php": "^8.2",
         "alperenersoy/filament-export": "^4.0",
         "bezhansalleh/filament-shield": "^4.0",
+        "caresome/filament-auth-designer": "^1.0",
         "codewithdennis/filament-lucide-icons": "^4.0",
         "filament/filament": "^4.0",
         "filament/spatie-laravel-media-library-plugin": "^4.0",

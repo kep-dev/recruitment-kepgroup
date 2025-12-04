@@ -2,7 +2,7 @@
 
 namespace App\Models\Psychotest;
 
-use App\Enums\Status;
+use App\Enums\status;
 use App\Models\ApplicantTest;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +26,7 @@ class PsychotestAttempt extends Model
     protected function casts(): array
     {
         return [
-            'status' => Status::class,
+            'status' => status::class,
             'started_at' => 'datetime',
             'completed_at' => 'datetime',
         ];

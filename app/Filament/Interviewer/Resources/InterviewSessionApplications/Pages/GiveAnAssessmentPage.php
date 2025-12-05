@@ -572,6 +572,68 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
 
                             ]),
 
+                        Tab::make('Hasil Tes')
+                            ->columns(12)
+                            ->schema(function ($record): array {
+                                // ds($this->record);
+                                $application = $this->record->application ?? null;
+
+                                if (! $application) {
+                                    return [
+                                        Section::make()
+                                            ->schema([
+                                                TextEntry::make('no_test')
+                                                    ->label('Hasil Tes')
+                                                    ->default('Pelamar ini belum memiliki data tes.'),
+                                            ])
+                                            ->columnSpanFull(),
+                                    ];
+                                }
+
+                                // Ambil semua ApplicantTest + attempts-nya
+                                $tests = $application->applicantTests->attempts;
+
+                                $testResults = $tests->map(function ($test) {
+                                    return [
+                                        'id' => $test->id,
+                                        'test_title' => $test->test->title,
+                                        'score' => $test->score * $test->jobVacancyTestItem->multiplier,
+                                    ];
+                                });
+
+                                // ds($tests->values()->toArray());
+
+                                if ($tests->isEmpty()) {
+                                    return [
+                                        Section::make()
+                                            ->schema([
+                                                TextEntry::make('no_attempt')
+                                                    ->label('Hasil Tes')
+                                                    ->default('Belum ada attempt yang dikerjakan.'),
+                                            ])
+                                            ->columnSpanFull(),
+                                    ];
+                                }
+
+                                return [
+                                    RepeatableEntry::make('attempt_rows')
+                                        ->hiddenLabel()
+                                        ->state($testResults->values()->toArray())
+                                        ->table([
+                                            TableColumn::make('Test'),
+                                            TableColumn::make('Skor'),
+                                        ])
+                                        ->schema([
+                                            TextEntry::make('test_title')
+                                                ->label('Soal'),
+
+                                            TextEntry::make('score')
+                                                ->label('Skor × Bobot')
+                                        ])
+                                        ->columnSpanFull(),
+                                ];
+                            }),
+
                         Tab::make('Hasil Tes Karakter')
                             ->columns(12)
                             ->schema(function ($record): array {

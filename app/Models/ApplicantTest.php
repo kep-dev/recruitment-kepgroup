@@ -42,7 +42,7 @@ class ApplicantTest extends Model
 
     public function attempts()
     {
-        return $this->hasMany(ApplicantTestAttempt::class);
+        return $this->hasMany(ApplicantTestAttempt::class, 'applicant_test_id');
     }
 
     public function psychotestAttempts()

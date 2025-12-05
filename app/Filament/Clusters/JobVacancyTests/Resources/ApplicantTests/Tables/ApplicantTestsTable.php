@@ -9,8 +9,10 @@ use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\QueryBuilder;
 use Filament\Tables\Filters\SelectFilter;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use Filament\QueryBuilder\Constraints\SelectConstraint;
 
 class ApplicantTestsTable
 {
@@ -24,6 +26,10 @@ class ApplicantTestsTable
                 TextColumn::make('application.jobVacancy.title')
                     ->label('Lowongan')
                     ->searchable(),
+                TextColumn::make('jobVacancyTest.type')
+                    ->label('Tipe Ujian')
+                    ->formatStateUsing(fn($state) => $state == 'general' ? 'Potensi Dasar Akademik' : 'Psikotest')
+                    ->searchable(),
                 TextColumn::make('status')
                     ->label('Status')
                     ->searchable(),
@@ -36,9 +42,19 @@ class ApplicantTestsTable
                     ->relationship('application.jobVacancy', 'title')
                     ->label('Lowongan')
                     ->options(JobVacancy::all()->pluck('title', 'id')),
+
+                QueryBuilder::make()
+                    ->constraints([
+                        SelectConstraint::make('jobVacancyTest.type')
+                            ->options([
+                                'general' => 'Potensi Dasar Akademik',
+                                'psychotest' => 'Psikotest',
+                            ])
+                    ]),
+
             ])
             ->recordActions([
-                // ViewAction::make(),
+                ViewAction::make(),
                 // EditAction::make(),
             ])
             ->toolbarActions([

@@ -31,7 +31,7 @@ class InterviewSessionApplicationInfolist
                             TextEntry::make('meeting_link')->label('Meeting Link')->placeholder('-'),
                         ]),
                         Grid::make(3)->schema([
-                            TextEntry::make('avg_score')->numeric(2)->label('Rata-rata Skor'),
+                            TextEntry::make('total_score')->numeric(2)->label('Rata-rata Skor'),
                             TextEntry::make('recommendation')
                                 ->label('Rekomendasi')
                                 ->badge()

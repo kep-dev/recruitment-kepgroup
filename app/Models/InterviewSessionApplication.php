@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\status;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
@@ -20,6 +21,23 @@ class InterviewSessionApplication extends Model
         'avg_score',
         'recommendation',
     ];
+
+    protected $appends = [
+        'total_score',
+    ];
+
+    public function totalScore(): Attribute
+    {
+        return Attribute::get(function () {
+            $avg = $this->evaluations()->avg('total_score');
+
+            if ($avg === null) {
+                return null;
+            }
+
+            return round((float) $avg, 2);
+        });
+    }
 
     protected function casts(): array
     {

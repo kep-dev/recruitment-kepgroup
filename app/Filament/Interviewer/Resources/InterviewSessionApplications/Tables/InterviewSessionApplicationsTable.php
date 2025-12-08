@@ -41,7 +41,7 @@ class InterviewSessionApplicationsTable
                 TextColumn::make('meeting_link')
                     ->searchable(),
                 TextColumn::make('status'),
-                TextColumn::make('avg_score')
+                TextColumn::make('total_score')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('recommendation'),

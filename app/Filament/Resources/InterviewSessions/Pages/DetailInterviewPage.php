@@ -80,7 +80,7 @@ class DetailInterviewPage extends Page implements HasSchemas
                                 ->label('Jumlah Evaluator Submit')
                                 ->state(fn() => $this->record->evaluations()->count())
                                 ->badge(),
-                            TextEntry::make('avg_score')
+                            TextEntry::make('total_score')
                                 ->label('Rata-rata Skor')
                                 ->numeric(2),
                             // TextEntry::make('recommendation')->label('Keputusan')->badge(),

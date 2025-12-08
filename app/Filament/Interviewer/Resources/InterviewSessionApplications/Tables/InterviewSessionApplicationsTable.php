@@ -10,14 +10,21 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use App\Filament\Interviewer\Resources\InterviewSessionApplications\Pages\GiveAnAssessmentPage;
+use Illuminate\Database\Eloquent\Builder;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
+use App\Filament\Interviewer\Resources\InterviewSessionApplications\Pages\GiveAnAssessmentPage;
 
 class InterviewSessionApplicationsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(
+                fn(Builder $query) => $query
+                    ->whereHas('interviewSession.interviewEvaluators', function (Builder $query) {
+                        $query->where('user_id', auth()->id());
+                    })
+            )
             ->columns([
                 TextColumn::make('application.user.name')
                     ->label('Pelamar')

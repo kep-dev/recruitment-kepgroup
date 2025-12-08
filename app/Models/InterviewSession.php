@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\status;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,15 @@ class InterviewSession extends Model
         'default_meeting_link',
         'status',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => status::class,
+            'scheduled_at' => 'datetime',
+            'scheduled_end_at' => 'datetime',
+        ];
+    }
 
     public function jobVacancy()
     {

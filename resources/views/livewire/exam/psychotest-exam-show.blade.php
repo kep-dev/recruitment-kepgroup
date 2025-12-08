@@ -116,56 +116,59 @@
         @endif
 
         {{-- Card Soal --}}
-        <div
+        <div -
             class="mb-6 rounded-2xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
-            <div class="border-b border-slate-100 dark:border-neutral-800 px-5 py-4">
-                <h2 class="text-sm font-semibold text-slate-900 dark:text-neutral-50">
-                    Pilih salah satu pernyataan berikut:
-                </h2>
-                <p class="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                    Tidak ada jawaban benar atau salah. Jawablah dengan jujur sesuai diri Anda.
-                </p>
-            </div>
+            + <div id="js-question-card" +
+                class="relative mb-6 rounded-2xl border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
+                <div class="border-b border-slate-100 dark:border-neutral-800 px-5 py-4">
+                    <h2 class="text-sm font-semibold text-slate-900 dark:text-neutral-50">
+                        Pilih salah satu pernyataan berikut:
+                    </h2>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                        Tidak ada jawaban benar atau salah. Jawablah dengan jujur sesuai diri Anda.
+                    </p>
+                </div>
 
-            <div class="p-5 grid gap-4 sm:grid-cols-2">
-                @foreach ($this->currentQuestion->options as $option)
-                    <button type="button" wire:click="selectOption('{{ $option->id }}')"
-                        class="group relative flex flex-col gap-2 rounded-xl border bg-white dark:bg-neutral-900 p-4 text-left shadow-sm transition-all
-              border-slate-200 hover:border-slate-400 hover:shadow
-              dark:border-neutral-700 dark:hover:border-neutral-500
-              @if ($selectedOptionId === $option->id) ring-2 ring-slate-900 border-slate-900
-                  dark:ring-slate-100 dark:border-slate-100 @endif">
-                        <div class="flex items-start gap-3">
-                            <span
-                                class="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold
-                                border-slate-300 bg-slate-50 text-slate-700
-                                dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100">
-                                {{ $option->label }}
-                            </span>
-                            <p class="text-sm leading-relaxed text-slate-800 dark:text-neutral-100">
-                                {{ $option->statement }}
-                            </p>
-                        </div>
-
-                        <div
-                            class="mt-2 flex items-center justify-between text-[11px] text-slate-400 dark:text-neutral-500">
-                            <div class="inline-flex items-center gap-1">
+                <div class="p-5 grid gap-4 sm:grid-cols-2">
+                    @foreach ($this->currentQuestion->options as $option)
+                        <button type="button" wire:click="selectOption('{{ $option->id }}')"
+                            class="group relative flex flex-col gap-2 rounded-xl border bg-white dark:bg-neutral-900 p-4 text-left shadow-sm transition-all
+               border-slate-200 hover:border-slate-400 hover:shadow
+               dark:border-neutral-700 dark:hover:border-neutral-500
+               @if ($selectedOptionId === $option->id) ring-2 ring-slate-900 border-slate-900
+                   dark:ring-slate-100 dark:border-slate-100 @endif">
+                            <div class="flex items-start gap-3">
                                 <span
-                                    class="h-1.5 w-1.5 rounded-full
-                                    @if ($selectedOptionId === $option->id) bg-emerald-500
-                                    @else
-                                        bg-slate-300 dark:bg-neutral-600 @endif"></span>
-                                <span>
-                                    @if ($selectedOptionId === $option->id)
-                                        Dipilih
-                                    @else
-                                        Klik untuk memilih
-                                    @endif
+                                    class="mt-0.5 inline-flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold
+                                 border-slate-300 bg-slate-50 text-slate-700
+                                 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-100">
+                                    {{ $option->label }}
                                 </span>
+                                <p class="text-sm leading-relaxed text-slate-800 dark:text-neutral-100">
+                                    {{ $option->statement }}
+                                </p>
                             </div>
-                        </div>
-                    </button>
-                @endforeach
+
+                            <div
+                                class="mt-2 flex items-center justify-between text-[11px] text-slate-400 dark:text-neutral-500">
+                                <div class="inline-flex items-center gap-1">
+                                    <span
+                                        class="h-1.5 w-1.5 rounded-full
+                                     @if ($selectedOptionId === $option->id) bg-emerald-500
+                                     @else
+                                         bg-slate-300 dark:bg-neutral-600 @endif"></span>
+                                    <span>
+                                        @if ($selectedOptionId === $option->id)
+                                            Dipilih
+                                        @else
+                                            Klik untuk memilih
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -322,5 +325,378 @@
         });
     </script>
 
+    <script>
+        (function() {
+            const watermarkId = 'exam-watermark';
+            const userInfo = "{{ auth()->user()->email ?? (auth()->user()->id ?? 'Peserta') }}";
+            const attemptId = "{{ $attempt->id }}";
+
+            const createWatermark = () => {
+                if (document.getElementById(watermarkId)) return;
+                const el = document.createElement('div');
+                el.id = watermarkId;
+                el.style.position = 'fixed';
+                el.style.top = '0';
+                el.style.left = '0';
+                el.style.right = '0';
+                el.style.bottom = '0';
+                el.style.pointerEvents = 'none';
+                el.style.zIndex = '999999';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+                el.style.justifyContent = 'center';
+                el.style.fontSize = '36px';
+                el.style.fontWeight = '600';
+                el.style.color = 'rgba(0,0,0,0.06)';
+                el.style.transform = 'translateZ(0) rotate(-20deg)';
+                el.style.userSelect = 'none';
+                el.style.whiteSpace = 'nowrap';
+                el.style.overflow = 'hidden';
+                el.style.padding = '0 20px';
+                // subtle repeated background to make cropping screenshots harder
+                el.style.backgroundImage =
+                    'repeating-linear-gradient(-30deg, rgba(0,0,0,0.03) 0, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 160px)';
+                el.textContent = `${userInfo} • ID:${attemptId} • ${new Date().toLocaleString()}`;
+                document.body.appendChild(el);
+
+                // update timestamp to make screenshots traceable
+                setInterval(() => {
+                    if (document.getElementById(watermarkId)) {
+                        el.textContent = `${userInfo} • ID:${attemptId} • ${new Date().toLocaleString()}`;
+                    }
+                }, 10000);
+            };
+
+            createWatermark();
+
+            const reportAttempt = (reason) => {
+                // Broadcast so app can show toast / mark attempt
+                window.dispatchEvent(new CustomEvent('screenshotAttempt', {
+                    detail: {
+                        reason
+                    }
+                }));
+                if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                    Livewire.dispatch('screenshot-attempt', {
+                        reason
+                    });
+                }
+                console.debug('screenshot attempt detected:', reason);
+            };
+
+            // Best-effort: block PrintScreen and common shortcuts, then try to clear clipboard
+            document.addEventListener('keyup', async (e) => {
+                try {
+                    if (e.key === 'PrintScreen') {
+                        try {
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                await navigator.clipboard.writeText('');
+                            }
+                        } catch (err) {
+                            // clipboard write may be blocked by browser permissions
+                        }
+                        reportAttempt('printscreen');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+
+                    // Detect Win/Cmd+Shift+S or Ctrl/Cmd+Shift+4 (macOS screenshot) best-effort
+                    if (e.shiftKey && (e.key === 'S' || e.key === '4') && (e.metaKey || e.ctrlKey)) {
+                        reportAttempt('shortcut-snipping');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+                } catch (err) {
+                    // noop
+                }
+            }, true);
+
+            // If tab is hidden or window loses focus, consider it suspicious
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    reportAttempt('visibility-hidden');
+                }
+            }, true);
+
+            window.addEventListener('blur', () => {
+                reportAttempt('window-blur');
+            }, true);
+
+            // --- NEW: blur question area while screenshot attempt is flagged ---
+            const QUESTION_CARD_ID = 'js-question-card';
+            const BLUR_OVERLAY_ID = 'js-blur-overlay';
+            const BLUR_DURATION_MS = 8000; // blur duration per attempt
+
+            const applyQuestionBlur = (reason) => {
+                const card = document.getElementById(QUESTION_CARD_ID);
+                if (!card) return;
+
+                // add blur style
+                card.classList.add('exam-blurred');
+                // create overlay to block interaction and show message
+                if (!document.getElementById(BLUR_OVERLAY_ID)) {
+                    const overlay = document.createElement('div');
+                    overlay.id = BLUR_OVERLAY_ID;
+                    overlay.className = 'absolute inset-0 flex items-center justify-center text-sm font-semibold';
+                    overlay.style.background = 'rgba(0,0,0,0.45)';
+                    overlay.style.color = '#fff';
+                    overlay.style.zIndex = '50';
+                    overlay.style.pointerEvents = 'auto';
+                    overlay.innerText = 'Tangkapan layar terdeteksi — soal diburamkan untuk sementara';
+                    card.appendChild(overlay);
+                }
+
+                // auto-remove after duration
+                clearTimeout(card._blurTimeout);
+                card._blurTimeout = setTimeout(() => {
+                    removeQuestionBlur();
+                }, BLUR_DURATION_MS);
+            };
+
+            const removeQuestionBlur = () => {
+                const card = document.getElementById(QUESTION_CARD_ID);
+                if (!card) return;
+                card.classList.remove('exam-blurred');
+                const overlay = document.getElementById(BLUR_OVERLAY_ID);
+                if (overlay) overlay.remove();
+                clearTimeout(card._blurTimeout);
+                delete card._blurTimeout;
+            };
+
+            // Listen to the internal event dispatched when a screenshot attempt is detected
+            window.addEventListener('screenshotAttempt', (e) => {
+                const reason = e?.detail?.reason ?? 'unknown';
+                applyQuestionBlur(reason);
+            }, true);
+
+            // expose a helper to remove deterrents when exam ends
+            window.disableScreenshotDeterrents = function() {
+                const wm = document.getElementById(watermarkId);
+                if (wm) wm.remove();
+                document.removeEventListener('keyup', this, true);
+                document.removeEventListener('visibilitychange', this, true);
+                window.removeEventListener('blur', this, true);
+                // also clear blur if set
+                removeQuestionBlur();
+            };
+
+            // add minimal CSS for blur (uses inline <style> so Tailwind rebuild not required)
+            (function injectBlurStyle() {
+                if (document.getElementById('js-exam-blur-style')) return;
+                const s = document.createElement('style');
+                s.id = 'js-exam-blur-style';
+                s.textContent = `
+                    #${QUESTION_CARD_ID}.exam-blurred { filter: blur(6px); transition: filter .18s ease; }
+                    #${QUESTION_CARD_ID}.exam-blurred * { pointer-events: none !important; }
+                `;
+                document.head.appendChild(s);
+            })();
+            // --- END NEW ---
+
+        })();
+    </script>
+
+    <script>
+        (function() {
+            const watermarkId = 'exam-watermark';
+            const userInfo = "{{ auth()->user()->email ?? (auth()->user()->id ?? 'Peserta') }}";
+            const attemptId = "{{ $attempt->id }}";
+
+            const createWatermark = () => {
+                if (document.getElementById(watermarkId)) return;
+                const el = document.createElement('div');
+                el.id = watermarkId;
+                el.style.position = 'fixed';
+                el.style.top = '0';
+                el.style.left = '0';
+                el.style.right = '0';
+                el.style.bottom = '0';
+                el.style.pointerEvents = 'none';
+                el.style.zIndex = '999999';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+                el.style.justifyContent = 'center';
+                el.style.fontSize = '36px';
+                el.style.fontWeight = '600';
+                el.style.color = 'rgba(0,0,0,0.06)';
+                el.style.transform = 'translateZ(0) rotate(-20deg)';
+                el.style.userSelect = 'none';
+                el.style.whiteSpace = 'nowrap';
+                el.style.overflow = 'hidden';
+                el.style.padding = '0 20px';
+                // subtle repeated background to make cropping screenshots harder
+                el.style.backgroundImage =
+                    'repeating-linear-gradient(-30deg, rgba(0,0,0,0.03) 0, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 160px)';
+                el.textContent = `${userInfo} • ID:${attemptId} • ${new Date().toLocaleString()}`;
+                document.body.appendChild(el);
+
+                // update timestamp to make screenshots traceable
+                setInterval(() => {
+                    if (document.getElementById(watermarkId)) {
+                        el.textContent = `${userInfo} • ID:${attemptId} • ${new Date().toLocaleString()}`;
+                    }
+                }, 10000);
+            };
+
+            createWatermark();
+
+            const reportAttempt = (reason) => {
+                // Broadcast so app can show toast / mark attempt
+                window.dispatchEvent(new CustomEvent('screenshotAttempt', {
+                    detail: {
+                        reason
+                    }
+                }));
+                if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                    Livewire.dispatch('screenshot-attempt', {
+                        reason
+                    });
+                }
+                console.debug('screenshot attempt detected:', reason);
+            };
+
+            // Best-effort: block PrintScreen and common shortcuts, then try to clear clipboard
+            document.addEventListener('keyup', async (e) => {
+                try {
+                    if (e.key === 'PrintScreen') {
+                        try {
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                await navigator.clipboard.writeText('');
+                            }
+                        } catch (err) {
+                            // clipboard write may be blocked by browser permissions
+                        }
+                        reportAttempt('printscreen');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+
+                    // Detect Win/Cmd+Shift+S or Ctrl/Cmd+Shift+4 (macOS screenshot) best-effort
+                    if (e.shiftKey && (e.key === 'S' || e.key === '4') && (e.metaKey || e.ctrlKey)) {
+                        reportAttempt('shortcut-snipping');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+                } catch (err) {
+                    // noop
+                }
+            }, true);
+
+            // If tab is hidden or window loses focus, consider it suspicious
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    reportAttempt('visibility-hidden');
+                }
+            }, true);
+
+            window.addEventListener('blur', () => {
+                reportAttempt('window-blur');
+            }, true);
+
+            // expose a helper to remove deterrents when exam ends
+            window.disableScreenshotDeterrents = function() {
+                const wm = document.getElementById(watermarkId);
+                if (wm) wm.remove();
+                document.removeEventListener('keyup', this, true);
+                document.removeEventListener('visibilitychange', this, true);
+                window.removeEventListener('blur', this, true);
+            };
+
+        })();
+    </script>
+
+    <script>
+        (function() {
+            // Named handlers so they can be removed later
+            const preventContext = (e) => {
+                e.preventDefault();
+            };
+            const preventAux = (e) => {
+                if (e.button === 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            };
+            const beforeUnloadHandler = (e) => {
+                const confirmationMessage =
+                    'Anda sedang mengerjakan tes. Jika meninggalkan halaman, jawaban mungkin tidak tersimpan.';
+                (e || window.event).returnValue = confirmationMessage;
+                return confirmationMessage;
+            };
+            const preventKey = (e) => {
+                const key = e.key;
+                // Block common reload/close/devtools shortcuts:
+                // F5, F11, F12, Ctrl/Cmd+R, Ctrl+Shift+R, Ctrl/Cmd+W, Ctrl+Shift+I/J
+                if (key === 'F5' || key === 'F11' || key === 'F12') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                if ((e.ctrlKey || e.metaKey) && (key === 'r' || key === 'R' || key === 'w' || key === 'W')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                if (e.ctrlKey && e.shiftKey && (key === 'R' || key === 'r' || key === 'I' || key === 'i' || key ===
+                        'J' || key === 'j')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                // Prevent back via Alt+ArrowLeft or Backspace when body is focused
+                if ((e.altKey && key === 'ArrowLeft') || (key === 'Backspace' && e.target === document.body)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+            };
+
+            const blockPop = () => {
+                history.pushState(null, document.title, location.href);
+            };
+            const popstateHandler = () => {
+                blockPop();
+                window.dispatchEvent(new CustomEvent('navigationBlocked', {
+                    detail: {
+                        reason: 'back'
+                    }
+                }));
+            };
+
+            // Attach handlers
+            document.addEventListener('contextmenu', preventContext, true);
+            document.addEventListener('auxclick', preventAux, true);
+            document.addEventListener('keydown', preventKey, true);
+            window.addEventListener('beforeunload', beforeUnloadHandler, true);
+            blockPop();
+            window.addEventListener('popstate', popstateHandler, true);
+
+            // Expose function to allow navigation when exam finishes
+            window.allowExamNavigation = function() {
+                document.removeEventListener('contextmenu', preventContext, true);
+                document.removeEventListener('auxclick', preventAux, true);
+                document.removeEventListener('keydown', preventKey, true);
+                window.removeEventListener('beforeunload', beforeUnloadHandler, true);
+                window.removeEventListener('popstate', popstateHandler, true);
+            };
+
+            // If Livewire emits 'exam-finished', automatically re-enable navigation
+            if (window.Livewire && typeof window.Livewire.on === 'function') {
+                window.Livewire.on('exam-finished', function() {
+                    window.allowExamNavigation();
+                });
+            }
+
+            // Optional: small visual feedback listener (app can use to show toast)
+            window.addEventListener('navigationBlocked', function(e) {
+                // noop by default; app can listen to this to show a message
+                console.debug('Navigation blocked:', e.detail);
+            });
+        })();
+    </script>
 
 </div>

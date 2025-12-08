@@ -66,10 +66,10 @@ class InterviewSessionForm
                                         Select::make('status')
                                             ->label('Status')
                                             ->options([
-                                                'scheduled' => 'Scheduled',
-                                                'in_progress' => 'In progress',
-                                                'completed' => 'Completed',
-                                                'canceled' => 'Canceled',
+                                                'scheduled' => 'Dijadwalkan',
+                                                'in_progress' => 'Dalam Proses',
+                                                'completed' => 'Selesai',
+                                                'canceled' => 'Dibatalkan',
                                             ])
                                             ->default('scheduled')
                                             ->required()

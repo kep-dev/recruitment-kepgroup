@@ -56,11 +56,6 @@ class PsychotestExamIndex extends Component
 
     public function startTest($JobVacancyPsychotestFormId, $psychotestFormId)
     {
-        // dd([
-        //     $JobVacancyPsychotestFormId,
-        //     $psychotestFormId
-        // ]);
-
         DB::beginTransaction();
         try {
             $applicantTestId = $this->applicantTest->id;
@@ -137,6 +132,10 @@ class PsychotestExamIndex extends Component
                 'attempt_no' => $item->order,
                 'score' => null,
                 'deadline_at' => $deadline,
+            ]);
+
+            $this->applicantTest->update([
+                'status' => 'in_progress',
             ]);
 
             // dd($newAttempt);

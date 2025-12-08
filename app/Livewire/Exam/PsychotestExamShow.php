@@ -234,7 +234,6 @@ class PsychotestExamShow extends Component
 
     public function render()
     {
-        ds($this->questions());
         return view('livewire.exam.psychotest-exam-show');
     }
 }

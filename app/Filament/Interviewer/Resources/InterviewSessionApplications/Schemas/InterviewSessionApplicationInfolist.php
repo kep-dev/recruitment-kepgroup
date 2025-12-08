@@ -8,6 +8,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 
 class InterviewSessionApplicationInfolist
 {
@@ -66,8 +67,8 @@ class InterviewSessionApplicationInfolist
                             ->label(false)
                             ->state(function ($record) {
                                 return $record
-                                ->evaluations()
-                                ->whereRelation('sessionEvaluator', 'user_id', Auth::user()->id)
+                                    ->evaluations()
+                                    ->whereRelation('sessionEvaluator', 'user_id', Auth::user()->id)
                                     ->with([
                                         'sessionEvaluator.user:id,name,email',
                                         'scores' => function ($q) {
@@ -120,15 +121,20 @@ class InterviewSessionApplicationInfolist
                                 // ---- rincian skor per kriteria untuk evaluator ini ----
                                 RepeatableEntry::make('scores')
                                     ->label('Rincian Skor per Kriteria')
+                                    ->table([
+                                        TableColumn::make('Kriteria'),
+                                        TableColumn::make('Nilai'),
+                                        TableColumn::make('Nilai'),
+                                        TableColumn::make('Skor'),
+                                        TableColumn::make('Catatan'),
+                                    ])
                                     ->schema([
-                                        Grid::make(12)->schema([
-                                            TextEntry::make('criteria_label')->label('Kriteria')->columnSpan(5),
-                                            TextEntry::make('scale_label')->label('Nilai')->columnSpan(2),
-                                            TextEntry::make('scale_value')->label('Value')->columnSpan(1),
-                                            TextEntry::make('criteria_weight')->label('Bobot')->numeric(2)->columnSpan(2),
-                                            TextEntry::make('score_numeric')->label('Skor')->numeric(2)->badge()->columnSpan(2),
-                                            TextEntry::make('comment')->label('Catatan')->columnSpan(12)->placeholder('—'),
-                                        ]),
+                                        TextEntry::make('criteria_label')->label('Kriteria'),
+                                        TextEntry::make('scale_label')->label('Nilai'),
+                                        TextEntry::make('scale_value')->label('Value'),
+                                        // TextEntry::make('criteria_weight')->label('Bobot')->numeric(2),
+                                        TextEntry::make('score_numeric')->label('Skor')->numeric(2)->badge(),
+                                        TextEntry::make('comment')->label('Catatan')->placeholder('—'),
                                     ])
                                     ->grid(1),
                             ])

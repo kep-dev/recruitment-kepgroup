@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\InterviewSessions\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Illuminate\Support\Facades\Auth;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
+use Filament\Tables\Columns\SelectColumn;
 
 class InterviewSessionsTable
 {
@@ -45,9 +48,21 @@ class InterviewSessionsTable
                 TextColumn::make('default_meeting_link')
                     ->label('Link Meeting')
                     ->searchable(),
-                TextColumn::make('status')
+                SelectColumn::make('status')
                     ->label('Status')
-                    ->searchable(),
+                    ->options([
+                        'scheduled' => 'Dijadwalkan',
+                        'in_progress' => 'Dalam Proses',
+                        'completed' => 'Selesai',
+                        'canceled' => 'Dibatalkan',
+                    ])
+                    ->searchable()
+                    ->disabled(function ($record) {
+                        if (!Auth::user()->hasRole('super_admin')) {
+                            return $record->status->value === 'completed';
+                        }
+                        return false;
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

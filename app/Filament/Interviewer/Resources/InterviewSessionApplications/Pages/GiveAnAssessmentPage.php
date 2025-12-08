@@ -41,6 +41,7 @@ use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use App\Filament\Interviewer\Resources\InterviewSessionApplications\InterviewSessionApplicationResource;
+use App\Models\InterviewScale;
 
 class GiveAnAssessmentPage extends Page implements HasSchemas
 {
@@ -872,7 +873,15 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                                                             ->value('weight') ?: 1.0);
 
                                                         $normalized = $maxVal > 0 ? ($opt->value / $maxVal) : 0;
+
+                                                        ds([
+                                                            'maxVal' => $maxVal,
+                                                            'weight' => $weight,
+                                                            'normalized' => $normalized,
+                                                        ]);
+
                                                         $score = round($normalized * $weight * 10, 2);
+                                                        // $score = $opt->value;
 
                                                         $set('score_numeric', $score);
                                                     }),
@@ -956,7 +965,7 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
     public function save(): void
     {
         $state = $this->testSchema->getState();
-        // dd($this->record);
+        // dd($state);
         // Pastikan semua kriteria terisi
         foreach ($state['scores'] as $row) {
             if (empty($row['interview_criteria_id']) || empty($row['interview_scale_id'])) {
@@ -1008,7 +1017,9 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
             // Simpan/Upsert skor per-kriteria
             $total = 0;
             foreach ($state['scores'] as $row) {
+                // dd($state['scores']);
                 $score = (float) ($row['score_numeric'] ?? 0);
+                $scale = InterviewScale::find($row['interview_scale_id']);
 
                 InterviewEvaluationScore::query()->updateOrCreate(
                     [
@@ -1017,8 +1028,8 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                     ],
                     [
                         'interview_scale_id'     => $row['interview_scale_id'],
-                        'scale_label_snapshot'   => $row['scale_label_snapshot'] ?? null,
-                        'scale_value_snapshot'   => $row['scale_value_snapshot'] ?? null,
+                        'scale_label_snapshot'   => $scale->label ?? null,
+                        'scale_value_snapshot'   => $scale->value ?? null,
                         'score_numeric'          => $score,
                         'comment'                => $row['comment'] ?? null,
                     ]
@@ -1027,15 +1038,16 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                 $total += $score;
             }
 
+            $avgTotal = $total / count($state['scores']);
+
             // Update total evaluator
-            $evaluation->update(['total_score' => $total]);
+            $evaluation->update(['total_score' => $avgTotal]);
 
             // Update avg_score kandidat di sesi ini
-            $avg = InterviewEvaluation::query()
-                ->where('interview_session_application_id', $this->record->id)
-                ->avg('total_score');
-
-            $this->record->update(['avg_score' => $avg]);
+            // $avg = InterviewEvaluation::query()
+            //     ->where('interview_session_application_id', $this->record->id)
+            //     ->avg('total_score');
+            $this->record->update(['avg_score' => $avgTotal]);
         });
 
         Notification::make()

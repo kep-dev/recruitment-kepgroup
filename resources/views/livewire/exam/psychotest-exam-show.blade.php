@@ -325,7 +325,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         (function() {
             const watermarkId = 'exam-watermark';
             const userInfo = "{{ auth()->user()->email ?? (auth()->user()->id ?? 'Peserta') }}";
@@ -607,7 +607,7 @@
             };
 
         })();
-    </script>
+    </script> --}}
 
     <script>
         (function() {

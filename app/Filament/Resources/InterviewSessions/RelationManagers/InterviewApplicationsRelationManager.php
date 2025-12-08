@@ -72,13 +72,34 @@ class InterviewApplicationsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('application.user.name')->label('Kandidat')->searchable()->sortable(),
-                TextColumn::make('mode')->label('Mode')->searchable()->sortable(),
-                TextColumn::make('location')->label('Lokasi')->searchable()->sortable(),
-                TextColumn::make('meeting_link')->label('Link Meeting')->searchable()->sortable(),
-                TextColumn::make('status')->label('Status')->searchable()->sortable(),
-                TextColumn::make('avg_score')->label('Skor Rata-rata')->searchable()->sortable(),
-                TextColumn::make('recommendation')->label('Rekomendasi')->searchable()->sortable(),
+                TextColumn::make('application.user.name')
+                    ->label('Kandidat')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('mode')
+                    ->label('Mode')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('location')
+                    ->label('Lokasi')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('meeting_link')
+                    ->label('Link Meeting')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('total_score')
+                    ->label('Skor Rata-rata')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('recommendation')
+                    ->label('Rekomendasi')
+                    ->searchable()
+                    ->sortable(),
 
             ])
             ->headerActions([

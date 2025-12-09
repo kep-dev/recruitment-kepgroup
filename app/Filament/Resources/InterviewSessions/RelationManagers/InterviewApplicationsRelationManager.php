@@ -92,9 +92,10 @@ class InterviewApplicationsRelationManager extends RelationManager
                     ->label('Status')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('total_score')
-                    ->label('Skor Rata-rata')
-                    ->searchable()
+                TextColumn::make('evaluations_avg_total_score')
+                    ->label('Rata-rata Skor')
+                    ->numeric(2)
+                    ->avg('evaluations', 'total_score')
                     ->sortable(),
                 TextColumn::make('total_score_label')
                     ->label('Label')

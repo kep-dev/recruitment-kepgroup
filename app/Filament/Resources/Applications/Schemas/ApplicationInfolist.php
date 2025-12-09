@@ -849,6 +849,7 @@ class ApplicationInfolist
 
                                                     return [
                                                         'name'              => $item->characteristic->name,
+                                                        'code'              => $item->characteristic->code,
                                                         'raw'               => $item->raw_score,
                                                         'scaled'            => $item->scaled_score,
                                                         'final_description' => $scoreDesc,
@@ -864,6 +865,7 @@ class ApplicationInfolist
                                                             ->hiddenLabel()
                                                             ->state($charState)
                                                             ->table([
+                                                                TableColumn::make('Kode'),
                                                                 TableColumn::make('Karakteristik'),
                                                                 // TableColumn::make('Skor Mentah'),
                                                                 TableColumn::make('Skor Skala'),
@@ -871,6 +873,9 @@ class ApplicationInfolist
                                                                 TableColumn::make('Deskripsi Karakteristik'),
                                                             ])
                                                             ->schema([
+                                                                TextEntry::make('code')
+                                                                    ->label('Kode')
+                                                                    ->weight('bold'),
                                                                 TextEntry::make('name')
                                                                     ->label('Karakteristik')
                                                                     ->weight('bold'),

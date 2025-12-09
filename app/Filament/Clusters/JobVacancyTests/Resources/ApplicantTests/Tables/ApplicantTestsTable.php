@@ -2,17 +2,23 @@
 
 namespace App\Filament\Clusters\JobVacancyTests\Resources\ApplicantTests\Tables;
 
+use Livewire\Component;
 use App\Models\JobVacancy;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Filters\Filter;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\QueryBuilder;
 use Filament\Tables\Filters\SelectFilter;
-use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\QueryBuilder\Constraints\SelectConstraint;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 
 class ApplicantTestsTable
 {
@@ -35,7 +41,11 @@ class ApplicantTestsTable
                     ->searchable(),
                 TextColumn::make('total_score')
                     ->sortable()
-                    ->label('Skor'),
+                    ->label('Skor')
+                    ->hidden(function(Component $livewire) {
+                        ds($livewire);
+                        return $livewire->activeTab === 'Psikotest';
+                    }),
             ])
             ->filters([
                 SelectFilter::make('application.jobVacancy.title')
@@ -43,14 +53,23 @@ class ApplicantTestsTable
                     ->label('Lowongan')
                     ->options(JobVacancy::all()->pluck('title', 'id')),
 
-                QueryBuilder::make()
-                    ->constraints([
-                        SelectConstraint::make('jobVacancyTest.type')
+
+                Filter::make('type')
+                    ->schema([
+                        Select::make('type')
+                            ->label('Tipe Ujian')
                             ->options([
-                                'general' => 'Potensi Dasar Akademik',
-                                'psychotest' => 'Psikotest',
-                            ])
-                    ]),
+                                'general' => 'Tes Potensi Dasar Akademik',
+                                'psychotest' => 'Tes Psikotest',
+                            ]),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['type'],
+                                fn(Builder $query, $date): Builder => $query->whereRelation('jobVacancyTest', 'type', $data['type']),
+                            );
+                    })
 
             ])
             ->recordActions([

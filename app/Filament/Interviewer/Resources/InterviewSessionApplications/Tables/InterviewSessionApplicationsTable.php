@@ -41,8 +41,10 @@ class InterviewSessionApplicationsTable
                 TextColumn::make('meeting_link')
                     ->searchable(),
                 TextColumn::make('status'),
-                TextColumn::make('total_score')
-                    ->numeric()
+                TextColumn::make('evaluations_avg_total_score')
+                    ->label('Rata-rata Skor')
+                    ->numeric(2)
+                    ->avg('evaluations', 'total_score')
                     ->sortable(),
                 TextColumn::make('total_score_label')
                     ->badge()

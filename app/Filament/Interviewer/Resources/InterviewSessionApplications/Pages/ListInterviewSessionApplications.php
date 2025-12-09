@@ -39,4 +39,5 @@ class ListInterviewSessionApplications extends ListRecords
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', 'completed')),
         ];
     }
+
 }

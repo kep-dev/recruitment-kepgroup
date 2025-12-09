@@ -37,7 +37,7 @@ class ApplicantTestAttemptPage extends Page implements HasActions, HasSchemas, H
             Action::make('back')
                 ->label('Kembali')
                 ->url(fn(): string => route(
-                    'filament.admin.resources.job-vacancy-tests.view',
+                    'filament.admin.job-vacancy-tests.resources.job-vacancy-tests.view',
                     ['record' => $this->ApplicantTest->job_vacancy_test_id]
                 )),
         ];

@@ -44,6 +44,9 @@ class InterviewSessionApplicationsTable
                 TextColumn::make('total_score')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('total_score_label')
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('recommendation'),
                 TextColumn::make('created_at')
                     ->dateTime()

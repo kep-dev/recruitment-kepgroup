@@ -32,14 +32,15 @@ class InterviewSessionApplicationInfolist
                         ]),
                         Grid::make(3)->schema([
                             TextEntry::make('total_score')->numeric(2)->label('Rata-rata Skor'),
-                            TextEntry::make('recommendation')
-                                ->label('Rekomendasi')
-                                ->badge()
-                                ->colors([
-                                    'success' => 'hire',
-                                    'warning' => 'hold',
-                                    'danger'  => 'no_hire',
-                                ]),
+                            TextEntry::make('total_score_label')->badge()->label('Rata-rata Skor'),
+                            // TextEntry::make('recommendation')
+                            //     ->label('Rekomendasi')
+                            //     ->badge()
+                            //     ->colors([
+                            //         'success' => 'hire',
+                            //         'warning' => 'hold',
+                            //         'danger'  => 'no_hire',
+                            //     ]),
                             TextEntry::make('updated_at')->dateTime()->label('Diperbarui'),
                         ]),
                     ]),

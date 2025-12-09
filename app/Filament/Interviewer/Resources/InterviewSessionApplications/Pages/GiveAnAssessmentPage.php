@@ -156,6 +156,7 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                                     ->columns(12)
                                     ->schema([
                                         ImageEntry::make('photo')
+                                            ->state(fn() => $this->record?->application?->user?->applicant?->photo ?? '-')
                                             ->label('Foto')
                                             ->circular()
                                             ->checkFileExistence(false) // kalau path langsung berupa URL

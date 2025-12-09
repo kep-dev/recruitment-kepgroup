@@ -23,7 +23,6 @@ class InterviewEvaluatorsRelationManager extends RelationManager
         return false;
     }
 
-
     public function getFormSchema(): array
     {
         return [

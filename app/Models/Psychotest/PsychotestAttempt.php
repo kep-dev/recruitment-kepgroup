@@ -56,8 +56,11 @@ class PsychotestAttempt extends Model
             ->orderBy('psychotest_characteristics.order');
     }
 
-    public function aspects()
+    public function aspects(): HasMany
     {
-        return $this->hasMany(PsychotestResultAspect::class, 'attempt_id', 'id');
+        return $this->hasMany(PsychotestResultAspect::class, 'attempt_id', 'id')
+            ->select('psychotest_result_aspects.*')
+            ->join('psychotest_aspects', 'psychotest_result_aspects.aspect_id', '=', 'psychotest_aspects.id')
+            ->orderBy('psychotest_aspects.order');
     }
 }

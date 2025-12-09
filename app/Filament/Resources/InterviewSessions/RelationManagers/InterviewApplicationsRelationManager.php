@@ -96,6 +96,11 @@ class InterviewApplicationsRelationManager extends RelationManager
                     ->label('Skor Rata-rata')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('total_score_label')
+                    ->label('Label')
+                    ->badge()
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('recommendation')
                     ->label('Rekomendasi')
                     ->searchable()

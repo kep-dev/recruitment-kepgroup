@@ -75,7 +75,7 @@ class DetailInterviewPage extends Page implements HasSchemas
 
                 Section::make('Ringkasan Penilaian')
                     ->schema([
-                        Grid::make(2)->schema([
+                        Grid::make(3)->schema([
                             TextEntry::make('evaluations_count')
                                 ->label('Jumlah Evaluator Submit')
                                 ->state(fn() => $this->record->evaluations()->count())
@@ -83,6 +83,9 @@ class DetailInterviewPage extends Page implements HasSchemas
                             TextEntry::make('total_score')
                                 ->label('Rata-rata Skor')
                                 ->numeric(2),
+                            TextEntry::make('total_score_label')
+                                ->label('Label')
+                                ->badge(),
                             // TextEntry::make('recommendation')->label('Keputusan')->badge(),
                         ]),
                     ])
@@ -102,6 +105,7 @@ class DetailInterviewPage extends Page implements HasSchemas
                                             'evaluator_name'  => $ev->sessionEvaluator?->user?->name,
                                             'evaluator_email' => $ev->sessionEvaluator?->user?->email,
                                             'total_score'     => $ev->total_score,
+                                            'total_score_label' => $ev->total_score_label,
                                             'recommendation'  => $ev->recommendation,
                                             'submitted_at'    => $ev->submitted_at,
                                             'overall_comment' => $ev->overall_comment,
@@ -119,10 +123,11 @@ class DetailInterviewPage extends Page implements HasSchemas
                                     })->values()->all();
                             })
                             ->schema([
-                                Grid::make(4)->schema([
+                                Grid::make(5)->schema([
                                     TextEntry::make('evaluator_name')->label('Evaluator')->icon('heroicon-m-user-circle')->iconColor('primary'),
                                     TextEntry::make('evaluator_email')->label('Email')->copyable(),
                                     TextEntry::make('total_score')->label('Skor Total')->numeric(2)->badge(),
+                                    TextEntry::make('total_score_label')->label('Label')->badge(),
                                     TextEntry::make('recommendation')
                                         ->label('Rekomendasi')
                                         ->badge()
@@ -152,12 +157,12 @@ class DetailInterviewPage extends Page implements HasSchemas
                                     ])
                                     ->schema([
 
-                                            TextEntry::make('criteria_label')->label('Kriteria'),
-                                            TextEntry::make('scale_label')->label('Nilai'),
-                                            TextEntry::make('scale_value')->label('Value'),
-                                            // TextEntry::make('criteria_weight')->label('Bobot')->numeric(2)->columnSpan(2),
-                                            TextEntry::make('score_numeric')->label('Skor')->numeric(2)->badge(),
-                                            TextEntry::make('comment')->label('Catatan')->placeholder('—'),
+                                        TextEntry::make('criteria_label')->label('Kriteria'),
+                                        TextEntry::make('scale_label')->label('Nilai'),
+                                        TextEntry::make('scale_value')->label('Value'),
+                                        // TextEntry::make('criteria_weight')->label('Bobot')->numeric(2)->columnSpan(2),
+                                        TextEntry::make('score_numeric')->label('Skor')->numeric(2)->badge(),
+                                        TextEntry::make('comment')->label('Catatan')->placeholder('—'),
 
                                     ])
                                     ->grid(1),

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class InterviewEvaluation extends Model
@@ -16,6 +17,37 @@ class InterviewEvaluation extends Model
         'overall_comment',
         'submitted_at',
     ];
+
+    protected $appends = [
+        'total_score_label'
+    ];
+
+    public function totalScoreLabel(): Attribute
+    {
+        return Attribute::get(function (): string {
+            $score = $this->total_score;
+
+            if ($score === null) {
+                return '-';
+            }
+
+            $score = (float) $score;
+
+            if ($score === 100.0) {
+                return 'Sangat Baik';
+            }
+
+            if ($score >= 75.0) {
+                return 'Baik';
+            }
+
+            if ($score >= 50.0) {
+                return 'Cukup';
+            }
+
+            return 'Kurang';
+        });
+    }
 
     public function interviewSessionApplication()
     {

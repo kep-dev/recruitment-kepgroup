@@ -24,6 +24,7 @@ class InterviewSessionApplication extends Model
 
     protected $appends = [
         'total_score',
+        'total_score_label'
     ];
 
     public function totalScore(): Attribute
@@ -36,6 +37,33 @@ class InterviewSessionApplication extends Model
             }
 
             return round((float) $avg, 2);
+        });
+    }
+
+    public function totalScoreLabel(): Attribute
+    {
+        return Attribute::get(function (): string {
+            $score = $this->total_score;
+
+            if ($score === null) {
+                return '-';
+            }
+
+            $score = (float) $score;
+
+            if ($score === 100.0) {
+                return 'Sangat Baik';
+            }
+
+            if ($score >= 75.0) {
+                return 'Baik';
+            }
+
+            if ($score >= 50.0) {
+                return 'Cukup';
+            }
+
+            return 'Kurang';
         });
     }
 

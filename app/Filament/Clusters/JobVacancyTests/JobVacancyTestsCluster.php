@@ -12,7 +12,7 @@ use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 class JobVacancyTestsCluster extends Cluster
 {
     protected static string|BackedEnum|null $navigationIcon = LucideIcon::BookOpen;
-    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Start;
     protected static string|UnitEnum|null $navigationGroup = 'Test';
 
     protected static ?string $navigationLabel = 'Test Rekrutment';

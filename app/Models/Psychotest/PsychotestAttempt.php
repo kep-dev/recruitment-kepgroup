@@ -4,8 +4,9 @@ namespace App\Models\Psychotest;
 
 use App\Enums\status;
 use App\Models\ApplicantTest;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PsychotestAttempt extends Model
 {
@@ -47,9 +48,12 @@ class PsychotestAttempt extends Model
         return $this->hasMany(PsychotestAnswer::class, 'attempt_id', 'id');
     }
 
-    public function characteristics()
+    public function characteristics(): HasMany
     {
-        return $this->hasMany(PsychotestResultCharacteristic::class, 'attempt_id', 'id');
+        return $this->hasMany(PsychotestResultCharacteristic::class, 'attempt_id', 'id')
+            ->select('psychotest_result_characteristics.*')
+            ->join('psychotest_characteristics', 'psychotest_result_characteristics.characteristic_id', '=', 'psychotest_characteristics.id')
+            ->orderBy('psychotest_characteristics.order');
     }
 
     public function aspects()

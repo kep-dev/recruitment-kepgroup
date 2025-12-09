@@ -2,9 +2,11 @@
 
 namespace App\Filament\Clusters\JobVacancyTests\Resources\ApplicantTests\Pages;
 
-use App\Filament\Clusters\JobVacancyTests\Resources\ApplicantTests\ApplicantTestResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Clusters\JobVacancyTests\Resources\ApplicantTests\ApplicantTestResource;
 
 class ListApplicantTests extends ListRecords
 {
@@ -14,6 +16,16 @@ class ListApplicantTests extends ListRecords
     {
         return [
             CreateAction::make(),
+        ];
+    }
+
+    public function getTabs(): array
+    {
+        return [
+            'Potensi Dasar Akademik' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->whereRelation('jobVacancyTest', 'type', 'general')),
+            'Psikotest' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->whereRelation('jobVacancyTest', 'type', 'psychotest')),
         ];
     }
 }

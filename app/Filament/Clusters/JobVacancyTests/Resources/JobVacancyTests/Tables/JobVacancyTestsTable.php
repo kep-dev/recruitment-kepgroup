@@ -42,7 +42,6 @@ class JobVacancyTestsTable
                     ->sortable(),
                 ToggleColumn::make('is_active')
                     ->label('Aktif'),
-
             ])
             ->filters([])
             ->filtersTriggerAction(

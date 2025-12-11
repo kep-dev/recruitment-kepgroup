@@ -117,21 +117,22 @@ class InterviewSessionApplicationResource extends Resource
                 SelectColumn::make('status')
                     ->label('Status')
                     ->options([
-                        'scheduled' => 'Dijadwalkan',
+                        'scheduled' => 'Dijadwalkan', 
                         'in_progress' => 'Dalam Proses',
                         'completed' => 'Selesai',
                         'no_show' => 'Tidak Hadir',
                         'canceled' => 'Dibatalkan',
                     ])
                     ->disabled(function ($record) {
-                        if ($record->status->value === 'completed' && !Auth::user()->hasRole('super_admin')) {
+                        if (($record->status->value === 'completed' && !Auth::user()->hasRole('super_admin')) || ($record->status->value === 'no_show' && !Auth::user()->hasRole('super_admin'))) {
                             return true;
                         }
                     }),
 
-                TextColumn::make('avg_score')
-                    ->label('Skor Rata-rata')
-                    ->numeric()
+                TextColumn::make('evaluations_avg_total_score')
+                    ->label('Rata-rata Skor')
+                    ->numeric(2)
+                    ->avg('evaluations', 'total_score')
                     ->sortable(),
                 TextColumn::make('recommendation')
                     ->badge(),

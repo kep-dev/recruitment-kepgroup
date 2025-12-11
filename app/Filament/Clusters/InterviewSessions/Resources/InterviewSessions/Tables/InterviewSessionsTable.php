@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Tables;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Tables;
 
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;

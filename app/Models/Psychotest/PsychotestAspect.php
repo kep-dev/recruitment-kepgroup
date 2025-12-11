@@ -13,6 +13,7 @@ class PsychotestAspect extends Model
         'code',
         'name',
         'description',
+        'order',
     ];
 
 

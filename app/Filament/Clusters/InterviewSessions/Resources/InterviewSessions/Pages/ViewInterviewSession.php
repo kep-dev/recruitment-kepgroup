@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Pages;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages;
 
-use App\Filament\Resources\InterviewSessions\InterviewSessionResource;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\InterviewSessionResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

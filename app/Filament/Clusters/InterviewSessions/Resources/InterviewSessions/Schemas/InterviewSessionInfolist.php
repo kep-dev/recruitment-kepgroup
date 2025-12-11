@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Schemas;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;

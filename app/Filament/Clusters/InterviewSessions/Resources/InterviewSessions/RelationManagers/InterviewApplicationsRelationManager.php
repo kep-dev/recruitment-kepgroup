@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\RelationManagers;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\RelationManagers;
 
 use Filament\Tables\Table;
 use App\Models\Application;
@@ -14,7 +14,7 @@ use Filament\Forms\Components\TextInput;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\InterviewSessions\InterviewSessionResource;
-use App\Filament\Resources\InterviewSessions\Pages\DetailInterviewPage;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages\DetailInterviewPage;
 
 class InterviewApplicationsRelationManager extends RelationManager
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions;
 
 use UnitEnum;
 use BackedEnum;
@@ -9,24 +9,26 @@ use Filament\Schemas\Schema;
 use App\Models\InterviewSession;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
+use App\Filament\Clusters\InterviewSessions\InterviewSessionsCluster;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
-use App\Filament\Resources\InterviewSessions\Pages\EditInterviewSession;
-use App\Filament\Resources\InterviewSessions\Pages\ViewInterviewSession;
-use App\Filament\Resources\InterviewSessions\Pages\ListInterviewSessions;
-use App\Filament\Resources\InterviewSessions\Pages\CreateInterviewSession;
-use App\Filament\Resources\InterviewSessions\Pages\DetailInterviewPage;
-use App\Filament\Resources\InterviewSessions\Schemas\InterviewSessionForm;
-use App\Filament\Resources\InterviewSessions\Tables\InterviewSessionsTable;
-use App\Filament\Resources\InterviewSessions\Schemas\InterviewSessionInfolist;
-use App\Filament\Resources\InterviewSessions\RelationManagers\InterviewEvaluatorsRelationManager;
-use App\Filament\Resources\InterviewSessions\RelationManagers\InterviewApplicationsRelationManager;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages\DetailInterviewPage;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages\EditInterviewSession;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages\ViewInterviewSession;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages\ListInterviewSessions;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages\CreateInterviewSession;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Schemas\InterviewSessionForm;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Tables\InterviewSessionsTable;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Schemas\InterviewSessionInfolist;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\RelationManagers\InterviewEvaluatorsRelationManager;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\RelationManagers\InterviewApplicationsRelationManager;
 
 class InterviewSessionResource extends Resource
 {
     protected static ?string $model = InterviewSession::class;
 
     protected static string|BackedEnum|null $navigationIcon = LucideIcon::MessagesSquare;
-    protected static string | UnitEnum | null $navigationGroup = 'Test';
+    protected static ?string $cluster = InterviewSessionsCluster::class;
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Sesi Interview';
     protected static ?string $modelLabel = 'Sesi Interview';
     protected static ?string $pluralModelLabel = 'Sesi Interview';

@@ -156,6 +156,7 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                                     ->columns(12)
                                     ->schema([
                                         ImageEntry::make('photo')
+                                            ->state(fn() => $this->record?->application?->user?->applicant?->photo ?? '-')
                                             ->label('Foto')
                                             ->circular()
                                             ->checkFileExistence(false) // kalau path langsung berupa URL
@@ -874,11 +875,11 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
 
                                                         $normalized = $maxVal > 0 ? ($opt->value / $maxVal) : 0;
 
-                                                        ds([
-                                                            'maxVal' => $maxVal,
-                                                            'weight' => $weight,
-                                                            'normalized' => $normalized,
-                                                        ]);
+                                                        // ds([
+                                                        //     'maxVal' => $maxVal,
+                                                        //     'weight' => $weight,
+                                                        //     'normalized' => $normalized,
+                                                        // ]);
 
                                                         $score = round($normalized * $weight * 10, 2);
                                                         // $score = $opt->value;
@@ -1054,6 +1055,13 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
             ->title('Penilaian tersimpan')
             ->success()
             ->send();
+
+        $this->redirect(
+            route(
+                'filament.interviewer.resources.interview-session-applications.index'
+            ),
+            true
+        );
     }
 
     // public function getHeading(): string

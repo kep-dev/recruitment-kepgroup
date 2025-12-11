@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Pages;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages;
 
 use Filament\Schemas\Schema;
 use Filament\Resources\Pages\Page;
@@ -13,7 +13,7 @@ use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Infolists\Components\RepeatableEntry\TableColumn;
-use App\Filament\Resources\InterviewSessions\InterviewSessionResource;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\InterviewSessionResource;
 
 class DetailInterviewPage extends Page implements HasSchemas
 {

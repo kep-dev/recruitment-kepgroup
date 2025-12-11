@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Pages;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages;
 
-use App\Filament\Resources\InterviewSessions\InterviewSessionResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\InterviewSessionResource;
 
 class ListInterviewSessions extends ListRecords
 {

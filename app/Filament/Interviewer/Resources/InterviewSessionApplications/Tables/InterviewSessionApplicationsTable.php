@@ -2,6 +2,7 @@
 
 namespace App\Filament\Interviewer\Resources\InterviewSessionApplications\Tables;
 
+use Livewire\Component;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -13,6 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use App\Filament\Interviewer\Resources\InterviewSessionApplications\Pages\GiveAnAssessmentPage;
+use Filament\Tables\Columns\SelectColumn;
 
 class InterviewSessionApplicationsTable
 {
@@ -49,7 +51,6 @@ class InterviewSessionApplicationsTable
                 TextColumn::make('total_score_label')
                     ->badge()
                     ->sortable(),
-                TextColumn::make('recommendation'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -70,6 +71,10 @@ class InterviewSessionApplicationsTable
                     ->color('primary')
                     ->icon(LucideIcon::ClipboardPenLine)
                     ->label('Berikan Penilaian')
+                    ->hidden(function (Component $livewire) {
+                        // ds($livewire);
+                        return $livewire->activeTab === 'completed';
+                    })
                     ->url(fn($record) => GiveAnAssessmentPage::getUrl(['record' => $record->getKey()])),
                 ViewAction::make(),
                 // EditAction::make(),

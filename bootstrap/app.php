@@ -4,6 +4,7 @@ use App\Console\Commands\seedWilayah;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Console\Commands\reCalculatePsychotestAnswers;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withCommands([
-        seedWilayah::class
+        seedWilayah::class,
+        reCalculatePsychotestAnswers::class,
     ])
     ->create();

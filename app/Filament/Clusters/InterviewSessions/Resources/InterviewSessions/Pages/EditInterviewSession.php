@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Pages;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Pages;
 
-use App\Filament\Resources\InterviewSessions\InterviewSessionResource;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\InterviewSessionResource;
 
 class EditInterviewSession extends EditRecord
 {

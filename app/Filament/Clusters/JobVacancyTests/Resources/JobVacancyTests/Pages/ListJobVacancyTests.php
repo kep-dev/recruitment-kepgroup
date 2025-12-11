@@ -17,7 +17,10 @@ class ListJobVacancyTests extends ListRecords
     public function getTabs(): array
     {
         return [
-           //
+            'Potensi Dasar Akademik' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('type', 'general')),
+            'Psikotest' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('type', 'psychotest')),
         ];
     }
 

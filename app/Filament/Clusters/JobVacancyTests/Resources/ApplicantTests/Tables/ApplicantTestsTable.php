@@ -53,7 +53,7 @@ class ApplicantTestsTable
                     ->sortable()
                     ->label('Skor')
                     ->hidden(function (Component $livewire) {
-                        ds($livewire);
+                        // ds($livewire);
                         return $livewire->activeTab === 'Psikotest';
                     }),
             ])
@@ -107,7 +107,7 @@ class ApplicantTestsTable
                             ->hiddenOn('create')
                     ])
                     ->action(function (ApplicantTest $record, array $data) {
-                        ds($data);
+                        // ds($data);
                         $record->update($data);
                     }),
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\RelationManagers;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\RelationManagers;
 
 use App\Models\User;
 use Filament\Tables\Table;

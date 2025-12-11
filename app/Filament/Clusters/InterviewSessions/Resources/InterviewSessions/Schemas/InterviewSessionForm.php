@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\InterviewSessions\Schemas;
+namespace App\Filament\Clusters\InterviewSessions\Resources\InterviewSessions\Schemas;
 
 use App\Models\Interview;
 use App\Models\JobVacancy;

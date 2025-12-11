@@ -72,7 +72,7 @@ class InterviewSessionApplicationsTable
                     ->icon(LucideIcon::ClipboardPenLine)
                     ->label('Berikan Penilaian')
                     ->hidden(function (Component $livewire, $record) {
-                        return $livewire->activeTab === 'completed' || $livewire->activeTab === 'no_show';
+                        return $livewire->activeTab === 'no_show';
                     })
                     ->url(fn($record) => GiveAnAssessmentPage::getUrl(['record' => $record->getKey()])),
                 ViewAction::make(),

@@ -33,6 +33,9 @@ class ListInterviewSessionApplications extends ListRecords
             'completed' => Tab::make('Selesai')
                 ->icon(LucideIcon::CheckCircle)
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('status', 'completed')),
+            'no_show' => Tab::make('Tidak Hadir')
+                ->icon(LucideIcon::UserX)
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', 'no_show')),
         ];
     }
 

@@ -251,10 +251,6 @@ class ApplicationsTable
 
                         try {
 
-                            if ($record->is_submitted === true) {
-                                throw new \Exception('Kandidat sudah diajukan sebelumnya.');
-                            }
-
                             // Ambil konfigurasi ERP
                             $erp = ErpIntegration::findOrFail($data['company']);
                             $application = Application::query()

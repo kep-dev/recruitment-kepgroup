@@ -251,6 +251,10 @@ class ApplicationsTable
 
                         try {
 
+                            if ($record->is_submitted === true) {
+                                throw new \Exception('Kandidat sudah diajukan sebelumnya.');
+                            }
+
                             // Ambil konfigurasi ERP
                             $erp = ErpIntegration::findOrFail($data['company']);
                             $application = Application::query()
@@ -268,7 +272,7 @@ class ApplicationsTable
                             // payload final (array murni)
                             $payload = CandidateSyncApiResource::make($application)
                                 ->resolve();
-
+                            // ds($payload[]);
                             // Convert kandidat → JSON
                             // $payload = [
                             //     'applicant' => ApplicantApiResource::make($record->user->applicant),
@@ -312,12 +316,18 @@ class ApplicationsTable
                             $response = Http::withToken($erp->bearer_token_encrypted)
                                 ->acceptJson()
                                 ->asJson()
-                                // ->dd()
                                 ->timeout(60)
+                                // ->dd()
                                 ->post(
                                     $erp->base_url . '/api/v1/candidates',
                                     $payload // payload berupa array/json
                                 );
+
+                            $record->update([
+                                'is_submitted' => true,
+                                'submitted_at' => now(),
+                                'submitted_by' => auth()->id(),
+                            ]);
 
                             // Jika response status 4xx/5xx, lempar exception otomatis
                             $response->throw();

@@ -24,6 +24,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\QueryBuilder\Constraints\SelectConstraint;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Models\ApplicantTest;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 
 class ApplicantTestsTable
 {
@@ -81,6 +82,7 @@ class ApplicantTestsTable
                     })
 
             ])
+
             ->recordActions([
                 ViewAction::make(),
                 // EditAction::make()
@@ -110,6 +112,13 @@ class ApplicantTestsTable
                         // ds($data);
                         $record->update($data);
                     }),
+
+                Action::make('download_pdf')
+                    ->label('Download PDF')
+                    ->icon(LucideIcon::FileDown)
+                    ->url(fn (ApplicantTest $record): ?string => optional($record->psychotestAttempts()->latest()->first())->id ? route('psychotest.attempt.pdf', ['attempt' => $record->psychotestAttempts()->latest()->first()->id]) : null)
+                    ->openUrlInNewTab()
+                    ->hidden(fn (Component $livewire, ApplicantTest $record): bool => $record->psychotestAttempts()->count() === 0),
 
             ])
             ->toolbarActions([

@@ -7,14 +7,18 @@ use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Filters\Filter;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use App\Filament\Interviewer\Resources\InterviewSessionApplications\Pages\GiveAnAssessmentPage;
-use Filament\Tables\Columns\SelectColumn;
+use App\Models\JobVacancy;
+use PHPUnit\Util\PHP\Job;
 
 class InterviewSessionApplicationsTable
 {
@@ -61,10 +65,20 @@ class InterviewSessionApplicationsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('application.job_vacancy_id')
-                    ->label('Lowongan')
-                    ->relationship('application.jobVacancy', 'title')
-                    ->searchable(),
+                Filter::make('job_vacancy_id')
+                    ->schema([
+                        Select::make('job_vacancy_id')
+                            ->label('Lowongan')
+                            ->options(JobVacancy::all()->pluck('title', 'id'))
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['job_vacancy_id'],
+                                fn(Builder $query, $date): Builder => $query->whereRelation('application.jobVacancy', 'id', $data['job_vacancy_id']),
+                            );
+                    })
+
             ])
             ->recordActions([
                 Action::make('GiveAnAssessment')

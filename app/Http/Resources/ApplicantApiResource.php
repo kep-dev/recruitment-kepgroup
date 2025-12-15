@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\EducationApiResource;
+use App\Http\Resources\DocumentApiResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -52,6 +53,9 @@ class ApplicantApiResource extends JsonResource
 
             'achievements' => AchievementApiResource::collection(
                 $this->user?->achievements ?? collect()
+            ),
+            'documents' => DocumentApiResource::collection(
+                $this->user->documents ?? collect()
             ),
         ];
     }

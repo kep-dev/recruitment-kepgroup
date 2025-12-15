@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Applications\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Date;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Tabs;
@@ -24,14 +25,39 @@ class ApplicationInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('user.name')
-                    ->label('Nama'),
-                TextEntry::make('user.email')
-                    ->label('Email'),
-                TextEntry::make('jobVacancy.title')
-                    ->label('Pekerjaan Yang Dilamar'),
-                TextEntry::make('final_status')
-                    ->label('Status'),
+                Grid::make(12)
+                    ->schema([
+                        TextEntry::make('user.name')
+                            ->label('Nama')
+                            ->columnSpan(3),
+                        TextEntry::make('user.email')
+                            ->label('Email')
+                            ->columnSpan(3),
+                        TextEntry::make('jobVacancy.title')
+                            ->label('Pekerjaan Yang Dilamar')
+                            ->columnSpan(3),
+                        TextEntry::make('final_status')
+                            ->label('Status')
+                            ->columnSpan(3),
+
+                        IconEntry::make('is_submitted')
+                            ->label('Sudah diajukan ke ERP')
+                            ->boolean()
+                            ->trueIcon(Heroicon::OutlinedCheckBadge)
+                            ->falseIcon(Heroicon::OutlinedXMark)
+                            ->columnSpan(3),
+
+                        TextEntry::make('submitted_at')
+                            ->label('Diajukan Pada')
+                            ->dateTime('d M Y H:i')
+                            ->columnSpan(3),
+
+                        TextEntry::make('submittedBy.name')
+                            ->label('Diajukan Oleh')
+                            ->columnSpan(3),
+                    ]),
+
+
 
                 // Livewire::make(ApplicantSnapshot::class, ['snapshot' => $schema->getRecord()->profileSnapshot])
                 // View::make('filament.schemas.components.applicant.applicant-snapshot')
@@ -343,19 +369,23 @@ class ApplicationInfolist
                             ->tabs([
                                 Tab::make('Hasil Tes')
                                     ->schema([
-                                        RepeatableEntry::make('applicantTests.attempts')
-                                            ->hiddenLabel(true)
-                                            ->table([
-                                                TableColumn::make('Soal'),
-                                                TableColumn::make('Status'),
-                                                TableColumn::make('Alasan Selesai'),
-                                                TableColumn::make('Skor'),
-                                            ])
+                                        Section::make('Hasil tes potensi dasar akademik')
                                             ->schema([
-                                                TextEntry::make('test.title'),
-                                                TextEntry::make('status'),
-                                                TextEntry::make('ended_reason'),
-                                                TextEntry::make('score'),
+                                                RepeatableEntry::make('applicantTests.attempts')
+                                                    ->hiddenLabel(true)
+                                                    ->table([
+                                                        TableColumn::make('Soal'),
+                                                        TableColumn::make('Status'),
+                                                        TableColumn::make('Alasan Selesai'),
+                                                        TableColumn::make('Skor'),
+                                                    ])
+                                                    ->schema([
+                                                        TextEntry::make('test.title'),
+                                                        TextEntry::make('status'),
+                                                        TextEntry::make('ended_reason'),
+                                                        TextEntry::make('score'),
+                                                    ])
+                                                    ->columnSpanFull()
                                             ])
                                             ->columnSpanFull()
                                     ]),

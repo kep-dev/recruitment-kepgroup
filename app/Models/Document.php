@@ -6,10 +6,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Document extends Model implements HasMedia
 {
-    use HasUuids, InteractsWithMedia;
+    use HasUuids, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
         'user_id',

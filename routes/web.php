@@ -15,6 +15,7 @@ use App\Livewire\Frontend\Profile\Page\SavedVacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PsychotestAttemptPdfController;
 
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
@@ -79,3 +80,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 
     return back()->with('toast', ['type' => 'info', 'text' => 'Link verifikasi dikirim.']);
 })->middleware('auth')->name('verification.send');
+
+Route::get('/psychotest/attempt/{attempt}/pdf', [PsychotestAttemptPdfController::class, 'download'])
+    ->name('psychotest.attempt.pdf')
+    ->middleware('auth');

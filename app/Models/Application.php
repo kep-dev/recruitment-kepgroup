@@ -21,8 +21,21 @@ class Application extends Model
         'current_stage_id',
         'applied_at',
         'final_status',
-        'note'
+        'note',
+        'is_submitted',
+        'submitted_at',
+        'submitted_by',
+        'external_id',
+        'external_status',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_submitted' => 'boolean',
+            'submitted_at' => 'datetime:Asia/Jakarta',
+        ];
+    }
 
     public function applicant()
     {
@@ -77,6 +90,11 @@ class Application extends Model
     public function preMedicalSessionApplications()
     {
         return $this->hasMany(PreMedicalSessionApplication::class, 'application_id', 'id');
+    }
+
+    public function submittedBy()
+    {
+        return $this->belongsTo(User::class, 'submitted_by', 'id');
     }
 
     public function applicantPsychotest()

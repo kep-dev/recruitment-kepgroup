@@ -231,7 +231,7 @@ class ApplicationsTable
                             ]))->withToken($token)
                                 ->acceptJson()
                                 ->asJson()
-                                ->timeout(60);
+                                ->timeout(120);
 
                             // perform request
                             $response = $client->post(

@@ -6,11 +6,13 @@ use Carbon\Carbon;
 use Filament\Forms\Form;
 use Filament\Actions\Action;
 use Filament\Schemas\Schema;
+use App\Models\InterviewScale;
 use Filament\Support\Enums\Width;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\DB;
 use App\Models\InterviewEvaluation;
 use Filament\Forms\Components\Radio;
+use Filament\Support\Enums\TextSize;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -41,7 +43,6 @@ use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use App\Filament\Interviewer\Resources\InterviewSessionApplications\InterviewSessionApplicationResource;
-use App\Models\InterviewScale;
 
 class GiveAnAssessmentPage extends Page implements HasSchemas
 {
@@ -599,7 +600,9 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                                     return [
                                         'id' => $test->id,
                                         'test_title' => $test->test->title,
+                                        'minimum_score' => $test->jobVacancyTestItem->minimum_score,
                                         'score' => $test->score * $test->jobVacancyTestItem->multiplier,
+                                        'description' => ($test->score * $test->jobVacancyTestItem->multiplier) > $test->jobVacancyTestItem->minimum_score ? 'Diatas Skor Minimal' : 'Dibawah Skor Minimal',
                                     ];
                                 });
 
@@ -618,19 +621,55 @@ class GiveAnAssessmentPage extends Page implements HasSchemas
                                 }
 
                                 return [
+                                    TextEntry::make('avg')
+                                        ->size(TextSize::Large)
+                                        ->label('Rata-rata Skor')
+                                        ->state(function () use ($testResults) {
+                                            $values = collect($testResults)->pluck('score')
+                                                ->filter(fn($v) => is_numeric($v))
+                                                ->map(fn($v) => (float) $v);
+
+                                            if ($values->isEmpty()) {
+                                                return '-';
+                                            }
+
+                                            return number_format($values->avg(), 2);
+                                        })
+                                        ->badge()
+                                        ->color(function ($state) {
+                                            if (!is_numeric($state)) {
+                                                return 'secondary';
+                                            }
+
+                                            return match (true) {
+                                                $state <= 2 => 'danger',
+                                                $state < 3 => 'warning',
+                                                $state < 4 => 'primary',
+                                                default => 'success',
+                                            };
+                                        }),
+
                                     RepeatableEntry::make('attempt_rows')
                                         ->hiddenLabel()
                                         ->state($testResults->values()->toArray())
                                         ->table([
                                             TableColumn::make('Test'),
+                                            TableColumn::make('Skor Minimal'),
                                             TableColumn::make('Skor'),
+                                            TableColumn::make('Keterangan'),
                                         ])
                                         ->schema([
                                             TextEntry::make('test_title')
                                                 ->label('Soal'),
 
+                                            TextEntry::make('minimum_score')
+                                                ->label('Skor Minimal'),
+
                                             TextEntry::make('score')
-                                                ->label('Skor × Bobot')
+                                                ->label('Skor × Bobot'),
+
+                                            TextEntry::make('description')
+                                                ->label('Keterangan'),
                                         ])
                                         ->columnSpanFull(),
                                 ];

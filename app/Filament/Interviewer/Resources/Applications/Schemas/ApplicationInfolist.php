@@ -525,7 +525,8 @@ class ApplicationInfolist
                                                     ->table([
                                                         TableColumn::make('Soal'),
                                                         TableColumn::make('Skor Minimal'),
-                                                        TableColumn::make('Skor'),
+                                                       TableColumn::make('Skor'),
+                                                       TableColumn::make('Keterangan'),
                                                     ])
                                                     ->schema([
                                                         TextEntry::make('test.title'),
@@ -536,6 +537,18 @@ class ApplicationInfolist
                                                                     $record->jobVacancyTestItem?->multiplier ?? 1
                                                                 )
                                                             )),
+                                                        TextEntry::make('keterangan')
+                                                            ->label('Keterangan')
+                                                            ->state(function ($record) {
+                                                                $score = ($record->score ?? 0) * ($record->jobVacancyTestItem?->multiplier ?? 1);
+                                                                $minimum = $record->jobVacancyTestItem?->minimum_score ?? 0;
+
+                                                                if (!is_numeric($score) || !is_numeric($minimum)) {
+                                                                    return '-';
+                                                                }
+
+                                                                return $score >= $minimum ? 'Di atas minimal' : 'Di bawah minimal';
+                                                            }),
                                                     ])
                                                     ->columnSpanFull()
                                             ])

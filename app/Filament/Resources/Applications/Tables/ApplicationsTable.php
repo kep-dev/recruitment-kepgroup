@@ -184,70 +184,7 @@ class ApplicationsTable
                             )
                     ])
                     ->action(function ($record, array $data) {
-                        // $interviewSessionApplications = $record->interviewSessionApplications()
-                        //     ->with([
-                        //         'interviewSession',                                 // session info
-                        //         'evaluations.sessionEvaluator.user', // evaluator + user
-                        //         'evaluations.scores.criteria',    // optional: nama kriteria
-                        //         'evaluations.scores.scaleOption',       // optional: info skala
-                        //     ])
-                        //     ->get();
 
-                        // $interviewResults = $interviewSessionApplications->map(function ($sessionApp) {
-                        //     $session = $sessionApp->interviewSession;
-
-                        //     return [
-                        //         'session_id'        => $session->id,
-                        //         'session_title'     => $session->title,
-                        //         'job_vacancy_id'    => $session->job_vacancy_id,
-                        //         'scheduled_at'      => $session->scheduled_at,
-                        //         'scheduled_end_at'  => $session->scheduled_end_at,
-
-                        //         // mode/location per kandidat (fallback ke default session)
-                        //         'mode'              => $sessionApp->mode ?? $session->default_mode,
-                        //         'location'          => $sessionApp->location ?? $session->default_location,
-                        //         'meeting_link'      => $sessionApp->meeting_link ?? $session->default_meeting_link,
-
-                        //         // status & hasil agregat per kandidat di sesi ini
-                        //         'status'            => $sessionApp->status,
-                        //         'avg_score'         => $sessionApp->avg_score,
-                        //         'recommendation'    => $sessionApp->recommendation, // hire/hold/no_hire
-
-                        //         // daftar penilaian per evaluator
-                        //         'evaluations'       => $sessionApp->evaluations->map(function ($evaluation) {
-                        //             $evaluator = $evaluation->sessionEvaluator;
-                        //             $user      = $evaluator->user;
-
-                        //             return [
-                        //                 'evaluator' => [
-                        //                     'id'   => $user->id,
-                        //                     'name' => $user->name,
-                        //                     'role' => $evaluator->role, // lead/panel/observer
-                        //                 ],
-
-                        //                 'total_score'    => $evaluation->total_score,
-                        //                 'recommendation' => $evaluation->recommendation, // hire/hold/no_hire
-                        //                 'overall_comment' => $evaluation->overall_comment,
-                        //                 'submitted_at'   => $evaluation->submitted_at,
-
-                        //                 // skor per kriteria
-                        //                 'scores' => $evaluation->scores->map(function ($score) {
-                        //                     return [
-                        //                         'criteria_id'   => $score->interview_criteria_id,
-                        //                         'criteria_name' => optional($score->criteria)->label, // kalau relasi ada
-                        //                         'scale_id'      => $score->interview_scale_id,
-                        //                         'scale_label'   => $score->scale_label_snapshot,
-                        //                         'scale_value'   => $score->scale_value_snapshot,
-                        //                         'score_numeric' => $score->score_numeric,
-                        //                         'comment'       => $score->comment,
-                        //                     ];
-                        //                 }),
-                        //             ];
-                        //         }),
-                        //     ];
-                        // });
-
-                        // dd($interviewResults);
 
                         try {
 
@@ -268,45 +205,6 @@ class ApplicationsTable
                             // payload final (array murni)
                             $payload = CandidateSyncApiResource::make($application)
                                 ->resolve();
-                            // ds($payload[]);
-                            // Convert kandidat → JSON
-                            // $payload = [
-                            //     'applicant' => ApplicantApiResource::make($record->user->applicant),
-
-                            //     'test_results' => TestResultApiResource::collection(
-                            //         $record->applicantTests->attempts->map(function ($attempt) {
-                            //             return [
-                            //                 'id' => $attempt->id,
-                            //                 'score' => $attempt->score,
-                            //                 'test_name' => $attempt->jobVacancyTestItem->test->title,
-                            //                 'number_of_questions' => $attempt->jobVacancyTestItem->number_of_question,
-                            //                 'multiplier' => $attempt->jobVacancyTestItem->multiplier,
-                            //                 'minimum_score' => $attempt->jobVacancyTestItem->minimum_score,
-
-                            //                 'correct_answers' => $attempt->answers->where('is_correct', true)->count(),
-                            //                 'wrong_answers' => $attempt->answers->where('is_correct', false)->count(),
-                            //                 'skipped_questions' => $attempt->answers->whereNull('selected_choice_id')->count(),
-                            //             ];
-                            //         })
-                            //     )->resolve(),
-                            // ];
-
-                            // $application = Application::query()
-                            //     ->with([
-                            //         'user.applicant',
-                            //         'applicantTests.attempts.answers',
-                            //         'applicantTests.attempts.jobVacancyTestItem.test',
-                            //         'interviewSessionApplications.interviewSession',
-                            //         'interviewSessionApplications.interviewEvaluations.interviewSessionEvaluator.user',
-                            //         'interviewSessionApplications.interviewEvaluations.scores.interviewCriteria',
-                            //         'interviewSessionApplications.interviewEvaluations.scores.interviewScale',
-                            //     ])
-                            //     ->findOrFail($record->id);
-
-                            // // payload final (array murni)
-                            // $payload = CandidateSyncApiResource::make($application);
-                            // dd($payload);
-
 
                             // Kirim request ke ERP
                             $response = Http::withToken($erp->bearer_token_encrypted)

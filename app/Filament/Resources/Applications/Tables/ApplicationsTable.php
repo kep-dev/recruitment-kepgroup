@@ -208,15 +208,42 @@ class ApplicationsTable
                                 ->resolve();
 
                             // Kirim request ke ERP
-                            $response = Http::withToken($erp->bearer_token_encrypted)
+                            $debugFile = null;
+                            $debugHandle = null;
+
+                            // Try to decrypt token if it's stored encrypted in DB
+                            try {
+                                $token = decrypt($erp->bearer_token_encrypted);
+                            } catch (\Throwable $ex) {
+                                $token = $erp->bearer_token_encrypted; // fallback to raw value
+                            }
+
+                            // Create a timestamped debug file so we can inspect request/response at cURL level
+                            try {
+                                $debugFile = storage_path('logs/erp_http_debug_' . now()->format('Ymd_His') . '.log');
+                                $debugHandle = @fopen($debugFile, 'w+');
+                            } catch (\Throwable $ex) {
+                                $debugHandle = null;
+                            }
+
+                            $client = Http::withOptions(array_filter([
+                                'debug' => $debugHandle ?: null,
+                            ]))->withToken($token)
                                 ->acceptJson()
                                 ->asJson()
-                                ->timeout(60)
-                                // ->dd()
-                                ->post(
-                                    $erp->base_url . '/api/v1/candidates',
-                                    $payload // payload berupa array/json
-                                );
+                                ->timeout(60);
+
+                            // perform request
+                            $response = $client->post(
+                                rtrim($erp->base_url, '/') . '/api/v1/candidates',
+                                $payload // payload berupa array/json
+                            );
+
+                            // close debug handle if opened and log path for visibility
+                            if (is_resource($debugHandle)) {
+                                fclose($debugHandle);
+                                Log::info('ERP HTTP debug written', ['debug_file' => $debugFile]);
+                            }
 
                             $record->update([
                                 'is_submitted' => true,

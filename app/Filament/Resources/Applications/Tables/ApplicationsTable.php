@@ -19,6 +19,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Grouping\Group;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Blade;
@@ -268,11 +269,32 @@ class ApplicationsTable
                                     ->send();
                             }
 
-                            // 500 atau server error lainnya
+                            // 500 atau server error lainnya — tampilkan pesan lebih spesifik jika tersedia
                             if ($response?->serverError()) {
+                                $errorBody = null;
+                                try {
+                                    $errorBody = $response?->json();
+                                } catch (\Throwable $ex) {
+                                    $errorBody = $response?->body();
+                                }
+
+                                if (is_array($errorBody)) {
+                                    $message = $errorBody['message'] ?? $errorBody['error'] ?? json_encode(array_slice($errorBody, 0, 3));
+                                } else {
+                                    $message = Str::limit((string) $errorBody, 400);
+                                }
+
+                                // Log full details for debugging (but avoid logging tokens)
+                                Log::error('ERP server error response', [
+                                    'company' => $erp->company_name ?? $data['company'] ?? null,
+                                    'status' => $response?->status(),
+                                    'body' => $errorBody,
+                                    'payload_summary' => Str::limit(json_encode($payload ?? []), 1000),
+                                ]);
+
                                 return Notification::make()
-                                    ->title('Server ERP Bermasalah')
-                                    ->body('ERP mengembalikan error ' . $response->status())
+                                    ->title('Server ERP Bermasalah: ' . ($response?->status() ?? 'Unknown'))
+                                    ->body($message)
                                     ->danger()
                                     ->send();
                             }

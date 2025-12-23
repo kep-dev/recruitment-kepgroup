@@ -59,12 +59,29 @@ class LatestEducation extends Component
                 'major' => 'required',
                 'university' => 'required',
                 'location' => 'required',
-                'graduation_year' => 'required|numeric|min:1900|max:' . date('Y'),
-                'gpa' => 'required|numeric|min:0|max:10',
+                'graduation_year' => 'required|numeric|min:1900',
+                'gpa' => 'required|numeric|min:0',
                 'certificate_number' => 'required|unique:educations,certificate_number',
                 'main_number' => 'required|unique:educations,main_number',
+            ], [
+                'required' => 'Field :attribute wajib diisi.',
+                'in' => 'Field :attribute tidak valid.',
+                'numeric' => 'Field :attribute harus berupa angka.',
+                'min' => 'Field :attribute minimal :min.',
+                'max' => 'Field :attribute maksimal :max.',
+                'unique' => 'Field :attribute sudah digunakan.',
+            ], [
+                'education_level' => 'tingkat pendidikan',
+                'major' => 'jurusan',
+                'university' => 'universitas',
+                'location' => 'lokasi',
+                'graduation_year' => 'tahun lulus',
+                'gpa' => 'IPK',
+                'certificate_number' => 'nomor ijazah',
+                'main_number' => 'nomor utama',
             ]);
 
+            // dd($validated);
             // $this->blockIfActive();
 
             if ($this->education) {

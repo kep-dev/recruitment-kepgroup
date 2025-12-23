@@ -32,4 +32,10 @@ class PreMedicalDentalFinding extends Model
     {
         return $this->belongsTo(DentalStatus::class);
     }
+
+    public function itemChecks()
+    {
+        return $this->morphMany(PreMedicalItemCheck::class, 'checkable');
+    }
+
 }

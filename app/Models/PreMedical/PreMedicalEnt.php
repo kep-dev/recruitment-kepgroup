@@ -21,4 +21,9 @@ class PreMedicalEnt extends Model
     {
         return $this->belongsTo(PreMedicalResult::class);
     }
+
+    public function itemChecks()
+    {
+        return $this->morphMany(PreMedicalItemCheck::class, 'checkable');
+    }
 }

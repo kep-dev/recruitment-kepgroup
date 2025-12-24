@@ -8,7 +8,10 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\View;
 use Illuminate\Support\Facades\Blade;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Wizard;
+use App\Models\PreMedical\PreMedicalEnt;
+use App\Models\PreMedical\PreMedicalEye;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\RichEditor;
@@ -16,12 +19,16 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Wizard\Step;
+use App\Models\PreMedical\PreMedicalPhysical;
+use App\Models\PreMedical\PreMedicalItemCheck;
+use App\Models\PreMedical\PreMedicalExamSection;
 use Filament\Infolists\Components\RepeatableEntry;
 
 class PreMedicalSessionApplicationInfolist
 {
     public static function configure(Schema $schema): Schema
     {
+
         return $schema
             ->components([
                 Tabs::make()
@@ -118,8 +125,10 @@ class PreMedicalSessionApplicationInfolist
 
                         // FISIK
                         Tab::make('Fisik')->schema([
-                            Section::make('Tanda Vital & Pemeriksaan Fisik')->columns(12)->schema([
-                                Grid::make()->columns(12)->schema([
+                            Section::make('Tanda Vital & Pemeriksaan Fisik')
+                                ->columns(12)
+                                ->schema([
+
                                     TextEntry::make('preMedicalResult.preMedicalPhysical.height_cm')->label('Tinggi (cm)')->placeholder('-')->columnSpan(3),
                                     TextEntry::make('preMedicalResult.preMedicalPhysical.weight_kg')->label('Berat (kg)')->placeholder('-')->columnSpan(3),
                                     TextEntry::make('preMedicalResult.preMedicalPhysical.temperature_c')->label('Suhu (°C)')->placeholder('-')->columnSpan(3),
@@ -135,24 +144,107 @@ class PreMedicalSessionApplicationInfolist
                                     TextEntry::make('preMedicalResult.preMedicalPhysical.bp_diastolic')->label('TD Diastolik')->placeholder('-')->columnSpan(3),
                                     TextEntry::make('preMedicalResult.preMedicalPhysical.heart_rate_bpm')->label('Nadi (bpm)')->placeholder('-')->columnSpan(3),
                                     TextEntry::make('preMedicalResult.preMedicalPhysical.resp_rate_per_min')->label('Resp (/menit)')->placeholder('-')->columnSpan(3),
+
+
+                                    TextEntry::make('preMedicalResult.preMedicalPhysical.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
+                                    // Components generated from Fisik sections
+
+                                    Section::make('Pemeriksaan Fisik')
+                                        ->columnSpanFull()
+                                        ->schema(function ($record) {
+                                            $preMedicalPhysical = $record->preMedicalResult->preMedicalPhysical;
+                                            $sections = PreMedicalExamSection::with([
+                                                'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
+                                                    $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                        ->where('checkable_type', get_class($preMedicalPhysical));
+                                                }
+                                            ])
+                                                ->where('type', 'physic')
+                                                ->orderBy('order')
+                                                ->get();
+
+                                            return $sections->map(function ($section) {
+                                                return Section::make($section->name)
+                                                    ->schema(
+                                                        $section->subSections->map(function ($sub) {
+
+                                                            return Section::make($sub->name)
+                                                                ->schema(
+                                                                    $sub->items->map(function ($item) {
+
+                                                                        $check = $item->itemChecks->first();
+
+                                                                        return Group::make([
+                                                                            TextEntry::make("item_{$item->id}")
+                                                                                ->label($item->name)
+                                                                                ->state($check?->value ?? '-')
+                                                                                ->columnSpan(3),
+
+                                                                            TextEntry::make("note_{$item->id}")
+                                                                                ->label('Catatan')
+                                                                                ->state($check?->note ?? '-')
+                                                                                ->columnSpan(9),
+                                                                        ])->columns(12);
+                                                                    })->toArray()
+                                                                );
+                                                        })->toArray()
+                                                    );
+                                            })->toArray();
+                                        })
                                 ]),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.head_neck')->label('Kepala & Leher')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.chest_heart')->label('Dada & Jantung')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.chest_lung')->label('Dada & Paru')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.abdomen_liver')->label('Abdomen & Ginjal')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.abdomen_spleen')->label('Abdomen & Perut')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.extremities')->label('Ekstremitas')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalPhysical.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
-                            ]),
                         ]),
 
                         // THT
                         Tab::make('THT')->schema([
                             Section::make('THT')->columns(12)->schema([
-                                TextEntry::make('preMedicalResult.preMedicalEnt.ear')->label('Telinga')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalEnt.nose')->label('Hidung')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalEnt.throat')->label('Tenggorokan')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalEnt.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEnt.ear')->label('Telinga')->html()->placeholder('-')->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEnt.nose')->label('Hidung')->html()->placeholder('-')->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEnt.throat')->label('Tenggorokan')->html()->placeholder('-')->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEnt.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
+                                // Components generated from THT sections
+                                // ...$entSectionComponents,
+                                Section::make('Pemeriksaan Telinga Hidung Tenggorokan')
+                                    ->columnSpanFull()
+                                    ->schema(function ($record) {
+                                        $preMedicalPhysical = $record->preMedicalResult->preMedicalPhysical;
+                                        $sections = PreMedicalExamSection::with([
+                                            'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
+                                                $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                    ->where('checkable_type', get_class($preMedicalPhysical));
+                                            }
+                                        ])
+                                            ->where('type', 'ent')
+                                            ->orderBy('order')
+                                            ->get();
+
+                                        return $sections->map(function ($section) {
+                                            return Section::make($section->name)
+                                                ->schema(
+                                                    $section->subSections->map(function ($sub) {
+
+                                                        return Section::make($sub->name)
+                                                            ->schema(
+                                                                $sub->items->map(function ($item) {
+
+                                                                    $check = $item->itemChecks->first();
+
+                                                                    return Group::make([
+                                                                        TextEntry::make("item_{$item->id}")
+                                                                            ->label($item->name)
+                                                                            ->state($check?->value ?? '-')
+                                                                            ->columnSpan(3),
+
+                                                                        TextEntry::make("note_{$item->id}")
+                                                                            ->label('Catatan')
+                                                                            ->state($check?->note ?? '-')
+                                                                            ->columnSpan(9),
+                                                                    ])->columns(12);
+                                                                })->toArray()
+                                                            );
+                                                    })->toArray()
+                                                );
+                                        })->toArray();
+                                    })
                             ]),
                         ]),
 
@@ -165,26 +257,72 @@ class PreMedicalSessionApplicationInfolist
                                     TextEntry::make('preMedicalResult.preMedicalEye.va_aided_right')->label('Dengan Kacamata (Kanan)')->placeholder('-')->columnSpan(6),
                                     TextEntry::make('preMedicalResult.preMedicalEye.va_aided_left')->label('Dengan Kacamata (Kiri)')->placeholder('-')->columnSpan(6),
                                 ]),
-                                TextEntry::make('preMedicalResult.preMedicalEye.color_vision')
-                                    ->label('Buta Warna')
-                                    ->badge()
-                                    ->color(fn($s) => match ($s) {
-                                        'normal' => 'success',
-                                        'partial' => 'warning',
-                                        'total' => 'danger',
-                                        default => 'gray'
+                                // TextEntry::make('preMedicalResult.preMedicalEye.color_vision')
+                                //     ->label('Buta Warna')
+                                //     ->badge()
+                                //     ->color(fn($s) => match ($s) {
+                                //         'normal' => 'success',
+                                //         'partial' => 'warning',
+                                //         'total' => 'danger',
+                                //         default => 'gray'
+                                //     })
+                                //     ->formatStateUsing(fn($s) => match ($s) {
+                                //         'normal' => 'Normal',
+                                //         'partial' => 'Sebagian',
+                                //         'total' => 'Total',
+                                //         default => '-'
+                                //     })
+                                //     ->placeholder('-')
+                                //     ->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEye.conjunctiva')->label('Konjungtiva')->html()->placeholder('-')->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEye.sclera')->label('Sclera')->html()->placeholder('-')->columnSpan(12),
+                                // TextEntry::make('preMedicalResult.preMedicalEye.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
+                                // Components generated from Mata sections
+                                // ...$eyeSectionComponents,
+
+                                Section::make('Pemeriksaan Mata')
+                                    ->columnSpanFull()
+                                    ->schema(function ($record) {
+                                        $preMedicalPhysical = $record->preMedicalResult->preMedicalPhysical;
+                                        $sections = PreMedicalExamSection::with([
+                                            'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
+                                                $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                    ->where('checkable_type', get_class($preMedicalPhysical));
+                                            }
+                                        ])
+                                            ->where('type', 'eye')
+                                            ->orderBy('order')
+                                            ->get();
+
+                                        return $sections->map(function ($section) {
+                                            return Section::make($section->name)
+                                                ->schema(
+                                                    $section->subSections->map(function ($sub) {
+
+                                                        return Section::make($sub->name)
+                                                            ->schema(
+                                                                $sub->items->map(function ($item) {
+
+                                                                    $check = $item->itemChecks->first();
+
+                                                                    return Group::make([
+                                                                        TextEntry::make("item_{$item->id}")
+                                                                            ->label($item->name)
+                                                                            ->state($check?->value ?? '-')
+                                                                            ->columnSpan(3),
+
+                                                                        TextEntry::make("note_{$item->id}")
+                                                                            ->label('Catatan')
+                                                                            ->state($check?->note ?? '-')
+                                                                            ->columnSpan(9),
+                                                                    ])->columns(12);
+                                                                })->toArray()
+                                                            );
+                                                    })->toArray()
+                                                );
+                                        })->toArray();
                                     })
-                                    ->formatStateUsing(fn($s) => match ($s) {
-                                        'normal' => 'Normal',
-                                        'partial' => 'Sebagian',
-                                        'total' => 'Total',
-                                        default => '-'
-                                    })
-                                    ->placeholder('-')
-                                    ->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalEye.conjunctiva')->label('Konjungtiva')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalEye.sclera')->label('Sclera')->html()->placeholder('-')->columnSpan(12),
-                                TextEntry::make('preMedicalResult.preMedicalEye.others')->label('Lainnya')->html()->placeholder('-')->columnSpan(12),
+
                             ]),
                         ]),
 

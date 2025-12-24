@@ -36,6 +36,7 @@ class ParamedicPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Paramedic/Resources'), for: 'App\Filament\Paramedic\Resources')
             ->discoverPages(in: app_path('Filament/Paramedic/Pages'), for: 'App\Filament\Paramedic\Pages')
+             ->discoverClusters(in: app_path('Filament/Paramedic/Clusters'), for: 'App\\Filament\\Paramedic\\Clusters')
             ->pages([
                 Dashboard::class,
             ])

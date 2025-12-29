@@ -24,7 +24,8 @@ class EducationApiResource extends JsonResource
             'graduation_year' => $this->graduation_year,
             'gpa' => $this->gpa,
             'certificate_number' => $this->certificate_number,
-            'main_number' => $this->main_number
+            'main_number' => $this->main_number,
+            'education_verification_link' => $this->education_verification_link,
         ];
     }
 }

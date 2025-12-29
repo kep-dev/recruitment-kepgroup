@@ -19,7 +19,8 @@ class Education extends Model
         'graduation_year',
         'gpa',
         'certificate_number',
-        'main_number'
+        'main_number',
+        'education_verification_link'
     ];
 
     public function user()

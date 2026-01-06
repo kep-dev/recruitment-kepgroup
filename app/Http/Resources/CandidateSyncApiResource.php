@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\PreMedicalResultApiResource;
 
 class CandidateSyncApiResource extends JsonResource
 {
@@ -60,6 +61,7 @@ class CandidateSyncApiResource extends JsonResource
             'psychotest_result' => $psychotestAttempt
                 ? PsychotestResultApiResource::make($psychotestAttempt)
                 : null,
+            'pre_medical_result' => PreMedicalResultApiResource::make($this->preMedicalSessionApplications->first()->preMedicalResult ?? null),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Paramedic\Resources\PreMedicalSessionApplications\Schemas;
 
+use Carbon\Carbon;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
 use Filament\Schemas\Components\Grid;
@@ -20,9 +21,11 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Wizard\Step;
 use App\Models\PreMedical\PreMedicalPhysical;
+use Filament\Infolists\Components\ImageEntry;
 use App\Models\PreMedical\PreMedicalItemCheck;
 use App\Models\PreMedical\PreMedicalExamSection;
 use Filament\Infolists\Components\RepeatableEntry;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 
 class PreMedicalSessionApplicationInfolist
 {
@@ -33,6 +36,159 @@ class PreMedicalSessionApplicationInfolist
             ->components([
                 Tabs::make()
                     ->tabs([
+                        Tab::make('Informasi Kandidat')
+                            ->schema([
+                                Section::make('Informasi Pribadi')
+                                    ->description('Ringkasan identitas karyawan.')
+                                    ->icon(LucideIcon::UserCircle)
+                                    ->collapsible()
+                                    ->columns(12)
+                                    ->schema([
+                                        ImageEntry::make('application.user.applicant.photo')
+                                            ->label('Foto')
+                                            ->circular()
+                                            ->checkFileExistence(false) // kalau path langsung berupa URL
+                                            ->default(fn($record) => asset('images/include/default-user.jpg'))
+                                            ->columnSpan([
+                                                'default' => 12,
+                                                'sm' => 12,
+                                                'md' => 2,
+                                                'lg' => 2,
+                                            ]),
+
+                                        Grid::make()
+                                            ->columns([
+                                                'default' => 1,
+                                                'sm' => 12,
+                                                'md' => 10,
+                                                'lg' => 10,
+                                            ])
+                                            ->columnSpan([
+                                                'default' => 12,
+                                                'md' => 10,
+                                                'lg' => 10,
+                                            ])
+                                            ->schema([
+                                                TextEntry::make('application.user.applicant.full_name')
+                                                    ->label('NIK')
+                                                    ->icon('heroicon-o-identification')
+                                                    ->copyable()
+                                                    ->formatStateUsing(function (?string $state) {
+                                                        if (!$state) return '—';
+                                                        // Spasi setiap 4 digit biar mudah dibaca
+                                                        return trim(collect(str_split($state))
+                                                            ->chunk(4)
+                                                            ->map(fn($c) => $c->implode(''))
+                                                            ->implode(' '));
+                                                    })
+                                                    ->placeholder('—')
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 3,
+                                                    ]),
+
+                                                TextEntry::make('application.user.applicant.phone_number')
+                                                    ->label('No. HP')
+                                                    ->icon('heroicon-o-phone')
+                                                    ->copyable()
+                                                    ->formatStateUsing(function (?string $state) {
+                                                        if (!$state) return '—';
+                                                        // Normalisasi jadi +62 dan hilangkan 0 diawal
+                                                        $num = ltrim($state);
+                                                        $num = preg_replace('/\D+/', '', $num);
+                                                        $num = ltrim($num, '0');
+                                                        return '+62 ' . $num;
+                                                    })
+                                                    ->placeholder('—')
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 3,
+                                                    ]),
+
+                                                TextEntry::make('application.user.email')
+                                                    ->label('Email')
+                                                    ->icon('heroicon-o-map-pin')
+                                                    ->placeholder('—')
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 3,
+                                                    ]),
+
+                                                TextEntry::make('application.user.applicant.place_of_birth')
+                                                    ->label('Tempat Lahir')
+                                                    ->icon('heroicon-o-map-pin')
+                                                    ->placeholder('—')
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 3,
+                                                    ]),
+
+                                                TextEntry::make('application.user.applicant.date_of_birth')
+                                                    ->label('Tanggal Lahir')
+                                                    ->icon('heroicon-o-calendar')
+                                                    ->date('d M Y')
+                                                    ->suffix(function ($record) {
+                                                        if (!$record?->date_of_birth) return null;
+                                                        try {
+                                                            return Carbon::parse($record->date_of_birth)->age . ' th';
+                                                        } catch (\Throwable $e) {
+                                                            return null;
+                                                        }
+                                                    })
+                                                    ->placeholder('—')
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 3,
+                                                    ]),
+
+                                                TextEntry::make('application.user.applicant.gender')
+                                                    ->label('Jenis Kelamin')
+                                                    ->badge()
+                                                    ->formatStateUsing(function (?string $state) {
+                                                        return match ($state) {
+                                                            'male'   => 'Laki-laki',
+                                                            'female' => 'Perempuan',
+                                                            default  => 'Tidak diketahui',
+                                                        };
+                                                    })
+                                                    ->color(fn(?string $state) => match ($state) {
+                                                        'male' => 'primary',
+                                                        'female' => 'warning',
+                                                        default => 'gray',
+                                                    })
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 2,
+                                                    ]),
+
+                                                // Alamat utuh (multi-baris)
+                                                TextEntry::make('address_line')
+                                                    ->label('Alamat Domisili')
+                                                    ->columnSpan([
+                                                        'default' => 1,
+                                                        'lg' => 6,
+                                                    ])
+                                                    ->state(function ($record) {
+                                                        $lines = [
+                                                            $record?->application?->user?->applicant?->address_line,
+                                                            // Tambahkan baris kecil untuk kode pos / kode desa jika ada
+                                                            collect([
+                                                                $record?->application?->user?->applicant?->postal_code ?  $record?->application?->user?->applicant?->postal_code : null,
+                                                                $record?->application?->user?->applicant?->village?->name ?  $record?->application?->user?->applicant?->village?->name : null,
+                                                                $record?->application?->user?->applicant?->regency?->name ?  $record?->application?->user?->applicant?->regency?->name : null,
+                                                                $record?->application?->user?->applicant?->district?->name ?  $record?->application?->user?->applicant?->district?->name : null,
+                                                                $record?->application?->user?->applicant?->province?->name ?  $record?->application?->user?->applicant?->province?->name : null,
+                                                            ])->filter()->implode(' • '),
+                                                        ];
+
+                                                        return collect($lines)->filter()->implode("\n");
+                                                    })
+                                                    ->formatStateUsing(fn($state) => $state ? nl2br(e($state)) : '—')
+                                                    ->html(),
+                                            ]),
+                                    ]),
+                            ]),
+
                         // RINGKASAN
                         Tab::make('Ringkasan')->schema([
                             Section::make('Kesimpulan')
@@ -152,11 +308,15 @@ class PreMedicalSessionApplicationInfolist
                                     Section::make('Pemeriksaan Fisik')
                                         ->columnSpanFull()
                                         ->schema(function ($record) {
-                                            $preMedicalPhysical = $record->preMedicalResult->preMedicalPhysical;
+                                            $preMedicalPhysical = $record?->preMedicalResult?->preMedicalPhysical;
                                             $sections = PreMedicalExamSection::with([
                                                 'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
-                                                    $q->where('checkable_id',  $preMedicalPhysical->id)
-                                                        ->where('checkable_type', get_class($preMedicalPhysical));
+                                                    if ($preMedicalPhysical) {
+                                                        $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                            ->where('checkable_type', get_class($preMedicalPhysical));
+                                                    } else {
+                                                        $q->whereNull('id');
+                                                    }
                                                 }
                                             ])
                                                 ->where('type', 'physic')
@@ -206,11 +366,15 @@ class PreMedicalSessionApplicationInfolist
                                 Section::make('Pemeriksaan Telinga Hidung Tenggorokan')
                                     ->columnSpanFull()
                                     ->schema(function ($record) {
-                                        $preMedicalPhysical = $record->preMedicalResult->preMedicalPhysical;
+                                        $preMedicalPhysical = $record?->preMedicalResult?->preMedicalPhysical;
                                         $sections = PreMedicalExamSection::with([
                                             'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
-                                                $q->where('checkable_id',  $preMedicalPhysical->id)
-                                                    ->where('checkable_type', get_class($preMedicalPhysical));
+                                                if ($preMedicalPhysical) {
+                                                    $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                        ->where('checkable_type', get_class($preMedicalPhysical));
+                                                } else {
+                                                    $q->whereNull('id');
+                                                }
                                             }
                                         ])
                                             ->where('type', 'ent')
@@ -283,11 +447,15 @@ class PreMedicalSessionApplicationInfolist
                                 Section::make('Pemeriksaan Mata')
                                     ->columnSpanFull()
                                     ->schema(function ($record) {
-                                        $preMedicalPhysical = $record->preMedicalResult->preMedicalPhysical;
+                                        $preMedicalPhysical = $record?->preMedicalResult?->preMedicalPhysical;
                                         $sections = PreMedicalExamSection::with([
                                             'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
-                                                $q->where('checkable_id',  $preMedicalPhysical->id)
-                                                    ->where('checkable_type', get_class($preMedicalPhysical));
+                                                if ($preMedicalPhysical) {
+                                                    $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                        ->where('checkable_type', get_class($preMedicalPhysical));
+                                                } else {
+                                                    $q->whereNull('id');
+                                                }
                                             }
                                         ])
                                             ->where('type', 'eye')

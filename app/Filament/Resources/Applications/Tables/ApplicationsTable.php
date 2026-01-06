@@ -185,8 +185,6 @@ class ApplicationsTable
                             )
                     ])
                     ->action(function ($record, array $data) {
-
-
                         try {
 
                             // Ambil konfigurasi ERP
@@ -231,6 +229,7 @@ class ApplicationsTable
                             ]))->withToken($token)
                                 ->acceptJson()
                                 ->asJson()
+                                // ->dd(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
                                 ->timeout(120);
 
                             // perform request

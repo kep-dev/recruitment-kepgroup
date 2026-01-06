@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Date;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\View;
+use Filament\Schemas\Components\Group;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Livewire;
@@ -715,6 +716,51 @@ class ApplicationInfolist
                                                             ->label('Lain-lain')
                                                             ->columnSpan(3)
                                                             ->html(),
+
+                                                        Section::make('Pemeriksaan Fisik')
+                                                            ->columnSpanFull()
+                                                            ->schema(function ($record) {
+                                                                $preMedicalPhysical = $record?->preMedicalResult?->preMedicalPhysical;
+                                                                $sections = \App\Models\PreMedical\PreMedicalExamSection::with([
+                                                                    'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
+                                                                        if ($preMedicalPhysical) {
+                                                                            $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                                                ->where('checkable_type', get_class($preMedicalPhysical));
+                                                                        } else {
+                                                                            $q->whereNull('id');
+                                                                        }
+                                                                    }
+                                                                ])
+                                                                    ->where('type', 'physic')
+                                                                    ->orderBy('order')
+                                                                    ->get();
+
+                                                                return $sections->map(function ($section) {
+                                                                    return Section::make($section->name)
+                                                                        ->schema(
+                                                                            $section->subSections->map(function ($sub) {
+                                                                                return Section::make($sub->name)
+                                                                                    ->schema(
+                                                                                        $sub->items->map(function ($item) {
+                                                                                            $check = $item->itemChecks->first();
+
+                                                                                            return Group::make([
+                                                                                                TextEntry::make("item_{$item->id}")
+                                                                                                    ->label($item->name)
+                                                                                                    ->state($check?->value ?? '-')
+                                                                                                    ->columnSpan(3),
+
+                                                                                                TextEntry::make("note_{$item->id}")
+                                                                                                    ->label('Catatan')
+                                                                                                    ->state($check?->note ?? '-')
+                                                                                                    ->columnSpan(9),
+                                                                                            ])->columns(12);
+                                                                                        })->toArray()
+                                                                                    );
+                                                                            })->toArray()
+                                                                        );
+                                                                })->toArray();
+                                                            }),
                                                     ])
                                                     ->columnSpanFull(),
 
@@ -739,6 +785,51 @@ class ApplicationInfolist
                                                             ->label('Lain-lain')
                                                             ->columnSpan(3)
                                                             ->html(),
+
+                                                        Section::make('Pemeriksaan Telinga Hidung Tenggorokan')
+                                                            ->columnSpanFull()
+                                                            ->schema(function ($record) {
+                                                                $preMedicalPhysical = $record?->preMedicalResult?->preMedicalPhysical;
+                                                                $sections = \App\Models\PreMedical\PreMedicalExamSection::with([
+                                                                    'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
+                                                                        if ($preMedicalPhysical) {
+                                                                            $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                                                ->where('checkable_type', get_class($preMedicalPhysical));
+                                                                        } else {
+                                                                            $q->whereNull('id');
+                                                                        }
+                                                                    }
+                                                                ])
+                                                                    ->where('type', 'ent')
+                                                                    ->orderBy('order')
+                                                                    ->get();
+
+                                                                return $sections->map(function ($section) {
+                                                                    return Section::make($section->name)
+                                                                        ->schema(
+                                                                            $section->subSections->map(function ($sub) {
+                                                                                return Section::make($sub->name)
+                                                                                    ->schema(
+                                                                                        $sub->items->map(function ($item) {
+                                                                                            $check = $item->itemChecks->first();
+
+                                                                                            return Group::make([
+                                                                                                TextEntry::make("item_{$item->id}")
+                                                                                                    ->label($item->name)
+                                                                                                    ->state($check?->value ?? '-')
+                                                                                                    ->columnSpan(3),
+
+                                                                                                TextEntry::make("note_{$item->id}")
+                                                                                                    ->label('Catatan')
+                                                                                                    ->state($check?->note ?? '-')
+                                                                                                    ->columnSpan(9),
+                                                                                            ])->columns(12);
+                                                                                        })->toArray()
+                                                                                    );
+                                                                            })->toArray()
+                                                                        );
+                                                                })->toArray();
+                                                            }),
                                                     ])
                                                     ->columnSpanFull(),
 
@@ -775,6 +866,51 @@ class ApplicationInfolist
                                                             ->label('Lain-lain')
                                                             ->html()
                                                             ->columnSpan(3),
+
+                                                        Section::make('Pemeriksaan Mata')
+                                                            ->columnSpanFull()
+                                                            ->schema(function ($record) {
+                                                                $preMedicalPhysical = $record?->preMedicalResult?->preMedicalPhysical;
+                                                                $sections = \App\Models\PreMedical\PreMedicalExamSection::with([
+                                                                    'subSections.items.itemChecks' => function ($q) use ($preMedicalPhysical) {
+                                                                        if ($preMedicalPhysical) {
+                                                                            $q->where('checkable_id',  $preMedicalPhysical->id)
+                                                                                ->where('checkable_type', get_class($preMedicalPhysical));
+                                                                        } else {
+                                                                            $q->whereNull('id');
+                                                                        }
+                                                                    }
+                                                                ])
+                                                                    ->where('type', 'eye')
+                                                                    ->orderBy('order')
+                                                                    ->get();
+
+                                                                return $sections->map(function ($section) {
+                                                                    return Section::make($section->name)
+                                                                        ->schema(
+                                                                            $section->subSections->map(function ($sub) {
+                                                                                return Section::make($sub->name)
+                                                                                    ->schema(
+                                                                                        $sub->items->map(function ($item) {
+                                                                                            $check = $item->itemChecks->first();
+
+                                                                                            return Group::make([
+                                                                                                TextEntry::make("item_{$item->id}")
+                                                                                                    ->label($item->name)
+                                                                                                    ->state($check?->value ?? '-')
+                                                                                                    ->columnSpan(3),
+
+                                                                                                TextEntry::make("note_{$item->id}")
+                                                                                                    ->label('Catatan')
+                                                                                                    ->state($check?->note ?? '-')
+                                                                                                    ->columnSpan(9),
+                                                                                            ])->columns(12);
+                                                                                        })->toArray()
+                                                                                    );
+                                                                            })->toArray()
+                                                                        );
+                                                                })->toArray();
+                                                            }),
                                                     ])
                                                     ->columnSpanFull(),
 

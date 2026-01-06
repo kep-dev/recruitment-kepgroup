@@ -2,6 +2,7 @@
 
 namespace App\Filament\Paramedic\Resources\PreMedicalSessionApplications\Tables;
 
+use Carbon\Carbon;
 use App\Models\JobVacancy;
 use Filament\Tables\Table;
 use Illuminate\Support\Arr;
@@ -24,8 +25,6 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Columns\SelectColumn;
@@ -34,9 +33,13 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Wizard\Step;
 use App\Models\PreMedical\PreMedicalExamItem;
-use App\Models\PreMedical\PreMedicalExamSection;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use App\Models\PreMedical\PreMedicalExamSection;
 use Filament\Forms\Components\Repeater\TableColumn;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 
 class PreMedicalSessionApplicationsTable
 {
@@ -147,7 +150,8 @@ class PreMedicalSessionApplicationsTable
         return $table
             ->columns([
                 TextColumn::make('application.user.name')
-                    ->label('Nama'),
+                    ->label('Nama')
+                    ->searchable(),
                 TextColumn::make('application.jobVacancy.title')
                     ->label('Lowongan'),
                 TextColumn::make('timeslot_start')
@@ -181,6 +185,7 @@ class PreMedicalSessionApplicationsTable
             ])
             ->recordActions([
                 Action::make('medicalCheckUp')
+                    ->icon(LucideIcon::HeartPulse)
                     ->closeModalByClickingAway(false)
                     ->databaseTransaction()
                     ->steps([
@@ -694,23 +699,17 @@ class PreMedicalSessionApplicationsTable
                         Step::make('Pemeriksaan Penunjang')
                             ->schema([
                                 RichEditor::make('preMedicalSupportExaminations.complete_blood')
-                                    ->label('Darah Lengkap')
-                                    ->required(),
+                                    ->label('Darah Lengkap'),
                                 RichEditor::make('preMedicalSupportExaminations.colesterol')
-                                    ->label('Kolesterol')
-                                    ->required(),
+                                    ->label('Kolesterol'),
                                 RichEditor::make('preMedicalSupportExaminations.blood_sugar')
-                                    ->label('Gula Darah')
-                                    ->required(),
+                                    ->label('Gula Darah'),
                                 RichEditor::make('preMedicalSupportExaminations.gout')
-                                    ->label('Asam Urat')
-                                    ->required(),
+                                    ->label('Asam Urat'),
                                 RichEditor::make('preMedicalSupportExaminations.ro')
-                                    ->label('Rongen Thorax')
-                                    ->required(),
+                                    ->label('Rongen Thorax'),
                                 RichEditor::make('preMedicalSupportExaminations.others')
-                                    ->label('Pemeriksaan lainnya')
-                                    ->required(),
+                                    ->label('Pemeriksaan lainnya'),
                             ]),
 
                         Step::make('Kesimpulan')
